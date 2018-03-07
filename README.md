@@ -1,5 +1,40 @@
 # BookInBot
 
+## Tasks
+https://trello.com/b/LpDMQOWF/bookusin
+
+## UX (edit with pop ups - mobile friendly)
+Users and Groups - Cognito
+bookinbot/admin - add users for my group
+
+bookinbot - one Bookable e.g. Sydney Apartment
+bookinbot/bookables - many bookables
+bookinbot/bookables/#id - calendar of bookings
+
+bookinbot/bookables/#id/booking/new
+
+## DataStructures
+
+User
+    - id (UUID)
+    - email
+    - password
+    - firstname
+    - lastname
+
+Bookable
+    - id (UUID)
+    - ownerid
+    - title e.g. Sydney Apartment
+
+    - description (optional)
+    - photo(s) (optional)
+
+Booking
+    - id (UUID)
+    - userid (UUID)
+    - starttime
+    - endtime
 
 ## Sync code
 
