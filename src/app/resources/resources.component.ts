@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-resources',
@@ -8,9 +9,15 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 })
 export class ResourcesComponent implements OnInit {
   
+  editMode = false;
+
   constructor() {}
 
   ngOnInit() {
   }
+
+  onSubmit(form: NgForm) {
+    console.log('form submitted');
+  }    
 
 }

@@ -2,30 +2,31 @@
 <!-- The Modal -->
 <div class="modal fade" id="editModal">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-      
+      <div class="modal-content">      
         <div class="modal-header">
           <h4 class="modal-title">Heading</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-      
-        <div class="modal-body">
-            <form (ngSubmit)="onSubmit(f)" #f="ngForm">
-                <div class="row">
-                  <div class="col-sm-5 form-group">
-                    <label for="name">Title</label>
-                    <input 
-                      type="text" id="title" class="form-control" name="title" ngModel required>
-                  </div>   
-                </div>
-              </form>       
-        </div>
-        
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-        
+        <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-sm-5 form-group">
+                <label for="name">Title</label>
+                <input 
+                  type="text" id="title" class="form-control" name="title" ngModel required>
+              </div>   
+            </div>    
+          </div>        
+          <!-- Modal footer -->
+          <div class="modal-footer">
+              <button 
+              class="btn btn-success" 
+              type="submit" 
+              [disabled]="!f.valid">
+              {{ editMode ? 'Update' : 'Add' }}</button>          
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </form>           
       </div>
     </div>
   </div>
