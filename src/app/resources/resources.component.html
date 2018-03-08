@@ -1,0 +1,52 @@
+  
+<!-- The Modal -->
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <div class="modal-header">
+          <h4 class="modal-title">Heading</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+      
+        <div class="modal-body">
+            <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+                <div class="row">
+                  <div class="col-sm-5 form-group">
+                    <label for="name">Title</label>
+                    <input 
+                      type="text" id="title" class="form-control" name="title" ngModel required>
+                  </div>   
+                </div>
+              </form>       
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+<div class="row">
+  <div class="col-xs-12">
+      <h2>Resources</h2>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">Add Resource</button>
+      <hr>
+      <ul class="list-group">
+        <a 
+          class="list-group-item" 
+          style="cursor: pointer"
+          *ngFor="let resource of resources; let i = index"
+          (click)="onEditItem(i)"
+          >
+          {{ resource.title }}
+        </a>
+      </ul>
+  </div>
+</div>
+
+    

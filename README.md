@@ -22,7 +22,7 @@ User
     - firstname
     - lastname
 
-Bookable
+Resource
     - id (UUID)
     - ownerid
     - title e.g. Sydney Apartment
@@ -102,14 +102,24 @@ https://serverless.com/blog/serverless-express-rest-api/
 
 ## Installing Bootstrap
 npm install --save bootstrap
-Add        "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+
+Add        
+      "styles": [
+        "../node_modules/bootstrap/dist/css/bootstrap.min.css",        
+        "styles.css"
+      ],
 to
 .angular-cli.json
+
+Add
+        "../node_modules/bootstrap/dist/js/bootstrap.min.js",
+
+
 ## Angular References
 
 https://angular.io/guide/quickstart
 ** the following commands can be used to set up an inital project
-ng new crud-angular
+ng new bookinbot
 
 
 ## Others References:
