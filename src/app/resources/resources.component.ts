@@ -23,6 +23,15 @@ export class ResourcesComponent implements OnInit {
   constructor(private dataStorageService: DataStorageService) {}
 
   ngOnInit() {
+    this.dataStorageService.getObjects('resources')
+    .subscribe(
+      (success: Response) => {          
+        this.resources = success.json()         
+      },
+      (error: Response) => {
+        this.message = messages.server_error;             
+      }
+    );   
   }
 
   onSubmit(form: NgForm) {
