@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { ResourcesComponent } from './resources/resources.component';
+import { DataStorageService } from './shared/data-storage.service';
 
 @NgModule({
   declarations: [
@@ -20,9 +21,9 @@ import { ResourcesComponent } from './resources/resources.component';
     HttpModule,
     AppRoutingModule,
     FormsModule, 
-    ModalModule.forRoot()   
+    ModalModule  
   ],
-  providers: [],
+  providers: [DataStorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
