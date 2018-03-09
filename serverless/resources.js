@@ -113,9 +113,10 @@ app.put('/resource', function (req, res) {
 app.delete('/resource', function (req, res) {
 
   try {  
-    let { id, firstname, lastname } = req.body;  
+    let { id, title } = req.body;  
 
     console.log('id is: ' + id);
+    console.log('title: ' + title);    
 
     const params = {
       TableName: RESOURCES_TABLE,

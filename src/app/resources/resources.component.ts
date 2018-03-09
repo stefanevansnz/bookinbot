@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
 import { Resource } from './resources.model';
@@ -14,10 +14,14 @@ declare var jQuery:any;
   styleUrls: ['./resources.component.css']
 })
 export class ResourcesComponent implements OnInit {
-  
+  @ViewChild('f') slForm: NgForm;
+
   private message;
 
   private editMode = false;
+  private editResource: Resource;
+  private editIndex: number;
+
   private resources: Resource[] = [];
 
   constructor(private dataStorageService: DataStorageService) {}
@@ -31,7 +35,8 @@ export class ResourcesComponent implements OnInit {
       (error: Response) => {
         this.message = messages.server_error;             
       }
-    );   
+    );
+    
   }
 
   onSubmit(form: NgForm) {
@@ -56,14 +61,41 @@ export class ResourcesComponent implements OnInit {
           this.message = messages.server_error;             
         }
       );
-
-
-      
-      //this.message = 'sdfdsf';
-      //this.editMode = false;
-      //form.reset();
     }
+  }
 
+  onAddObject() {
+    this.editMode = false;
+    jQuery("#editModal").modal("show");
   }    
+  
+  onEditObject(index: number, resource: Resource) {
+    //console.log('onEditObject ' + index);
+    this.editResource = resource;
+    this.editIndex = index;
+    this.editMode = true;
+    this.slForm.setValue({
+      title: resource.title,
+    });
+    jQuery("#editModal").modal("show");
+  }  
+
+  onDelete() {
+
+    let resource = new Resource(this.editResource.id, '', 'sdfsf');    
+    console.log('delete id is ' + this.editResource.id);
+
+    this.dataStorageService.deleteObject(resource)
+    .subscribe(
+      (success: Response) => {          
+        this.resources.splice(this.editIndex, 1);        
+        this.message = '';
+        jQuery("#editModal").modal("hide");          
+      },
+      (error: Response) => {
+        this.message = messages.server_error;             
+      }
+    );    
+  }
 
 }
