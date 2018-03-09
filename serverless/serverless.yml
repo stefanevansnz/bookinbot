@@ -1,0 +1,87 @@
+# serverless.yml
+plugins:
+  - serverless-finch
+  - serverless-domain-manager  
+  - serverless-dynamodb-local
+  - serverless-offline #serverless-offline needs to be last in the list  
+
+service: bookinbot-application
+
+custom:
+  cognitoPoolArn: "arn:aws:cognito-idp:ap-southeast-2:522157531186:userpool/ap-southeast-2_phGgoDzbH"
+  cognitoAuthorizer:
+    arn: ${self:custom.cognitoPoolArn}
+  customDomain:
+    domainName: api.bookinbot.com
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: false    
+  client:
+    bucketName: '${self:provider.url}'
+    distributionFolder: ../dist 
+    indexDocument: index.html 
+    errorDocument: index.html 
+  tableName: 'bookinbot-resources'        
+  dynamodb:
+    start:
+      migrate: true
+
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: prod
+  url: bookinbot.com  
+  region: ap-southeast-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["ResourcesDynamoDBTable", "Arn" ] }
+  environment:
+    RESOURCES_TABLE: ${self:custom.tableName}
+              
+
+functions:
+  app:
+    handler: resources.handler
+    events:
+      - http: 
+          authorizer: ${self:custom.cognitoAuthorizer}
+          method: put
+          path: "resource"
+          cors: true 
+      - http: 
+          authorizer: ${self:custom.cognitoAuthorizer}
+          method: get
+          path: "resources"
+          cors: true      
+      - http: 
+          authorizer: ${self:custom.cognitoAuthorizer}
+          method: delete
+          path: "resource"
+          cors: true   
+
+resources:
+  Resources:
+    ResourcesDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          - 
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - 
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}

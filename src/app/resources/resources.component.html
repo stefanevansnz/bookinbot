@@ -10,16 +10,25 @@
         <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
           <div class="modal-body">
             <div class="row">
-              <div class="col-sm-5 form-group">
+              <div class="col-sm-12 form-group">
                 <label for="name">Title</label>
                 <input 
                   type="text" id="title" class="form-control" name="title" ngModel required>
               </div>   
             </div>    
+            
+            <div class="row" *ngIf="message">
+                <div class="col-sm-12 form-group">
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>   
+                </div>
+            </div>
+
           </div>        
           <!-- Modal footer -->
           <div class="modal-footer">
-              <button 
+            <button 
               class="btn btn-success" 
               type="submit" 
               [disabled]="!f.valid">

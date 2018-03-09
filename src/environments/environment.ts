@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  api: 'https://api.bookinbot.com'
+  api: 'http://localhost:3000'
+  //api: 'https://api.bookinbot.com'
 };

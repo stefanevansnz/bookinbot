@@ -2,7 +2,11 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
 import { Resource } from './resources.model';
+import { Response } from "@angular/http";
 import { DataStorageService } from '../shared/data-storage.service';
+import { messages } from '../app-messages';
+
+declare var jQuery:any;
 
 @Component({
   selector: 'app-resources',
@@ -11,7 +15,10 @@ import { DataStorageService } from '../shared/data-storage.service';
 })
 export class ResourcesComponent implements OnInit {
   
-  editMode = false;
+  private message;
+
+  private editMode = false;
+  private resources: Resource[] = [];
 
   constructor(private dataStorageService: DataStorageService) {}
 
@@ -27,10 +34,25 @@ export class ResourcesComponent implements OnInit {
       //this.userListService.saveUser(this.editedItemIndex,
       //  new User(this.editedItem.id, value.firstname, value.lastname));
     } else {
-      this.dataStorageService.storeObject(new Resource('', '', value.title))
+      let resource = new Resource('', '', value.title);
+      this.dataStorageService.storeObject(resource)
+      .subscribe(
+        (success: Response) => {          
+          resource.id = success.json().id;
+          this.resources.push(resource);
+          this.message = '';
+          jQuery("#editModal").modal("hide");          
+        },
+        (error: Response) => {
+          this.message = messages.server_error;             
+        }
+      );
 
-      this.editMode = false;
-      form.reset();
+
+      
+      //this.message = 'sdfdsf';
+      //this.editMode = false;
+      //form.reset();
     }
 
   }    

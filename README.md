@@ -47,7 +47,7 @@ aws s3 sync . s3://bookinbotcode/ --exclude 'node_modules/*'
 1) Install and set up Serverless framework with database (required once)
 npm install -g serverless
 npm install --save serverless-dynamodb-local
-npm install --save amazon-cognito-identity-js
+#npm install --save amazon-cognito-identity-js
 npm install --save serverless-finch
 npm install serverless-domain-manager --save-dev
 npm install --save moment
@@ -58,14 +58,13 @@ sls dynamodb install
 
 2) Run locally (open a new prompt)
 cd serverless
+#sls dynamodb start --migrate
 sls offline start
 
 3) Test backend locally
-curl -H "Content-Type: application/json" -X POST http://localhost:3000/users -d '{"userId": "1", "name": "Albert Einstein"}'
-curl -H "Content-Type: application/json" -X POST http://localhost:3000/users -d '{"userId": "2", "name": "Max Planck"}'
-curl -H "Content-Type: application/json" -X POST http://localhost:3000/users -d '{"userId": "3", "name": "Niels Bohr"}'
+curl -H "Content-Type: application/json" -X POST http://localhost:3000/resource -d '{"id": "1", "title": "Sydney Apartment"}'
 
-curl -H "Content-Type: application/json" -X GET http://localhost:3000/users
+curl -H "Content-Type: application/json" -X GET http://localhost:3000/resources
 
 4) Clean and Deploy
 serverless remove
