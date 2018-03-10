@@ -14,6 +14,7 @@ declare var jQuery:any;
   styleUrls: ['./resources.component.css']
 })
 export class ResourcesComponent implements OnInit {
+
   @ViewChild('f') slForm: NgForm;
 
   private message;
@@ -44,9 +45,19 @@ export class ResourcesComponent implements OnInit {
     console.log('form submitted title is ' + value.title);
 
     if (this.editMode) {
-      //console.log(this.editedItem.id);
-      //this.userListService.saveUser(this.editedItemIndex,
-      //  new User(this.editedItem.id, value.firstname, value.lastname));
+      let resource = new Resource( this.editResource.id, this.editResource.ownerid, value.title);
+      this.dataStorageService.storeObject(resource)
+      .subscribe(
+        (success: Response) => {          
+          resource.id = success.json().id;
+          this.resources[this.editIndex] = resource;
+          this.message = '';
+          jQuery("#editModal").modal("hide");          
+        },
+        (error: Response) => {
+          this.message = messages.server_error;             
+        }
+      );
     } else {
       let resource = new Resource('', '', value.title);
       this.dataStorageService.storeObject(resource)
@@ -66,6 +77,7 @@ export class ResourcesComponent implements OnInit {
 
   onAddObject() {
     this.editMode = false;
+    this.slForm.reset();
     jQuery("#editModal").modal("show");
   }    
   
