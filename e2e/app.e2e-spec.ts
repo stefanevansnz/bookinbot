@@ -7,8 +7,17 @@ describe('bookinbot App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display resource heading', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    expect(page.getResourceHeadingText()).toEqual('Resources');
   });
+
+  it('should open modal when the add buttom is clicked', () => {
+    page.navigateTo();
+    page.clickAddButton();
+    expect(page.getModalTitleText()).toEqual('Heading');    
+  });
+
+
+
 });

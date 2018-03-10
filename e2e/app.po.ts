@@ -5,7 +5,16 @@ export class AppPage {
     return browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+  getResourceHeadingText() {
+    return element(by.css('h2')).getText();
   }
+
+  getModalTitleText() {
+    return element(by.css('div.modal-header h4')).getText();
+  }
+
+  clickAddButton() {
+    element(by.id('add')).click();
+  }
+
 }
