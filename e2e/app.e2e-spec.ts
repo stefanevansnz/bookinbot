@@ -12,10 +12,12 @@ describe('bookinbot App', () => {
     expect(page.getResourceHeadingText()).toEqual('Resources');
   });
 
-  it('should open modal when the add buttom is clicked', () => {
+  it('should open modal and save resource', () => {
     page.navigateTo();
-    page.clickAddButton();
+    page.clickAddResourceModalButton();
     expect(page.getModalTitleText()).toEqual('Heading');    
+    page.enterValueToTitleField();
+    page.clickSaveResourceButton();
   });
 
 

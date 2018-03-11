@@ -13,8 +13,17 @@ export class AppPage {
     return element(by.css('div.modal-header h4')).getText();
   }
 
-  clickAddButton() {
-    element(by.id('add')).click();
+  clickAddResourceModalButton() {
+    element(by.id('add-resource')).click();
   }
+
+  enterValueToTitleField() {
+    element(by.id('title')).sendKeys('Sydney Apartment');
+  }
+
+  clickSaveResourceButton() {
+    element(by.id('save-resource')).click();
+  }
+
 
 }

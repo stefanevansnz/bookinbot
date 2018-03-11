@@ -29,6 +29,7 @@
           <!-- Modal footer -->
           <div class="modal-footer">
             <button 
+              id="save-resource"
               class="btn btn-success" 
               type="submit" 
               [disabled]="!f.valid">
@@ -49,7 +50,7 @@
 <div class="row">
   <div class="col-xs-12">
       <h2>Resources</h2>
-      <button id="add" type="button" class="btn btn-primary" 
+      <button id="add-resource" type="button" class="btn btn-primary" 
         (click)="onAddObject()">Add Resource</button>
       <hr>
       <ul class="list-group">
