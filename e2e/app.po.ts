@@ -17,12 +17,16 @@ export class AppPage {
     element(by.id('add-resource')).click();
   }
 
-  enterValueToTitleField() {
-    element(by.id('title')).sendKeys('Sydney Apartment');
+  enterValueToTitleField(resourceName: string) {
+    element(by.id('title')).sendKeys(resourceName);
   }
 
   clickSaveResourceButton() {
     element(by.id('save-resource')).click();
+  }
+
+  getResourceList() {
+    return element.all(by.css('.list-group a'));
   }
 
 
