@@ -5,6 +5,7 @@ import { Resource } from './resources.model';
 import { Response } from "@angular/http";
 import { DataStorageService } from '../shared/data-storage.service';
 import { messages } from '../app-messages';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 declare var jQuery:any;
 
@@ -25,9 +26,21 @@ export class ResourcesComponent implements OnInit {
 
   private resources: Resource[] = [];
 
-  constructor(private dataStorageService: DataStorageService) {}
+  constructor(private dataStorageService: DataStorageService, 
+              private router: Router, 
+              private route: ActivatedRoute) {}
 
   ngOnInit() {
+
+    this.route.params
+      .subscribe(
+        (params: Params) => {
+          // something has changed
+          console.log('id = ' + params['id']);
+          this.initForm();
+        }
+      );
+
     this.dataStorageService.getObjects('resources')
     .subscribe(
       (success: Response) => {          
@@ -38,6 +51,15 @@ export class ResourcesComponent implements OnInit {
       }
     );
     
+  }
+
+
+  private initForm() {  }  
+
+
+  onViewBookings(index: number, resource: Resource) {
+    console.log('onViewBookings resource id ' + resource.id);
+    this.router.navigate(['/bookings/' + resource.id]);
   }
 
   onSubmit(form: NgForm) {

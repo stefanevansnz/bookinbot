@@ -54,14 +54,21 @@
         (click)="onAddObject()">Add Resource</button>
       <hr>
       <ul class="list-group">
-        <a 
-          class="list-group-item" 
+        <li class="list-group-item" class="list-group-item" 
           style="cursor: pointer"
-          *ngFor="let resource of resources; let i = index"
-          (click)="onEditObject(i, resource)"
-          >
-          {{ resource.title }}
-        </a>
+          *ngFor="let resource of resources; let i = index">
+            <button 
+            id="edit-resource"
+            class="btn btn-success" 
+            (click)="onEditObject(i, resource)"            
+            type="submit" >
+            Edit</button>
+            <a 
+            (click)="onViewBookings(i, resource)"
+            >
+            {{ resource.title }}
+            </a>
+        </li>
       </ul>
   </div>
 </div>

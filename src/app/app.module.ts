@@ -10,11 +10,13 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ResourcesComponent } from './resources/resources.component';
 import { DataStorageService } from './shared/data-storage.service';
+import { BookingsComponent } from './bookings/bookings.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ResourcesComponent
+    ResourcesComponent,
+    BookingsComponent
   ],
   imports: [
     BrowserModule,
