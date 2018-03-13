@@ -65,21 +65,24 @@ app.get('/bookings', function (req, res) {
 // Save Booking
 app.put('/booking', function (req, res) {
   try {  
-    let { id, start, end } = req.body;
+    let { id, resourceid, userid, start, end } = req.body;
     
     //createddate = moment().format();
     //updateddate = moment().format();
     //owner id
-    createddate = 'na';
-    updateddate = 'na';
+    let updateddate = new Date();
+    let createddate = new Date();
 
     console.log('id is: ' + id);
+    console.log('resourceid is: ' + resourceid);    
+    console.log('userid is: ' + userid);    
     console.log('createddate is: ' + createddate);
     console.log('updateddate is: ' + updateddate);    
     console.log('start: ' + start);
     console.log('end: ' + end);
 
     if (id == "") {
+
       id = uuidv1();
     }
     
@@ -94,8 +97,10 @@ app.put('/booking', function (req, res) {
       TableName: BOOKINGS_TABLE,
       Item: {
         id: id,
-        createddate: createddate,
-        updateddate: updateddate,
+        resourceid: resourceid,
+        userid: userid,
+        createddate: createddate.toString(),
+        updateddate: updateddate.toString(),
         start: start,
         end: end,            
       },
@@ -105,7 +110,7 @@ app.put('/booking', function (req, res) {
       if (error) {
         res.status(error.statusCode).json({ error: error});
       } else {
-        res.json({ id, createddate, updateddate, start, end });
+        res.json({ id, createddate, userid, updateddate, start, end });
       }
     });
 

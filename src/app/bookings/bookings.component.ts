@@ -24,6 +24,8 @@ export class BookingsComponent implements OnInit {
   private editBooking: Booking;
   private editIndex: number;
 
+  private resourceId;
+
   private bookings: Booking[] = [];
 
   constructor(private dataStorageService: DataStorageService, 
@@ -35,9 +37,9 @@ export class BookingsComponent implements OnInit {
       .subscribe(
         (params: Params) => {
           // something has changed
-          console.log('id = ' + params['id']);
+          console.log('resourceId = ' + params['id']);
           // get all bookings with this booking id
-          this.initForm();
+          this.resourceId = params['id'];
         }
       );
 
@@ -53,8 +55,7 @@ export class BookingsComponent implements OnInit {
 
   }
 
-  private initForm() {  } 
-  
+
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log('form submitted start is ' + value.start);
@@ -62,8 +63,8 @@ export class BookingsComponent implements OnInit {
 
     if (this.editMode) {
       let booking = new Booking( this.editBooking.id, 
-                                 this.editBooking.ownerid,
-                                 'resourceid',
+                                 this.editBooking.userid,
+                                 this.resourceId,
                                  value.start, value.end);
       this.dataStorageService.storeObject(booking)
       .subscribe(
@@ -78,7 +79,11 @@ export class BookingsComponent implements OnInit {
         }
       );
     } else {
-      let booking = new Booking('', '', 'resourceid', value.start, value.end);
+      let booking = new Booking('', 
+                                'userid', // TODO add user id from token 
+                                this.resourceId, 
+                                value.start, 
+                                value.end);
       this.dataStorageService.storeObject(booking)
       .subscribe(
         (success: Response) => {          

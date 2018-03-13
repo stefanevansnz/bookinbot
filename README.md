@@ -32,7 +32,7 @@ Resource
 
 Booking
     - id (UUID)
-    - userid (UUID)
+    - resourceid (UUID)
     - starttime
     - endtime
 
