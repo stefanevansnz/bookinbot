@@ -21,7 +21,8 @@ custom:
     distributionFolder: ../dist 
     indexDocument: index.html 
     errorDocument: index.html 
-  tableName: 'bookinbot-resources'        
+  tableNameResources: 'bookinbot-resources'    
+  tableNameBookings: 'bookinbot-bookings'         
   dynamodb:
     start:
       migrate: true
@@ -43,13 +44,13 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - { "Fn::GetAtt": ["ResourcesDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["ResourcesDynamoDBTable", "Arn", "BookingsDynamoDBTable", "Arn" ] }
   environment:
-    RESOURCES_TABLE: ${self:custom.tableName}
+    RESOURCES_TABLE: ${self:custom.tableNameResources}
+    BOOKINGS_TABLE: ${self:custom.tableNameBookings}    
               
-
 functions:
-  app:
+  app-resources:
     handler: resources.handler
     events:
       - http: 
@@ -66,8 +67,25 @@ functions:
           authorizer: ${self:custom.cognitoAuthorizer}
           method: delete
           path: "resource"
+          cors: true  
+  app-bookings:           
+    handler: bookings.handler
+    events:
+      - http: 
+          authorizer: ${self:custom.cognitoAuthorizer}
+          method: put
+          path: "booking"
+          cors: true 
+      - http: 
+          authorizer: ${self:custom.cognitoAuthorizer}
+          method: get
+          path: "bookings"
+          cors: true      
+      - http: 
+          authorizer: ${self:custom.cognitoAuthorizer}
+          method: delete
+          path: "booking"
           cors: true   
-
 resources:
   Resources:
     ResourcesDynamoDBTable:
@@ -84,4 +102,20 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:custom.tableName}
+        TableName: ${self:custom.tableNameResources}
+    BookingsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          - 
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - 
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableNameBookings}
+      

@@ -58,7 +58,9 @@ sls dynamodb install
 
 2) Run locally (open a new prompt)
 cd serverless
-#sls dynamodb start --migrate
+
+#create databases
+sls dynamodb start --migrate
 sls offline start
 
 3) Test backend locally
