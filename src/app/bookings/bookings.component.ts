@@ -48,8 +48,16 @@ export class BookingsComponent implements OnInit {
         (success: Response) => {          
           this.bookings = success.json();  
           // load calendar
-          jQuery("#calendar").fullCalendar({
-            weekends: false // will hide Saturdays and Sundays
+          jQuery("#calendar").fullCalendar({           
+            themeSystem: 'bootstrap4',
+            header: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'month,agendaWeek,agendaDay,listMonth'
+            },
+//            eventLimit: true, // allow "more" link when too many events
+//            events: 'https://fullcalendar.io/demo-events.json'
+                      
           });
         },
         (error: Response) => {
