@@ -46,7 +46,11 @@ export class BookingsComponent implements OnInit {
       this.dataStorageService.getObjects('bookings')
       .subscribe(
         (success: Response) => {          
-          this.bookings = success.json()         
+          this.bookings = success.json();  
+          // load calendar
+          jQuery("#calendar").fullCalendar({
+            weekends: false // will hide Saturdays and Sundays
+          });
         },
         (error: Response) => {
           this.message = messages.server_error;             

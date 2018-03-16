@@ -13,6 +13,8 @@ bookinbot/bookables/#id - calendar of bookings
 
 bookinbot/bookables/#id/booking/new
 
+https://fullcalendar.io/
+
 ## DataStructures
 
 User
@@ -58,10 +60,11 @@ sls dynamodb install
 
 2) Run locally (open a new prompt)
 cd serverless
+sls offline start
 
 #create databases
 sls dynamodb start --migrate
-sls offline start
+
 
 3) Test backend locally
 curl -H "Content-Type: application/json" -X POST http://localhost:3000/resource -d '{"id": "1", "title": "Sydney Apartment"}'
