@@ -44,12 +44,11 @@ aws s3api create-bucket --bucket bookinbotcode --region ap-southeast-2 --create-
 
 aws s3 sync . s3://bookinbotcode/ --exclude 'node_modules/*' --exclude 'serverless/node_modules/*' 
 
-
-
 ## Set up and test a local serverless backend API:
 
 1) Install and set up Serverless framework with database (required once)
 npm install -g serverless
+npm install serverless-offline --save-dev
 npm install --save serverless-dynamodb-local
 #npm install --save amazon-cognito-identity-js
 npm install --save serverless-finch

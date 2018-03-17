@@ -116,7 +116,7 @@ export class BookingsComponent implements OnInit {
   onAddObject() {
     this.editMode = false;
     this.slForm.reset();
-    jQuery('#datetimepickerStart').datetimepicker({                    
+    jQuery('#start').datetimepicker({                    
       useCurrent: false,       
       minDate: new Date(),      
       format:'DD/MM/YYYY hh:mm A',
@@ -125,7 +125,8 @@ export class BookingsComponent implements OnInit {
       showClose: true,
       showClear: true,
       toolbarPlacement: 'top',
-      stepping: 15
+      stepping: 15,
+      inline:false
     }
     );
     jQuery('#datetimepickerEnd').datetimepicker({

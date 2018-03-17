@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "serverless-domain-manager": "^2.3.4",
-    "serverless-dynamodb-local": "^0.2.28"
+    "serverless-dynamodb-local": "^0.2.28",
+    "serverless-offline": "^3.18.0"
   }
 }

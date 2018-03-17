@@ -12,14 +12,16 @@
 
             <div class="row">
               <div class="col-sm-12 form-group">                                
-                <label for="name">Start</label>
-                <div class="input-group date" id="datetimepickerStart" data-target-input="nearest">
-                  <input 
-                    type="text" id="start" class="form-control datetimepicker-input" data-target="#datetimepickerStart" name="start" ngModel>
-                  <div class="input-group-append" data-target="#datetimepickerStart" data-toggle="datetimepicker">
+                <label for="start">Start</label>
+                <div class="input-group date" id="start" data-target-input="nearest">
+                  <input type="text" class="form-control datetimepicker-input" 
+                  id="start" data-toggle="datetimepicker" 
+                  data-target="#start" name="start" 
+                  ngModel required>
+                  <div class="input-group-append" data-target="#start" data-toggle="datetimepicker" >
                       <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div> 
-                </div>  
+                  </div>     
+                </div>                                   
               </div>   
             </div>  
             
