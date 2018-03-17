@@ -44,6 +44,8 @@ aws s3api create-bucket --bucket bookinbotcode --region ap-southeast-2 --create-
 
 aws s3 sync . s3://bookinbotcode/ --exclude 'node_modules/*' --exclude 'serverless/node_modules/*' 
 
+
+
 ## Set up and test a local serverless backend API:
 
 1) Install and set up Serverless framework with database (required once)

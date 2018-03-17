@@ -9,21 +9,32 @@
         </div>
         <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
           <div class="modal-body">
+
             <div class="row">
-              <div class="col-sm-12 form-group">
+              <div class="col-sm-12 form-group">                                
                 <label for="name">Start</label>
-                <input 
-                  type="text" id="start" class="form-control" name="start" ngModel required>
+                <div class="input-group date" id="datetimepickerStart" data-target-input="nearest">
+                  <input 
+                    type="text" id="start" class="form-control datetimepicker-input" data-target="#datetimepickerStart" name="start" ngModel required>
+                  <div class="input-group-append" data-target="#datetimepickerStart" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div> 
+                </div>  
               </div>   
             </div>  
             
             <div class="row">
-                <div class="col-sm-12 form-group">
-                  <label for="name">End</label>
-                  <input 
-                    type="text" id="start" class="form-control" name="end" ngModel required>
+                <div class="col-sm-12 form-group">                                
+                    <label for="name">End</label>
+                    <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest">
+                      <input 
+                        type="text" id="end" class="form-control datetimepicker-input" data-target="#datetimepickerEnd" name="end" ngModel required>
+                      <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div> 
+                    </div>  
                 </div>   
-              </div>              
+            </div>              
             
             <div class="row" *ngIf="message">
                 <div class="col-sm-12 form-group">
@@ -76,7 +87,7 @@
             Edit</button>
             <a 
             (click)="onViewBookings(i, booking)"
-            >{{ booking.start }}
+            >{{ booking.start }} - {{ booking.end }}
             </a>            
         </li>
       </ul>

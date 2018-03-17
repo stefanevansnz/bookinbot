@@ -55,8 +55,10 @@ export class BookingsComponent implements OnInit {
               center: 'title',
               right: 'month,agendaWeek,agendaDay,listMonth'
             },
+            nowIndicator: true,
+
 //            eventLimit: true, // allow "more" link when too many events
-//            events: 'https://fullcalendar.io/demo-events.json'
+            events: 'https://fullcalendar.io/demo-events.json'
                       
           });
         },
@@ -114,6 +116,29 @@ export class BookingsComponent implements OnInit {
   onAddObject() {
     this.editMode = false;
     this.slForm.reset();
+    jQuery('#datetimepickerStart').datetimepicker({                    
+      useCurrent: false,       
+      minDate: new Date(),      
+      format:'DD/MM/YYYY hh:mm A',
+      showTodayButton: true,
+      sideBySide: true,
+      showClose: true,
+      showClear: true,
+      toolbarPlacement: 'top',
+      stepping: 15
+    }
+    );
+    jQuery('#datetimepickerEnd').datetimepicker({
+      useCurrent: false,       
+      minDate: new Date(),      
+      format:'DD/MM/YYYY hh:mm A',
+      showTodayButton: true,
+      sideBySide: true,
+      showClose: true,
+      showClear: true,
+      toolbarPlacement: 'top',
+      stepping: 15
+    });    
     jQuery("#editModal").modal("show");
   }    
   
