@@ -28,13 +28,15 @@
             <div class="row">
                 <div class="col-sm-12 form-group">                                
                     <label for="name">End</label>
-                    <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest">
-                      <input 
-                        type="text" id="end" class="form-control datetimepicker-input" data-target="#datetimepickerEnd" name="end" ngModel>
-                      <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
+                    <div class="input-group date" id="end" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" 
+                      id="end" data-toggle="datetimepicker" 
+                      data-target="#end" name="end" 
+                      ngModel required>
+                      <div class="input-group-append" data-target="#end" data-toggle="datetimepicker" >
                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div> 
-                    </div>  
+                      </div>     
+                    </div>   
                 </div>   
             </div>              
             

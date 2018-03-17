@@ -116,6 +116,7 @@ export class BookingsComponent implements OnInit {
   onAddObject() {
     this.editMode = false;
     this.slForm.reset();
+
     jQuery('#start').datetimepicker({                    
       useCurrent: false,       
       minDate: new Date(),      
@@ -125,11 +126,10 @@ export class BookingsComponent implements OnInit {
       showClose: true,
       showClear: true,
       toolbarPlacement: 'top',
-      stepping: 15,
-      inline:false
+      stepping: 15
     }
     );
-    jQuery('#datetimepickerEnd').datetimepicker({
+    jQuery('#end').datetimepicker({
       useCurrent: false,       
       minDate: new Date(),      
       format:'DD/MM/YYYY hh:mm A',
@@ -140,14 +140,26 @@ export class BookingsComponent implements OnInit {
       toolbarPlacement: 'top',
       stepping: 15
     });  
-    jQuery("#datetimepickerStart").on("change.datetimepicker", function (e) {
-      jQuery('#datetimepickerEnd').datetimepicker('minDate', e.date);
+    jQuery("#start").on("change.datetimepicker", function (e) {
+      jQuery('#end').datetimepicker('minDate', e.date);
+      console.log('start changed ' + e.date);
+      //jQuery("#start").trigger('change');
+      let el = document.querySelector('#start > input');
+      let ev = new Event('input',{bubbles:true})
+      el.dispatchEvent(ev);
+
     });
-    jQuery("#datetimepickerEnd").on("change.datetimepicker", function (e) {
-      jQuery('#datetimepickerStart').datetimepicker('maxDate', e.date);
+    jQuery("#end").on("change.datetimepicker", function (e) {
+      jQuery('#start').datetimepicker('maxDate', e.date);
+      //jQuery("#end").trigger('change');   
+      let el = document.querySelector('#end > input');
+      let ev = new Event('input',{bubbles:true})
+      el.dispatchEvent(ev);
+
     });    
     
     jQuery("#editModal").modal("show");
+
   }    
   
   onEditObject(index: number, booking: Booking) {
