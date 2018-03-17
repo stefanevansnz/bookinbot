@@ -138,7 +138,14 @@ export class BookingsComponent implements OnInit {
       showClear: true,
       toolbarPlacement: 'top',
       stepping: 15
+    });  
+    jQuery("#datetimepickerStart").on("change.datetimepicker", function (e) {
+      jQuery('#datetimepickerEnd').datetimepicker('minDate', e.date);
+    });
+    jQuery("#datetimepickerEnd").on("change.datetimepicker", function (e) {
+      jQuery('#datetimepickerStart').datetimepicker('maxDate', e.date);
     });    
+    
     jQuery("#editModal").modal("show");
   }    
   
