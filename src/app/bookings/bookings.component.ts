@@ -8,6 +8,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Booking } from './bookings.model';
 
 declare var jQuery:any;
+declare var moment:any;
 
 @Component({
   selector: 'app-bookings',
@@ -86,6 +87,17 @@ export class BookingsComponent implements OnInit {
           booking.id = success.json().id;
           this.bookings[this.editIndex] = booking;
           this.message = '';
+
+          var startDate = moment(value.start, 'DD/MM/YYYY hh:mm a');
+          var endDate = moment(value.end, 'DD/MM/YYYY hh:mm a');
+
+          jQuery('#calendar').fullCalendar('renderEvent', {
+            title: 'Stefan Evans',
+            start: startDate,
+            end: endDate,
+            color: '#378006'
+          });
+
           jQuery("#editModal").modal("hide");          
         },
         (error: Response) => {
@@ -104,6 +116,17 @@ export class BookingsComponent implements OnInit {
           booking.id = success.json().id;
           this.bookings.push(booking);
           this.message = '';
+
+          var startDate = moment(value.start, 'DD/MM/YYYY hh:mm a');
+          var endDate = moment(value.end, 'DD/MM/YYYY hh:mm a');
+
+          jQuery('#calendar').fullCalendar('renderEvent', {
+            title: 'Stefan Evans',
+            start: startDate,
+            end: endDate,
+            color: '#378006'
+          });
+
           jQuery("#editModal").modal("hide");          
         },
         (error: Response) => {
@@ -142,16 +165,13 @@ export class BookingsComponent implements OnInit {
     });  
     jQuery("#start").on("change.datetimepicker", function (e) {
       jQuery('#end').datetimepicker('minDate', e.date);
-      console.log('start changed ' + e.date);
-      //jQuery("#start").trigger('change');
       let el = document.querySelector('#start > input');
       let ev = new Event('input',{bubbles:true})
       el.dispatchEvent(ev);
 
     });
     jQuery("#end").on("change.datetimepicker", function (e) {
-      jQuery('#start').datetimepicker('maxDate', e.date);
-      //jQuery("#end").trigger('change');   
+      jQuery('#start').datetimepicker('maxDate', e.date); 
       let el = document.querySelector('#end > input');
       let ev = new Event('input',{bubbles:true})
       el.dispatchEvent(ev);
