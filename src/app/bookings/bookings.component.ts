@@ -10,6 +10,7 @@ import { Booking } from './bookings.model';
 declare var jQuery:any;
 declare var moment:any;
 
+
 @Component({
   selector: 'app-bookings',
   templateUrl: './bookings.component.html',
@@ -18,6 +19,9 @@ declare var moment:any;
 export class BookingsComponent implements OnInit {
   
   @ViewChild('f') slForm: NgForm;
+
+  //private readonly timeFormat = 'DD/MM/YYYY hh:mm a';
+  private readonly timeFormat = 'DD/MM/YYYY';
 
   private message;
 
@@ -57,11 +61,56 @@ export class BookingsComponent implements OnInit {
               right: 'month,agendaWeek,agendaDay,listMonth'
             },
             nowIndicator: true,
+            eventClick: function(calEvent, jsEvent, view) {
+              //alert('Event: ' + calEvent.id);
+              var booking = new Booking( calEvent.id,  calEvent.userid,  calEvent.resourceId,  calEvent.start,  calEvent.end);
+              _this.onEditObject( calEvent.id, booking);
+            },
 
 //            eventLimit: true, // allow "more" link when too many events
-            events: 'https://fullcalendar.io/demo-events.json'
-                      
+            //events: 'https://fullcalendar.io/demo-events.json'
+            //events: 'http://localhost:3000/bookings'
+            
+            events: function(start, end, timezone, callback) {
+              
+              //var _this = this;
+
+              jQuery.ajax({
+                url: 'http://localhost:3000/bookings',
+                dataType: 'json',
+                data: {
+                  // our hypothetical feed requires UNIX timestamps
+                  start: start.unix(),
+                  end: end.unix()
+                },
+                success: function(doc) {
+                  var events = [];
+                  //console.log('loop events start = ' + start);
+                  //jQuery(doc).find('event').each(function() {
+                  var index = 0;  
+                  doc.forEach( function (item) {
+
+                    var startItem = moment(item.start, _this.timeFormat);
+                    var endItem = moment(item.end, _this.timeFormat);
+                    
+                    //console.log('PUSH item.start ' + item.start + ', push ' + startItem);
+                    events.push({
+                      index: index,
+                      id: item.id,
+                      title: item.userid + '-' + index,
+                      start: startItem,
+                      end: endItem, 
+                      color: '#378006'                                           
+                    });
+                    index++;
+                  });
+                  callback(events);
+                }
+              });
+            }
           });
+                      
+
         },
         (error: Response) => {
           this.message = messages.server_error;             
@@ -88,8 +137,8 @@ export class BookingsComponent implements OnInit {
           this.bookings[this.editIndex] = booking;
           this.message = '';
 
-          var startDate = moment(value.start, 'DD/MM/YYYY hh:mm a');
-          var endDate = moment(value.end, 'DD/MM/YYYY hh:mm a');
+          var startDate = moment(value.start, this.timeFormat);
+          var endDate = moment(value.end, this.timeFormat);
 
           jQuery('#calendar').fullCalendar('renderEvent', {
             title: 'Stefan Evans',
@@ -117,8 +166,8 @@ export class BookingsComponent implements OnInit {
           this.bookings.push(booking);
           this.message = '';
 
-          var startDate = moment(value.start, 'DD/MM/YYYY hh:mm a');
-          var endDate = moment(value.end, 'DD/MM/YYYY hh:mm a');
+          var startDate = moment(value.start, this.timeFormat);
+          var endDate = moment(value.end, this.timeFormat);
 
           jQuery('#calendar').fullCalendar('renderEvent', {
             title: 'Stefan Evans',
@@ -143,19 +192,20 @@ export class BookingsComponent implements OnInit {
     jQuery('#start').datetimepicker({                    
       useCurrent: false,       
       minDate: new Date(),      
-      format:'DD/MM/YYYY hh:mm A',
+      format: this.timeFormat,
       showTodayButton: true,
       sideBySide: true,
       showClose: true,
       showClear: true,
       toolbarPlacement: 'top',
-      stepping: 15
+      stepping: 15,
+      //format: 'L'
     }
     );
     jQuery('#end').datetimepicker({
       useCurrent: false,       
       minDate: new Date(),      
-      format:'DD/MM/YYYY hh:mm A',
+      format: this.timeFormat,
       showTodayButton: true,
       sideBySide: true,
       showClose: true,
@@ -183,7 +233,7 @@ export class BookingsComponent implements OnInit {
   }    
   
   onEditObject(index: number, booking: Booking) {
-    //console.log('onEditObject ' + index);
+    console.log('onEditObject ' + index);
     this.editBooking = booking;
     this.editIndex = index;
     this.editMode = true;
@@ -202,7 +252,13 @@ export class BookingsComponent implements OnInit {
     this.dataStorageService.deleteObject(booking)
     .subscribe(
       (success: Response) => {          
-        this.bookings.splice(this.editIndex, 1);        
+        this.bookings.splice(this.editIndex, 1);  
+
+
+        jQuery('#calendar').fullCalendar('removeEvents', 
+          [this.editBooking.id]
+        );
+
         this.message = '';
         jQuery("#editModal").modal("hide");          
       },
