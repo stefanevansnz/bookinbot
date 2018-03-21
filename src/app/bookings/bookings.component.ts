@@ -6,10 +6,10 @@ import { DataStorageService } from '../shared/data-storage.service';
 import { messages } from '../app-messages';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Booking } from './bookings.model';
+import { environment } from '../../environments/environment';
 
 declare var jQuery:any;
 declare var moment:any;
-
 
 @Component({
   selector: 'app-bookings',
@@ -61,22 +61,18 @@ export class BookingsComponent implements OnInit {
               right: 'month,agendaWeek,agendaDay,listMonth'
             },
             nowIndicator: true,
-            eventClick: function(calEvent, jsEvent, view) {
-              //alert('Event: ' + calEvent.id);
-              var booking = new Booking( calEvent.id,  calEvent.userid,  calEvent.resourceId,  calEvent.start,  calEvent.end);
-              _this.onEditObject( calEvent.id, booking);
-            },
-
-//            eventLimit: true, // allow "more" link when too many events
-            //events: 'https://fullcalendar.io/demo-events.json'
-            //events: 'http://localhost:3000/bookings'
-            
-            events: function(start, end, timezone, callback) {
-              
-              //var _this = this;
+            eventClick: function(item, jsEvent, view) {
+              console.log('start: ' + item.start);              
+              var startItem = moment(item.start).format(_this.timeFormat);
+              var endItem = moment(item.end).format(_this.timeFormat);
+              console.log('start: ' + startItem);
+              var booking = new Booking( item.id,  item.userid,  item.resourceId, startItem, endItem);
+              _this.onEditObject( item.id, booking);
+            },            
+            events: function(start, end, timezone, callback) {            
 
               jQuery.ajax({
-                url: 'http://localhost:3000/bookings',
+                url: environment.api + '/bookings',
                 dataType: 'json',
                 data: {
                   // our hypothetical feed requires UNIX timestamps
@@ -86,21 +82,24 @@ export class BookingsComponent implements OnInit {
                 success: function(doc) {
                   var events = [];
                   //console.log('loop events start = ' + start);
-                  //jQuery(doc).find('event').each(function() {
                   var index = 0;  
                   doc.forEach( function (item) {
 
                     var startItem = moment(item.start, _this.timeFormat);
                     var endItem = moment(item.end, _this.timeFormat);
+
+                    // need to load into an object when component created
+                    var username = 'stefanevansnz'
+                    var colour = '#378006';
                     
                     //console.log('PUSH item.start ' + item.start + ', push ' + startItem);
                     events.push({
                       index: index,
                       id: item.id,
-                      title: item.userid + '-' + index,
+                      title: username,
                       start: startItem,
                       end: endItem, 
-                      color: '#378006'                                           
+                      color: colour                                          
                     });
                     index++;
                   });
@@ -140,11 +139,15 @@ export class BookingsComponent implements OnInit {
           var startDate = moment(value.start, this.timeFormat);
           var endDate = moment(value.end, this.timeFormat);
 
+          // need to load into an object when component created
+          var username = 'stefanevansnz'
+          var colour = '#378006';
+
           jQuery('#calendar').fullCalendar('renderEvent', {
-            title: 'Stefan Evans',
+            title: username,
             start: startDate,
             end: endDate,
-            color: '#378006'
+            color: colour
           });
 
           jQuery("#editModal").modal("hide");          
@@ -169,11 +172,15 @@ export class BookingsComponent implements OnInit {
           var startDate = moment(value.start, this.timeFormat);
           var endDate = moment(value.end, this.timeFormat);
 
+          // need to load into an object when component created
+          var username = 'stefanevansnz';
+          var colour = '#378006';
+
           jQuery('#calendar').fullCalendar('renderEvent', {
-            title: 'Stefan Evans',
+            title: username,
             start: startDate,
             end: endDate,
-            color: '#378006'
+            color: colour
           });
 
           jQuery("#editModal").modal("hide");          
