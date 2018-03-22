@@ -68,7 +68,19 @@ export class BookingsComponent implements OnInit {
               console.log('start: ' + startItem);
               var booking = new Booking( item.id,  item.userid,  item.resourceId, startItem, endItem);
               _this.onEditObject( item.id, booking);
-            },            
+            }, 
+            dayClick: function(date, jsEvent, view) {
+              //alert('Clicked on: ' + date.format());
+              var startItem = moment(date.format()).format(_this.timeFormat);
+              var endItem = moment(date.format()).format(_this.timeFormat);
+              console.log('form submitted start is ' + startItem);
+              console.log('form submitted end is ' + endItem);          
+              var booking = new Booking( '',  '',  '', startItem, endItem);
+              //_this.onEditObject( item.id, booking);
+              // add object
+              _this.onAddObject(booking);
+              
+            },           
             events: function(start, end, timezone, callback) {            
 
               jQuery.ajax({
@@ -192,9 +204,18 @@ export class BookingsComponent implements OnInit {
     }
   }
 
-  onAddObject() {
+  onAddObject(booking: Booking) {
     this.editMode = false;
-    this.slForm.reset();
+    //this.slForm.reset();
+    this.editBooking = booking;
+
+    console.log('form submitted start is ' +  booking.start);
+    console.log('form submitted end is ' +  booking.end); 
+    
+    this.slForm.setValue({
+      start: booking.start,
+      end: booking.end      
+    });    
 
     jQuery('#start').datetimepicker({                    
       useCurrent: false,       
