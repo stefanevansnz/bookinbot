@@ -219,7 +219,7 @@ export class BookingsComponent implements OnInit {
 
     jQuery('#start').datetimepicker({                    
       useCurrent: false,       
-      minDate: new Date(),      
+      //minDate: new Date(),      
       format: this.timeFormat,
       showTodayButton: true,
       sideBySide: true,
@@ -232,7 +232,7 @@ export class BookingsComponent implements OnInit {
     );
     jQuery('#end').datetimepicker({
       useCurrent: false,       
-      minDate: new Date(),      
+      //minDate: new Date(),      
       format: this.timeFormat,
       showTodayButton: true,
       sideBySide: true,
