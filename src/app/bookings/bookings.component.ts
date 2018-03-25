@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 
 declare var jQuery:any;
 declare var moment:any;
+//declare var _this: any
 
 @Component({
   selector: 'app-bookings',
@@ -38,6 +39,8 @@ export class BookingsComponent implements OnInit {
     private route: ActivatedRoute) {}
 
   ngOnInit() {
+    var self = this;
+
     this.route.params
       .subscribe(
         (params: Params) => {
@@ -63,22 +66,22 @@ export class BookingsComponent implements OnInit {
             nowIndicator: true,
             eventClick: function(item, jsEvent, view) {
               console.log('start: ' + item.start);              
-              var startItem = moment(item.start).format(_this.timeFormat);
-              var endItem = moment(item.end).format(_this.timeFormat);
+              var startItem = moment(item.start).format(self.timeFormat);
+              var endItem = moment(item.end).format(self.timeFormat);
               console.log('start: ' + startItem);
               var booking = new Booking( item.id,  item.userid,  item.resourceId, startItem, endItem);
-              _this.onEditObject( item.id, booking);
+              self.onEditObject( item.id, booking);
             }, 
             dayClick: function(date, jsEvent, view) {
               //alert('Clicked on: ' + date.format());
-              var startItem = moment(date.format()).format(_this.timeFormat);
-              var endItem = moment(date.format()).format(_this.timeFormat);
+              var startItem = moment(date.format()).format(self.timeFormat);
+              var endItem = moment(date.format()).format(self.timeFormat);
               console.log('form submitted start is ' + startItem);
               console.log('form submitted end is ' + endItem);          
               var booking = new Booking( '',  '',  '', startItem, endItem);
               //_this.onEditObject( item.id, booking);
               // add object
-              _this.onAddObject(booking);
+              self.onAddObject(booking);
               
             },           
             events: function(start, end, timezone, callback) {            
@@ -97,8 +100,8 @@ export class BookingsComponent implements OnInit {
                   var index = 0;  
                   doc.forEach( function (item) {
 
-                    var startItem = moment(item.start, _this.timeFormat);
-                    var endItem = moment(item.end, _this.timeFormat);
+                    var startItem = moment(item.start, self.timeFormat);
+                    var endItem = moment(item.end, self.timeFormat);
 
                     // need to load into an object when component created
                     var username = 'stefanevansnz'
@@ -222,11 +225,12 @@ export class BookingsComponent implements OnInit {
       //minDate: new Date(),      
       format: this.timeFormat,
       showTodayButton: true,
-      sideBySide: true,
-      showClose: true,
-      showClear: true,
-      toolbarPlacement: 'top',
-      stepping: 15,
+      //sideBySide: true,
+      //inline: true,      
+      //showClose: true,
+      //showClear: true,
+      //toolbarPlacement: 'top',
+      //stepping: 15,
       //format: 'L'
     }
     );
@@ -235,11 +239,12 @@ export class BookingsComponent implements OnInit {
       //minDate: new Date(),      
       format: this.timeFormat,
       showTodayButton: true,
-      sideBySide: true,
-      showClose: true,
-      showClear: true,
-      toolbarPlacement: 'top',
-      stepping: 15
+      //sideBySide: true,
+      //inline: true,
+      //showClose: true,
+      //showClear: true,
+      //toolbarPlacement: 'top',
+      //stepping: 15
     });  
     jQuery("#start").on("change.datetimepicker", function (e) {
       jQuery('#end').datetimepicker('minDate', e.date);

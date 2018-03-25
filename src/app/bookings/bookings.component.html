@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">      
         <div class="modal-header">
-          <h4 class="modal-title">Heading</h4>
+          <h4 class="modal-title">{{ editMode ? 'Update' : 'Add' }} Booking</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
@@ -12,7 +12,7 @@
 
             <div class="row">
               <div class="col-sm-12 form-group">                                
-                <label for="start">Start</label>
+                <label for="start">From:</label>
                 <div class="input-group date" id="start" data-target-input="nearest">
                   <input type="text" class="form-control datetimepicker-input" 
                   id="start" data-toggle="datetimepicker" 
@@ -27,7 +27,7 @@
             
             <div class="row">
                 <div class="col-sm-12 form-group">                                
-                    <label for="name">End</label>
+                    <label for="name">To:</label>
                     <div class="input-group date" id="end" data-target-input="nearest">
                       <input type="text" class="form-control datetimepicker-input" 
                       id="end" data-toggle="datetimepicker" 
