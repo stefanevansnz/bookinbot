@@ -82,6 +82,7 @@ export class BookingsComponent implements OnInit {
               //_this.onEditObject( item.id, booking);
               // add object
               self.onAddObject(booking);
+                  //date time picker
               
             },           
             events: function(start, end, timezone, callback) {            
@@ -220,6 +221,20 @@ export class BookingsComponent implements OnInit {
       end: booking.end      
     });    
 
+    //date time picker
+    jQuery('#start').daterangepicker({
+      //timePicker: true,
+      //timePickerIncrement: 15,
+      singleDatePicker: true,
+      locale: {
+          format: 'DD/MM/YYYY'
+      }
+    });
+    
+    //jQuery('input[name="start"]').daterangepicker();
+
+
+    /*
     jQuery('#start').datetimepicker({                    
       useCurrent: false,       
       //minDate: new Date(),      
@@ -260,6 +275,7 @@ export class BookingsComponent implements OnInit {
       el.dispatchEvent(ev);
 
     });    
+    */
     
     jQuery("#editModal").modal("show");
 

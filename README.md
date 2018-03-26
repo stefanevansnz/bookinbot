@@ -129,6 +129,10 @@ ng new bookinbot
 
 ## Others References:
 
+Date Pickers
+https://wireddots.com/products/datetimepicker
+http://www.daterangepicker.com
+https://ng-bootstrap.github.io/#/components/timepicker/examples
 
 Auth and Cognito:
 https://github.com/aws/aws-amplify/tree/master/packages/amazon-cognito-identity-js
