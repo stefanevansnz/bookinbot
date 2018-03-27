@@ -1350,11 +1350,12 @@
                   this.clickApply();
                 }
             }
-
+         
             if (this.singleDatePicker) {
                 this.setEndDate(this.startDate);
-                if (!this.timePicker)
-                    this.clickApply();
+                //if (!this.timePicker)
+                // always apply
+                this.clickApply();
             }
 
             this.updateView();
@@ -1493,6 +1494,9 @@
             //re-render the time pickers because changing one selection can affect what's enabled in another
             this.renderTimePicker('left');
             this.renderTimePicker('right');
+
+            // apply changes for time
+            this.clickApply();
 
         },
 

@@ -64,7 +64,7 @@ export class BookingsComponent implements OnInit {
               right: 'month,agendaWeek,agendaDay,listMonth'
             },
             nowIndicator: true,
-            height: 650,
+            height: 540,
             eventClick: function(item, jsEvent, view) {
               console.log('start: ' + item.start);              
               var startItem = moment(item.start).format(self.timeFormat);
@@ -76,7 +76,8 @@ export class BookingsComponent implements OnInit {
             dayClick: function(date, jsEvent, view) {
               console.log('Clicked on: ' + date.format());
               var startItem = moment(date.format() + ' ' + self.defaultTime).format(self.timeFormat);
-              var endItem = moment(date.format()).format(self.timeFormat);
+              // add a day
+              var endItem = moment(date.format() + ' ' + self.defaultTime).add(1, 'days').format(self.timeFormat);
               console.log('form submitted start is ' + startItem);
               console.log('form submitted end is ' + endItem);          
               var booking = new Booking( '',  '',  '', startItem, endItem);
@@ -228,6 +229,7 @@ export class BookingsComponent implements OnInit {
       timePicker: true,
       timePickerIncrement: 15,
       singleDatePicker: true,
+      autoApply: true,
       locale: {
           format: this.timeFormat
       }

@@ -15,7 +15,7 @@
                 <label for="start">From:</label>
                 <div class="input-group date">
                   <input type="text" class="form-control datetimepicker-input" 
-                  id="start" name="start" 
+                   name="start" id="start"
                   ngModel required>
                   
                   <div class="input-group-append">
@@ -28,18 +28,19 @@
             
             <div class="row">
                 <div class="col-sm-12 form-group">                                
-                    <label for="name">To:</label>
-                    <div class="input-group date" id="end" data-target-input="nearest">
-                      <input type="text" class="form-control datetimepicker-input" 
-                      id="end" data-toggle="datetimepicker" 
-                      data-target="#end" name="end" 
-                      ngModel required>
-                      <div class="input-group-append" data-target="#end" data-toggle="datetimepicker" >
-                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>     
-                    </div>   
+                  <label for="end">To:</label>
+                  <div class="input-group date">
+                    <input type="text" class="form-control datetimepicker-input" 
+                     name="end" id="end"
+                    ngModel required>
+                    
+                    <div class="input-group-append">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+  
+                  </div>                                   
                 </div>   
-            </div>              
+              </div>            
             
             <div class="row" *ngIf="message">
                 <div class="col-sm-12 form-group">
