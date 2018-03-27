@@ -234,37 +234,19 @@ export class BookingsComponent implements OnInit {
           format: this.timeFormat
       }
     });
-    
-    //jQuery('input[name="start"]').daterangepicker();
 
+    //date time picker
+    jQuery('#end').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 15,
+      singleDatePicker: true,
+      autoApply: true,
+      locale: {
+          format: this.timeFormat
+      }
+    });    
 
     /*
-    jQuery('#start').datetimepicker({                    
-      useCurrent: false,       
-      //minDate: new Date(),      
-      format: this.timeFormat,
-      showTodayButton: true,
-      //sideBySide: true,
-      //inline: true,      
-      //showClose: true,
-      //showClear: true,
-      //toolbarPlacement: 'top',
-      //stepping: 15,
-      //format: 'L'
-    }
-    );
-    jQuery('#end').datetimepicker({
-      useCurrent: false,       
-      //minDate: new Date(),      
-      format: this.timeFormat,
-      showTodayButton: true,
-      //sideBySide: true,
-      //inline: true,
-      //showClose: true,
-      //showClear: true,
-      //toolbarPlacement: 'top',
-      //stepping: 15
-    });  
     jQuery("#start").on("change.datetimepicker", function (e) {
       jQuery('#end').datetimepicker('minDate', e.date);
       let el = document.querySelector('#start > input');
