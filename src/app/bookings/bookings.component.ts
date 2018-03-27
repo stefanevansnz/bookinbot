@@ -64,6 +64,7 @@ export class BookingsComponent implements OnInit {
               right: 'month,agendaWeek,agendaDay,listMonth'
             },
             nowIndicator: true,
+            height: 650,
             eventClick: function(item, jsEvent, view) {
               console.log('start: ' + item.start);              
               var startItem = moment(item.start).format(self.timeFormat);
@@ -71,7 +72,7 @@ export class BookingsComponent implements OnInit {
               console.log('start: ' + startItem);
               var booking = new Booking( item.id,  item.userid,  item.resourceId, startItem, endItem);
               self.onEditObject( item.id, booking);
-            }, 
+            },            
             dayClick: function(date, jsEvent, view) {
               //alert('Clicked on: ' + date.format());
               var startItem = moment(date.format()).format(self.timeFormat);

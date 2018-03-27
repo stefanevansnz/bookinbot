@@ -1,6 +1,11 @@
-.modal-content {
- 
-    top: 0px;
-    background-color:#BBD6EC;
- 
-}    
+.modal-dialog,
+.modal-content, form {
+    /* 80% of window height */
+    height: 95%;
+}
+
+.modal-body {
+    /* 100% = dialog height, 120px = header + footer */
+    max-height: calc(100% - 120px);
+    overflow-y: scroll;
+}

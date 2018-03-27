@@ -4,8 +4,8 @@
 */
 .daterangepicker .btn-primary, .daterangepicker .btn-primary:hover, .daterangepicker .btn-primary:focus,
 .daterangepicker .btn-primary.disabled, .daterangepicker .btn-primary:disabled{
-    background-color: #6200ea;
-    border-color: #6200ea;
+    background-color: #007bff;
+    border-color: #007bff;
 }
 .input-daterange input {
     text-align: center
@@ -144,7 +144,7 @@
 .daterangepicker td.active,
 .daterangepicker td.active:focus,
 .daterangepicker td.active:hover {
-    background-color: #6200ea;
+    background-color: #007bff;
     color: #fff;
     border-radius: 3px;
 }
@@ -266,7 +266,7 @@
 
 .ranges ul li.active {
     color: #fff;
-    background-color: #6200ea
+    background-color: #007bff
 }
 
 .ranges .daterangepicker-inputs {
