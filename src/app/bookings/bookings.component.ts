@@ -21,8 +21,8 @@ export class BookingsComponent implements OnInit {
   
   @ViewChild('f') slForm: NgForm;
 
-  //private readonly timeFormat = 'DD/MM/YYYY hh:mm a';
-  private readonly timeFormat = 'DD/MM/YYYY';
+  private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
+  private readonly defaultTime = '10:00 AM';
 
   private message;
 
@@ -74,8 +74,8 @@ export class BookingsComponent implements OnInit {
               self.onEditObject( item.id, booking);
             },            
             dayClick: function(date, jsEvent, view) {
-              //alert('Clicked on: ' + date.format());
-              var startItem = moment(date.format()).format(self.timeFormat);
+              console.log('Clicked on: ' + date.format());
+              var startItem = moment(date.format() + ' ' + self.defaultTime).format(self.timeFormat);
               var endItem = moment(date.format()).format(self.timeFormat);
               console.log('form submitted start is ' + startItem);
               console.log('form submitted end is ' + endItem);          
@@ -210,6 +210,7 @@ export class BookingsComponent implements OnInit {
   }
 
   onAddObject(booking: Booking) {
+
     this.editMode = false;
     //this.slForm.reset();
     this.editBooking = booking;
@@ -224,11 +225,11 @@ export class BookingsComponent implements OnInit {
 
     //date time picker
     jQuery('#start').daterangepicker({
-      //timePicker: true,
-      //timePickerIncrement: 15,
+      timePicker: true,
+      timePickerIncrement: 15,
       singleDatePicker: true,
       locale: {
-          format: 'DD/MM/YYYY'
+          format: this.timeFormat
       }
     });
     
