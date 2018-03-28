@@ -2,3 +2,7 @@
 #calendar .fc-view-container .fc-body {
     cursor: pointer;
 }
+
+#calendar .fc-center h2 {
+    font-size: 1.5em;
+}

@@ -43,9 +43,20 @@ app.use(
 // List All Resources
 app.get('/resources', function (req, res) {
   try {
+
+    // Get Resource
+    let { id, title } = req.body;  
+
+    console.log('id is: ' + id);
+    console.log('title: ' + title);  
+
     const params = {
-        TableName: RESOURCES_TABLE
-    }
+      TableName: RESOURCES_TABLE,
+      Key: {
+        id: id 
+      },
+    };
+
     dynamoDb.scan(params, (error, result) => {
         if (error) {
           res.status(400).json({ error: 'Could not get resources' });
@@ -60,7 +71,6 @@ app.get('/resources', function (req, res) {
     res.status(500).json({ error: String(error) });
   }      
 });
-
 
 // Save Resource
 app.put('/resource', function (req, res) {

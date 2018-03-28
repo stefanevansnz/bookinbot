@@ -9,3 +9,9 @@
     max-height: calc(100% - 120px);
     overflow-y: scroll;
 }
+
+h1 {
+    padding-top: .5em;
+    font-size: 1.5em;
+}
+

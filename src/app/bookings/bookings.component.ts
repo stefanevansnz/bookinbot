@@ -7,6 +7,7 @@ import { messages } from '../app-messages';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Booking } from './bookings.model';
 import { environment } from '../../environments/environment';
+import { Resource } from '../resources/resources.model';
 
 declare var jQuery:any;
 declare var moment:any;
@@ -31,6 +32,8 @@ export class BookingsComponent implements OnInit {
   private editIndex: number;
 
   private resourceId;
+  private resourceName;
+  private resource: Resource;
 
   private bookings: Booking[] = [];
 
@@ -48,6 +51,23 @@ export class BookingsComponent implements OnInit {
           console.log('resourceId = ' + params['id']);
           // get all bookings with this booking id
           this.resourceId = params['id'];
+
+          let booking = new Booking(this.resourceId, '', '','' ,'');    
+
+          this.dataStorageService.getObject('resources', booking)
+          .subscribe(
+            (success: Response) => { 
+              this.resource = success.json();
+              console.log('resource name is ' + this.resource[0].title);
+              this.resourceName = this.resource[0].title;
+
+            },
+            (error: Response) => {
+              this.message = messages.server_error;             
+            }
+          );
+
+
         }
       );
 
@@ -59,9 +79,9 @@ export class BookingsComponent implements OnInit {
           jQuery("#calendar").fullCalendar({           
             themeSystem: 'bootstrap4',
             header: {
-              left: 'prev,next today',
+              left: 'prev',
               center: 'title',
-              right: 'month,agendaWeek,agendaDay,listMonth'
+              right: 'next'
             },
             nowIndicator: true,
             height: 540,
@@ -84,7 +104,6 @@ export class BookingsComponent implements OnInit {
               //_this.onEditObject( item.id, booking);
               // add object
               self.onAddObject(booking);
-                  //date time picker
               
             },           
             events: function(start, end, timezone, callback) {            

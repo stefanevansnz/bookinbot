@@ -11,12 +11,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { ResourcesComponent } from './resources/resources.component';
 import { DataStorageService } from './shared/data-storage.service';
 import { BookingsComponent } from './bookings/bookings.component';
+import { HeadingComponent } from './heading/heading.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ResourcesComponent,
-    BookingsComponent
+    BookingsComponent,
+    HeadingComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
