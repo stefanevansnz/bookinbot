@@ -5,6 +5,9 @@
 
 export const environment = {
   production: false,
-  api: 'http://localhost:3000'
-  //api: 'https://api.bookinbot.com'
+  api: 'http://localhost:3000',
+  region: 'ap-southeast-2',
+  // cognito
+  userpoolid: 'ap-southeast-2_VtLj715IH',
+  clientid: '50aq7qj6d9skojjun572fh5945'
 };

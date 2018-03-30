@@ -10,9 +10,13 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ResourcesComponent } from './resources/resources.component';
 import { DataStorageService } from './shared/data-storage.service';
+import { AuthenticationService } from './shared/authentication.service';
 import { BookingsComponent } from './bookings/bookings.component';
 import { HeadingComponent } from './heading/heading.component';
 import { FooterComponent } from './footer/footer.component';
+import { SigninComponent } from './signin/signin.component';
+import { SignupComponent } from './signup/signup.component';
+import { NotificationService } from './shared/notification.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +24,9 @@ import { FooterComponent } from './footer/footer.component';
     ResourcesComponent,
     BookingsComponent,
     HeadingComponent,
-    FooterComponent
+    FooterComponent,
+    SigninComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +35,7 @@ import { FooterComponent } from './footer/footer.component';
     FormsModule, 
     ModalModule  
   ],
-  providers: [DataStorageService],
+  providers: [DataStorageService, AuthenticationService, NotificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

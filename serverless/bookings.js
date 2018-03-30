@@ -40,13 +40,24 @@ app.use(
     bodyParser.json({ strict: false }
 ));    
 
-// List All Bookings
-app.get('/bookings', function (req, res) {
+// List all bookings for a resource
+app.get('/bookings/:id', function (req, res) {
   try {
+    // Get resource
+    var resourceid = req.param('id');
+
+    console.log('resourceid is: ' + resourceid);
+
     const params = {
-        TableName: BOOKINGS_TABLE
-    }
-    dynamoDb.scan(params, (error, result) => {
+        TableName: BOOKINGS_TABLE,
+        KeyConditionExpression: "#resourceid = :resourceid",
+        ExpressionAttributeNames:{
+            "#resourceid": "resourceid"
+        },
+        ExpressionAttributeValues: {
+            ":resourceid": resourceid
+        }    }
+    dynamoDb.query(params, (error, result) => {
         if (error) {
           res.status(400).json({ error: 'Could not get bookings' });
         }

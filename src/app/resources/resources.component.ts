@@ -41,7 +41,7 @@ export class ResourcesComponent implements OnInit {
         }
       );
 
-    this.dataStorageService.getObjects('resources')
+    this.dataStorageService.getObjects('resources', null)
     .subscribe(
       (success: Response) => {          
         this.resources = success.json()         

@@ -57,6 +57,9 @@ npm install --save moment
 npm install --save uuid
 npm install npm
 
+https://github.com/aws/aws-sdk-js/issues/1271
+
+
 sls dynamodb install
 
 2) Run locally (open a new prompt)

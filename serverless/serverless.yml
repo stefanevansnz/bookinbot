@@ -88,8 +88,12 @@ functions:
       - http: 
           authorizer: ${self:custom.cognitoAuthorizer}
           method: get
-          path: "bookings"
-          cors: true      
+          path: "bookings/{id}"
+          cors: true 
+          request: 
+            parameters: 
+              paths: 
+                id: true                 
       - http: 
           authorizer: ${self:custom.cognitoAuthorizer}
           method: delete
@@ -117,12 +121,18 @@ resources:
       Properties:
         AttributeDefinitions:
           - 
-            AttributeName: id
+            AttributeName: resourceid
             AttributeType: S
-        KeySchema:
           - 
             AttributeName: id
+            AttributeType: S            
+        KeySchema:
+          - 
+            AttributeName: resourceid
             KeyType: HASH
+          - 
+            AttributeName: id
+            KeyType: RANGE            
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

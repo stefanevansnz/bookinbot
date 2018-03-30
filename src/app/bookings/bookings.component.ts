@@ -70,7 +70,7 @@ export class BookingsComponent implements OnInit {
         }
       );
 
-      this.dataStorageService.getObjects('bookings')
+      this.dataStorageService.getObjects('bookings', this.resourceId)
       .subscribe(
         (success: Response) => {          
           this.bookings = success.json();  
@@ -108,7 +108,7 @@ export class BookingsComponent implements OnInit {
             events: function(start, end, timezone, callback) {            
 
               jQuery.ajax({
-                url: environment.api + '/bookings',
+                url: environment.api + '/bookings/' + self.resourceId,
                 dataType: 'json',
                 data: {
                   // our hypothetical feed requires UNIX timestamps
@@ -176,7 +176,7 @@ export class BookingsComponent implements OnInit {
           var endDate = moment(value.end, this.timeFormat);
 
           // need to load into an object when component created
-          var username = 'stefanevansnz'
+          var username = 'Stefan Evans';
           var colour = '#378006';
 
           jQuery('#calendar').fullCalendar('renderEvent', {
@@ -209,7 +209,7 @@ export class BookingsComponent implements OnInit {
           var endDate = moment(value.end, this.timeFormat);
 
           // need to load into an object when component created
-          var username = 'stefanevansnz';
+          var username = 'Stefan Evans';
           var colour = '#378006';
 
           jQuery('#calendar').fullCalendar('renderEvent', {
