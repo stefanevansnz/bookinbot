@@ -16,10 +16,7 @@ export class HeadingComponent implements OnInit {
 
   }
 
-  ngOnInit() {
-    console.log('path in header' + this.route.url );
-    console.log('route ' + this.route.snapshot.url); 
- 
+  ngOnInit() { 
   }
 
 }

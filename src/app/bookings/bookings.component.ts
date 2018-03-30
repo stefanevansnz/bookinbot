@@ -52,14 +52,13 @@ export class BookingsComponent implements OnInit {
           // get all bookings with this booking id
           this.resourceId = params['id'];
 
-          let booking = new Booking(this.resourceId, '', '','' ,'');    
-
-          this.dataStorageService.getObject('resources', booking)
+          this.dataStorageService.getObject('resource', this.resourceId)
           .subscribe(
             (success: Response) => { 
-              this.resource = success.json();
-              console.log('resource name is ' + this.resource[0].title);
-              this.resourceName = this.resource[0].title;
+              var result = success.json();
+              this.resource = result.Item;
+              console.log('resource name is ' + this.resource.title);
+              this.resourceName = this.resource.title;
 
             },
             (error: Response) => {

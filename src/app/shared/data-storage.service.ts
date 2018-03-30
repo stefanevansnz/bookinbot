@@ -7,16 +7,11 @@ export class DataStorageService {
 
     constructor(private http: Http) { }
 
-    getObject(name: string, object: any) {  
+    getObject(name: string, id: string) {  
         //let name = object.constructor.name.toLowerCase();
-        console.log(environment.api + '/' + name, object);
-
-        let options = new RequestOptions({
-            //headers: headers,
-            body: object
-         })
+        console.log(environment.api + '/' + name + ' id is ' + id);
         
-        return this.http.get(environment.api + '/' + name, options);
+        return this.http.get(environment.api + '/' + name + '/' + id);
     }
 
     getObjects(name: string) {        

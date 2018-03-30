@@ -43,18 +43,9 @@ app.use(
 // List All Resources
 app.get('/resources', function (req, res) {
   try {
-
-    // Get Resource
-    let { id, title } = req.body;  
-
-    console.log('id is: ' + id);
-    console.log('title: ' + title);  
-
+    // Get Resources
     const params = {
       TableName: RESOURCES_TABLE,
-      Key: {
-        id: id 
-      },
     };
 
     dynamoDb.scan(params, (error, result) => {
@@ -63,6 +54,41 @@ app.get('/resources', function (req, res) {
         }
         if (result) {
             res.json(result.Items);
+        } else {
+          res.status(404).json({ error: "Resources not found" });
+        }
+    });
+  } catch (error) {
+    res.status(500).json({ error: String(error) });
+  }      
+});
+
+
+// List a eesource
+app.get('/resource/:id', function (req, res) {
+  try {
+
+    // Get Resource
+    var id = req.param('id');
+
+    console.log('id is: ' + id);
+
+    const params = {
+      TableName: RESOURCES_TABLE,
+      Key: {
+        id: id 
+      }
+//      KeyConditionExpression: "id = :a",
+    };
+
+    console.log('search...');
+    dynamoDb.get(params, (error, result) => {
+        if (error) {
+          res.status(400).json({ error: 'Could not get resources' });
+        }
+        if (result) {
+          console.log('result found');
+          res.json(result);
         } else {
           res.status(404).json({ error: "Resources not found" });
         }

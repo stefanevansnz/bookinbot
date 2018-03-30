@@ -61,6 +61,15 @@ functions:
       - http: 
           authorizer: ${self:custom.cognitoAuthorizer}
           method: get
+          path: "resource/{id}"
+          cors: true         
+          request: 
+            parameters: 
+              paths: 
+                id: true           
+      - http: 
+          authorizer: ${self:custom.cognitoAuthorizer}
+          method: get
           path: "resources"
           cors: true      
       - http: 
