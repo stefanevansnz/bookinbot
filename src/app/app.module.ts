@@ -17,6 +17,7 @@ import { FooterComponent } from './footer/footer.component';
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
 import { NotificationService } from './shared/notification.service';
+import { SignoutComponent } from './signout/signout.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { NotificationService } from './shared/notification.service';
     HeadingComponent,
     FooterComponent,
     SigninComponent,
-    SignupComponent
+    SignupComponent,
+    SignoutComponent
   ],
   imports: [
     BrowserModule,

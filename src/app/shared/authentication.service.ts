@@ -73,8 +73,12 @@ export class AuthenticationService {
         localStorage.setItem('token', token);
     }
     
+    deleteToken() {
+        localStorage.removeItem("token");
+    }
+
     getToken() {
         return localStorage.getItem("token");
-    }
+    }    
 
 }
