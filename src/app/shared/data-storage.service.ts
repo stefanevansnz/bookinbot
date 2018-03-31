@@ -28,8 +28,9 @@ export class DataStorageService {
         headers.append('Authorization', this.authenticationService.getToken());
 
         console.log(environment.api + '/' + name + ' id is ' + id + ' token is ' + this.authenticationService.getToken());        
-
-        return this.http.get(environment.api + '/' + name, {headers: headers});
+        
+        return this.http.get(environment.api + '/' + 
+            name + (id != null ? '/' + id : ''), {headers: headers});
 
     }
 
