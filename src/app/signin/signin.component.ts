@@ -15,6 +15,7 @@ export class SigninComponent implements OnInit {
   @ViewChild('f') slForm: NgForm;
   messageUpdate: Subscription;
   message: any;
+  loading: boolean = false;
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService) { }
@@ -30,10 +31,15 @@ export class SigninComponent implements OnInit {
   }
 
   onSignin(form: NgForm) {
+    this.loading = true;
     const email = form.value.email;
     const password = form.value.password;    
-    this.authenticationService.signinUser(email, password,this);
+    this.authenticationService.signinUser(email, password, this);
   } 
+
+  isLoading() {
+    return this.loading;
+  }
 
 
 }

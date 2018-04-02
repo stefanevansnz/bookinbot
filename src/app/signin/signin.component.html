@@ -15,7 +15,7 @@
                 {{ message }}
             </div>        
             
-            <button class="btn btn-primary" type="submit">Sign In</button>              
+            <button [disabled]="isLoading()" class="btn btn-primary" type="submit">Sign In</button>              
 
         </form>        
                   

@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
+import { Router } from '@angular/router';
 import * as AWS from 'aws-sdk';
 import { environment } from '../../environments/environment';
 import { NotificationService } from "./notification.service";
 import { User } from './user.model';
 import { Subject } from "rxjs/Subject";
+
 
 declare let AWSCognito: any;
 declare let apigClientFactory: any;
@@ -13,7 +15,8 @@ export class AuthenticationService {
 
     user = new Subject();
 
-    constructor(private notificationService: NotificationService) {
+    constructor(private notificationService: NotificationService,
+                private router: Router) {
 
         AWS.config.update({
             region: environment.region,
@@ -54,15 +57,17 @@ export class AuthenticationService {
                 cognitoGetUser.getSession(function(err, result) {
                   if (result) {
                     console.log ("Authenticated to Cognito User Pools! result is " + result);
-                    let token = result.getAccessToken().getJwtToken();                                       
+                    let token = result.getAccessToken().getJwtToken();                                                        
                     cognitoGetUser.getUserAttributes(function (err, result) {
                         if (err) {
                             console.log('getUserAttributes() ERROR: ' + err);
-                            self.notificationService.setMessage( err.message );                            
+                            self.notificationService.setMessage( err.message );  
+                            callback.loading = false;                          
                         } else {
                             console.log('getUserAttributes() OK: ' + result);
                             self.createUser(cognitoUser.username, token, result);
-                            
+                            self.router.navigateByUrl('/'); 
+                           
                         }
                       });
 
@@ -72,7 +77,8 @@ export class AuthenticationService {
             },
             onFailure: function(err) {
                 console.log ("Authenticated Error:" + err.message);    
-                self.notificationService.setMessage( err.message );           
+                self.notificationService.setMessage( err.message );
+                callback.loading = false;           
                 
             },
             newPasswordRequired: function(userAttributes, requiredAttributes) {
