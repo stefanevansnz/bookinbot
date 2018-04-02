@@ -2,12 +2,16 @@ import { Injectable } from "@angular/core";
 import * as AWS from 'aws-sdk';
 import { environment } from '../../environments/environment';
 import { NotificationService } from "./notification.service";
+import { User } from './user.model';
+import { Subject } from "rxjs/Subject";
 
 declare let AWSCognito: any;
 declare let apigClientFactory: any;
 
 @Injectable()
 export class AuthenticationService {
+
+    user = new Subject();
 
     constructor(private notificationService: NotificationService) {
 
@@ -40,19 +44,28 @@ export class AuthenticationService {
           Pool : userPool
         };
         let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
-          
+
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
-              this.token = result.getIdToken().getJwtToken();
               
-              console.log('success ' + this.token.length);
               let cognitoGetUser = userPool.getCurrentUser();
     
               if (cognitoGetUser != null) {
                 cognitoGetUser.getSession(function(err, result) {
                   if (result) {
                     console.log ("Authenticated to Cognito User Pools! result is " + result);
-                    self.setToken( result.getAccessToken().getJwtToken());
+                    let token = result.getAccessToken().getJwtToken();                                       
+                    cognitoGetUser.getUserAttributes(function (err, result) {
+                        if (err) {
+                            console.log('getUserAttributes() ERROR: ' + err);
+                            self.notificationService.setMessage( err.message );                            
+                        } else {
+                            console.log('getUserAttributes() OK: ' + result);
+                            self.createUser(cognitoUser.username, token, result);
+                            
+                        }
+                      });
+
                   }
                 });
               }    
@@ -69,16 +82,32 @@ export class AuthenticationService {
           
     }
     
-    setToken(token: string) {
-        localStorage.setItem('token', token);
+    createUser(userName: string, userToken: string, userAttributes: any) {            
+        let givenName;
+        let familyName;    
+        for (let i = 0; i < userAttributes.length; i++) {      
+          //console.log('attribute ' +  user[i].Name + ' has value ' +  user[i].Value);
+          if(userAttributes[i].Name == 'given_name' ) {
+            givenName = userAttributes[i].Value;
+          } 
+          if(userAttributes[i].Name == 'family_name' ) {
+            familyName = userAttributes[i].Value;
+          } 
+        }
+        let user = new User(userName, givenName, familyName, userToken);
+        localStorage.setItem('user',  JSON.stringify(user));
+        console.log('setting fill name to ' + givenName + ' ' + familyName);    
+        this.user.next(user);    
     }
     
-    deleteToken() {
-        localStorage.removeItem("token");
+    deleteUser() {
+        localStorage.removeItem("user");
+        this.user.next();
     }
 
-    getToken() {
-        return localStorage.getItem("token");
-    }    
-
+    getUser() {
+        this.user.next(JSON.parse(localStorage.getItem("user")));        
+        return this.user.asObservable();
+    }
+    
 }

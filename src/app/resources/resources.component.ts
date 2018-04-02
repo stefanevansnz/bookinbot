@@ -38,18 +38,19 @@ export class ResourcesComponent implements OnInit {
           // something has changed
           console.log('id = ' + params['id']);
           this.initForm();
+          this.dataStorageService.getObjects('resources', null)
+          .subscribe(
+            (success: Response) => {          
+              this.resources = success.json()         
+            },
+            (error: Response) => {
+              this.message = messages.server_error;             
+            }
+          );          
         }
       );
 
-    this.dataStorageService.getObjects('resources', null)
-    .subscribe(
-      (success: Response) => {          
-        this.resources = success.json()         
-      },
-      (error: Response) => {
-        this.message = messages.server_error;             
-      }
-    );
+
     
   }
 

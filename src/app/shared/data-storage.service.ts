@@ -12,22 +12,26 @@ export class DataStorageService {
 
     getObject(name: string, id: string) {  
 
+        let user = this.authenticationService.getUser();        
+
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');        
-        headers.append('Authorization', this.authenticationService.getToken());
+        headers.append('Authorization', user.token);
                 
-        console.log(environment.api + '/' + name + ' id is ' + id + ' token is ' + this.authenticationService.getToken());
+        console.log(environment.api + '/' + name + ' id is ' + id + ' token is ' + user.token);
         
         return this.http.get(environment.api + '/' + name + '/' + id, {headers: headers});
     }
 
     getObjects(name: string, id: string) {  
         
+        let user = this.authenticationService.getUser();        
+
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');        
-        headers.append('Authorization', this.authenticationService.getToken());
+        headers.append('Authorization', user.token);
 
-        console.log(environment.api + '/' + name + ' id is ' + id + ' token is ' + this.authenticationService.getToken());        
+        console.log(environment.api + '/' + name + ' id is ' + id + ' token is ' + user.token);        
         
         return this.http.get(environment.api + '/' + 
             name + (id != null ? '/' + id : ''), {headers: headers});

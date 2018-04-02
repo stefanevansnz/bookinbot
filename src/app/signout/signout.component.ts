@@ -11,7 +11,7 @@ export class SignoutComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    this.authenticationService.deleteToken();
+    this.authenticationService.deleteUser();
   }
 
 }

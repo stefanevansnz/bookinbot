@@ -25,7 +25,7 @@ export class SigninComponent implements OnInit {
       (message) => {
         this.message = message;
       }
-  );
+    );
 
   }
 
