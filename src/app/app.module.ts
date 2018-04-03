@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ResourcesComponent } from './resources/resources.component';
 import { DataStorageService } from './shared/data-storage.service';
 import { AuthenticationService } from './shared/authentication.service';
+import { AuthenticationGuardService } from './shared/authentication-guard.service';
 import { BookingsComponent } from './bookings/bookings.component';
 import { HeadingComponent } from './heading/heading.component';
 import { FooterComponent } from './footer/footer.component';
@@ -18,6 +19,7 @@ import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
 import { NotificationService } from './shared/notification.service';
 import { SignoutComponent } from './signout/signout.component';
+import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { SignoutComponent } from './signout/signout.component';
     FooterComponent,
     SigninComponent,
     SignupComponent,
-    SignoutComponent
+    SignoutComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,7 @@ import { SignoutComponent } from './signout/signout.component';
     FormsModule, 
     ModalModule  
   ],
-  providers: [DataStorageService, AuthenticationService, NotificationService],
+  providers: [DataStorageService, AuthenticationService, NotificationService, AuthenticationGuardService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

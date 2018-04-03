@@ -16,7 +16,7 @@ export class DataStorageService {
 
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');        
-        headers.append('Authorization', user.token);
+        headers.append('Authorization', user.token );
                 
         console.log(environment.api + '/' + name + ' id is ' + id + ' token is ' + user.token);
         

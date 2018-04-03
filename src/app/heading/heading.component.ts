@@ -13,33 +13,40 @@ export class HeadingComponent implements OnInit {
 
   loggedIn: boolean = false;
   
-  fullNameUpdate: Subscription;
+  userUpdate: Subscription;
   fullName: any;
 
   constructor(              
     private router: Router,
     private route: ActivatedRoute,
     private authenticationService: AuthenticationService ) {
-    
+  }
 
+  setFullName( user: User ) {
+    if (user != null) {
+      this.fullName = user.firstname + ' ' + user.lastname;
+    } else {
+      // not logged in
+      this.fullName = '';
+    }
   }
 
   ngOnInit() { 
 
+    self = this;
+
     // update on sign in
     var self = this;
-    this.fullNameUpdate = this.authenticationService.getUser()
+    this.userUpdate = this.authenticationService.getloadedUser()
     .subscribe(
         (user: User) => {
-          if (user != null) {
-            this.fullName = user.firstname + ' ' + user.lastname;
-            console.log('setting full name to ' + this.fullName);
-            self.loggedIn = true;  
-          } else {
-            this.fullName = '';
-          }
+          self.setFullName(user);
         }
-      );  
+    );   
+
+    var user = this.authenticationService.getUser();
+    self.setFullName(user);
+
   }
 
 }

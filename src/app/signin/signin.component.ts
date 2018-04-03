@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthenticationService } from '../shared/authentication.service';
@@ -18,7 +19,8 @@ export class SigninComponent implements OnInit {
   loading: boolean = false;
 
   constructor(private authenticationService: AuthenticationService,
-              private notificationService: NotificationService) { }
+              private notificationService: NotificationService,
+              private router: Router) { }
 
   ngOnInit() {
     this.messageUpdate = this.notificationService.getMessage()
@@ -36,6 +38,11 @@ export class SigninComponent implements OnInit {
     const password = form.value.password;    
     this.authenticationService.signinUser(email, password, this);
   } 
+
+  successfulLogin() {
+    console.log('successfulLogin');
+    this.router.navigateByUrl('/'); 
+  }
 
   isLoading() {
     return this.loading;

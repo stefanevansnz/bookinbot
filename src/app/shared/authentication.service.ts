@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Router } from '@angular/router';
+import { Router, CanActivate } from '@angular/router';
 import * as AWS from 'aws-sdk';
 import { environment } from '../../environments/environment';
 import { NotificationService } from "./notification.service";
 import { User } from './user.model';
 import { Subject } from "rxjs/Subject";
-
 
 declare let AWSCognito: any;
 declare let apigClientFactory: any;
@@ -13,7 +12,7 @@ declare let apigClientFactory: any;
 @Injectable()
 export class AuthenticationService {
 
-    user = new Subject();
+    loadedUser = new Subject();
 
     constructor(private notificationService: NotificationService,
                 private router: Router) {
@@ -62,12 +61,11 @@ export class AuthenticationService {
                         if (err) {
                             console.log('getUserAttributes() ERROR: ' + err);
                             self.notificationService.setMessage( err.message );  
-                            callback.loading = false;                          
+                            callback.loading = false;                                                      
                         } else {
                             console.log('getUserAttributes() OK: ' + result);
                             self.createUser(cognitoUser.username, token, result);
-                            self.router.navigateByUrl('/'); 
-                           
+                            callback.successfulLogin();                           
                         }
                       });
 
@@ -103,17 +101,21 @@ export class AuthenticationService {
         let user = new User(userName, givenName, familyName, userToken);
         localStorage.setItem('user',  JSON.stringify(user));
         console.log('setting fill name to ' + givenName + ' ' + familyName);    
-        this.user.next(user);    
+        this.loadedUser.next(user);            
     }
     
     deleteUser() {
         localStorage.removeItem("user");
-        this.user.next();
+        this.loadedUser.next();    
     }
 
-    getUser() {
-        this.user.next(JSON.parse(localStorage.getItem("user")));        
-        return this.user.asObservable();
+    getloadedUser() {
+        this.loadedUser.next(JSON.parse(localStorage.getItem("user")));        
+        return this.loadedUser.asObservable();
     }
-    
+
+    getUser() : User {        
+        return JSON.parse(localStorage.getItem("user"));
+    }
+
 }
