@@ -33,6 +33,7 @@ export class BookingsComponent implements OnInit {
 
   private resourceId;
   private resourceName;
+  private resourceOwner;  
   private resource: Resource;
 
   private bookings: Booking[] = [];
@@ -59,6 +60,8 @@ export class BookingsComponent implements OnInit {
               this.resource = result.Item;
               console.log('resource name is ' + this.resource.title);
               this.resourceName = this.resource.title;
+              console.log('resource owner is ' + this.resource.ownerid);
+              this.resourceOwner = this.resource.ownerid; 
 
             },
             (error: Response) => {

@@ -6,6 +6,7 @@ import { Response } from "@angular/http";
 import { DataStorageService } from '../shared/data-storage.service';
 import { messages } from '../app-messages';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { AuthenticationService } from '../shared/authentication.service';
 
 declare var jQuery:any;
 
@@ -26,7 +27,8 @@ export class ResourcesComponent implements OnInit {
 
   private resources: Resource[] = [];
 
-  constructor(private dataStorageService: DataStorageService, 
+  constructor(private authenticationService: AuthenticationService,
+              private dataStorageService: DataStorageService, 
               private router: Router, 
               private route: ActivatedRoute) {}
 
@@ -67,8 +69,12 @@ export class ResourcesComponent implements OnInit {
     const value = form.value;
     console.log('form submitted title is ' + value.title);
 
+    var user = this.authenticationService.getUser();
+    var ownerid = user.username;
+    console.log('form submitted owner id is ' + ownerid);
+
     if (this.editMode) {
-      let resource = new Resource( this.editResource.id, this.editResource.ownerid, value.title);
+      let resource = new Resource( this.editResource.id, ownerid, value.title);
       this.dataStorageService.storeObject(resource)
       .subscribe(
         (success: Response) => {          
@@ -82,7 +88,7 @@ export class ResourcesComponent implements OnInit {
         }
       );
     } else {
-      let resource = new Resource('', '', value.title);
+      let resource = new Resource('', ownerid, value.title);
       this.dataStorageService.storeObject(resource)
       .subscribe(
         (success: Response) => {          

@@ -101,7 +101,7 @@ app.get('/resource/:id', function (req, res) {
 // Save Resource
 app.put('/resource', function (req, res) {
   try {  
-    let { id, title } = req.body;
+    let { id, title, ownerid } = req.body;
     
     //createddate = moment().format();
     //updateddate = moment().format();
@@ -110,6 +110,7 @@ app.put('/resource', function (req, res) {
     updateddate = 'na';
 
     console.log('id is: ' + id);
+    console.log('ownerid is: ' + ownerid);    
     console.log('createddate is: ' + createddate);
     console.log('updateddate is: ' + updateddate);    
     console.log('title: ' + title);
@@ -119,13 +120,17 @@ app.put('/resource', function (req, res) {
     }
     
     if (typeof title !== 'string') {
-      res.status(400).json({ error: 'First Name must have a value.' });
+      res.status(400).json({ error: 'Title must have a value.' });
+    }
+    if (typeof ownerid !== 'string') {
+      res.status(400).json({ error: 'OwnerId must have a value.' });
     }
 
     const params = {
       TableName: RESOURCES_TABLE,
       Item: {
         id: id,
+        ownerid: ownerid,
         createddate: createddate,
         updateddate: updateddate,
         title: title    
