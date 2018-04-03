@@ -10,11 +10,10 @@ import { User } from '../shared/user.model';
   styleUrls: ['./heading.component.css']
 })
 export class HeadingComponent implements OnInit {
-
-  loggedIn: boolean = false;
   
   userUpdate: Subscription;
-  fullName: any;
+  
+  fullName: string;
 
   constructor(              
     private router: Router,
@@ -22,13 +21,16 @@ export class HeadingComponent implements OnInit {
     private authenticationService: AuthenticationService ) {
   }
 
-  setFullName( user: User ) {
+  private setFullName( user: User ) {
     if (user != null) {
       this.fullName = user.firstname + ' ' + user.lastname;
     } else {
-      // not logged in
       this.fullName = '';
     }
+  }
+
+  isLoggedIn() {
+    return this.fullName != '';
   }
 
   ngOnInit() { 
