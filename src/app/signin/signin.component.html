@@ -15,7 +15,11 @@
                 {{ message }}
             </div>        
             
-            <button [disabled]="isLoading()" class="btn btn-primary" type="submit">Sign In</button>              
+            <button [disabled]="isLoading()" class="btn btn-primary" type="submit">Sign In</button>
+            
+            <div>
+                <a routerLink="/signup">No login? Sign Up here!</a>
+            </div>
 
         </form>        
                   
