@@ -21,6 +21,7 @@ import { NotificationService } from './shared/notification.service';
 import { SignoutComponent } from './signout/signout.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { SettingsComponent } from './settings/settings.component';
+import { SplashComponent } from './splash/splash.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { SettingsComponent } from './settings/settings.component';
     SignupComponent,
     SignoutComponent,
     PageNotFoundComponent,
-    SettingsComponent
+    SettingsComponent,
+    SplashComponent
   ],
   imports: [
     BrowserModule,

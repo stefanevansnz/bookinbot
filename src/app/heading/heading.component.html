@@ -4,8 +4,8 @@
         BookInBot.com
     </a>
 
-    <div *ngIf="isLoggedIn()" class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mr-auto">          
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul *ngIf="isLoggedIn();else other_content" class="navbar-nav mr-auto">          
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{fullName}}</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -15,5 +15,17 @@
           </div>          
         </li>           
       </ul>
+
+      <ng-template #other_content>
+      <ul class="navbar-nav mr-auto">  
+          <a routerLink="/signin" href="#">Sign In</a>  
+      </ul>
+      </ng-template>
     </div>
+
+
+    
+
+
+
 </nav>

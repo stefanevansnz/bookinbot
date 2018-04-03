@@ -2,6 +2,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { NgModule } from "@angular/core";
 import { ResourcesComponent } from "./resources/resources.component";
 import { BookingsComponent } from "./bookings/bookings.component";
+import { SplashComponent } from "./splash/splash.component";
 import { SignupComponent } from "./signup/signup.component";
 import { SigninComponent } from "./signin/signin.component";
 import { SignoutComponent } from "./signout/signout.component";
@@ -11,13 +12,13 @@ import { SettingsComponent } from "./settings/settings.component";
 
 const appRoutes: Routes = [
 
+    { path: 'resources', component: ResourcesComponent, canActivate: [AuthenticationGuard] },
     { path: 'bookings/:id', component: BookingsComponent, canActivate: [AuthenticationGuard] },
-    { path: '', component: ResourcesComponent, canActivate: [AuthenticationGuard] },    
-    { path: 'signup', component: SignupComponent },
-    { path: 'signin', component: SigninComponent },
+    { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },    
     { path: 'signout', component: SignoutComponent, canActivate: [AuthenticationGuard] },    
-    { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] } ,
-    
+    { path: '', component: SplashComponent },        
+    { path: 'signup', component: SignupComponent },
+    { path: 'signin', component: SigninComponent },    
     { path: '**', component: PageNotFoundComponent}    
 ];
 

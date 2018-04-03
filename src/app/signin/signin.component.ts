@@ -41,7 +41,7 @@ export class SigninComponent implements OnInit {
 
   successfulLogin() {
     console.log('successfulLogin');
-    this.router.navigateByUrl('/'); 
+    this.router.navigateByUrl('/resources'); 
   }
 
   isLoading() {
