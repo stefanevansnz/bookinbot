@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const express = require('express')
 const AWS = require('aws-sdk');
 const uuidv1 = require('uuid/v1');
-//const moment = require('moment');
 const app = express()
 
 const RESOURCES_TABLE = process.env.RESOURCES_TABLE;
@@ -102,23 +101,26 @@ app.get('/resource/:id', function (req, res) {
 app.put('/resource', function (req, res) {
   try {  
     let { id, title, ownerid } = req.body;
-    
-    //createddate = moment().format();
-    //updateddate = moment().format();
-    //owner id
-    createddate = 'na';
-    updateddate = 'na';
 
-    console.log('id is: ' + id);
-    console.log('ownerid is: ' + ownerid);    
-    console.log('createddate is: ' + createddate);
-    console.log('updateddate is: ' + updateddate);    
-    console.log('title: ' + title);
+    var newResource = false;
+
+    var currentDateTime = new Date().toString();
+    var params;
 
     if (id == "") {
+      newResource = true;
       id = uuidv1();
     }
-    
+
+    console.log('newResource is: ' + newResource);
+    console.log('id is: ' + id);
+    console.log('ownerid is: ' + ownerid);    
+    console.log('currentDateTime is: ' + currentDateTime);
+    console.log('title: ' + title);
+
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'Id must have a value.' });
+    }
     if (typeof title !== 'string') {
       res.status(400).json({ error: 'Title must have a value.' });
     }
@@ -126,24 +128,50 @@ app.put('/resource', function (req, res) {
       res.status(400).json({ error: 'OwnerId must have a value.' });
     }
 
-    const params = {
-      TableName: RESOURCES_TABLE,
-      Item: {
-        id: id,
-        ownerid: ownerid,
-        createddate: createddate,
-        updateddate: updateddate,
-        title: title    
-      },
-    };
 
-    dynamoDb.put(params, (error) => {
-      if (error) {
-        res.status(error.statusCode).json({ error: error});
-      } else {
-        res.json({ id, createddate, updateddate, title });
-      }
-    });
+    if (newResource) {
+      // create in db
+      params = {
+        TableName: RESOURCES_TABLE,
+        Item: {
+          id: id,
+          ownerid: ownerid,
+          createddate: currentDateTime, 
+          title: title, 
+        }
+      }             
+      dynamoDb.put(params, (error) => {
+        if (error) {
+          res.status(error.statusCode).json({ error: error});
+        } else {
+          res.json({ id, title });
+        }
+      });        
+    } else {
+      // update in db    
+      params = {
+        TableName: RESOURCES_TABLE,
+        Key:{
+            "id": id
+        },
+        UpdateExpression: "set title = :title, updateddate = :updateddate",
+        ExpressionAttributeValues:{
+            ":title": title,
+            ":updateddate": currentDateTime
+        },
+        ReturnValues:"UPDATED_NEW"
+      };
+
+      dynamoDb.update(params, (error) => {
+        if (error) {
+          res.status(error.statusCode).json({ error: error});
+        } else {
+          res.json({ id, title });
+        }
+      });        
+        
+    }
+
 
   } catch (error) {
     res.status(500).json({ error: String(error) });
