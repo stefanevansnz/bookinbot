@@ -88,9 +88,9 @@ export class BookingsComponent implements OnInit {
           jQuery("#calendar").fullCalendar({           
             themeSystem: 'bootstrap4',
             header: {
-              left: 'prev',
-              center: 'title',
-              right: 'next'
+              left: 'prev title next today',
+              center: '',
+              right: 'month,agendaWeek,agendaDay '
             },
             nowIndicator: true,
             height: 540,
@@ -136,7 +136,7 @@ export class BookingsComponent implements OnInit {
                     var username = item.userid;
                     var colour = '#378006';
                     
-                    console.log('PUSH item.start ' + item.start + ', username ' + username);
+                    //console.log('PUSH item.start ' + item.start + ', username ' + username);
                     // calendar events
                     events.push({
                       index: index,
