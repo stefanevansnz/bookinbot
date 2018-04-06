@@ -78,25 +78,27 @@ app.put('/booking', function (req, res) {
   try {  
     let { id, resourceid, userid, start, end } = req.body;
     
-    //createddate = moment().format();
-    //updateddate = moment().format();
-    //owner id
-    let updateddate = new Date();
-    let createddate = new Date();
+    var newBooking = false;
 
+    var currentDateTime = new Date().toString();
+    var params;
+
+    if (id == "") {
+      newBooking = true;
+      id = uuidv1();
+    }    
+
+    console.log('newBooking is: ' + newBooking);
     console.log('id is: ' + id);
     console.log('resourceid is: ' + resourceid);    
     console.log('userid is: ' + userid);    
-    console.log('createddate is: ' + createddate);
-    console.log('updateddate is: ' + updateddate);    
+    console.log('currentDateTime is: ' + currentDateTime);    
     console.log('start: ' + start);
     console.log('end: ' + end);
-
-    if (id == "") {
-
-      id = uuidv1();
-    }
     
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'Id must have a value.' });
+    }    
     if (typeof start !== 'string') {
       res.status(400).json({ error: 'Start must have a value.' });
     }
@@ -104,26 +106,57 @@ app.put('/booking', function (req, res) {
       res.status(400).json({ error: 'End must have a value.' });
     }
 
-    const params = {
-      TableName: BOOKINGS_TABLE,
-      Item: {
-        id: id,
-        resourceid: resourceid,
-        userid: userid,
-        createddate: createddate.toString(),
-        updateddate: updateddate.toString(),
-        start: start,
-        end: end,            
-      },
-    };
+    if (newBooking) {
+      // create in db
+      params = {
+        TableName: BOOKINGS_TABLE,
+        Item: {
+          id: id,
+          resourceid: resourceid,
+          userid: userid,
+          createddate: currentDateTime,
+          updateddate: currentDateTime,
+          start: start,
+          end: end,  
+        }
+      }             
+      dynamoDb.put(params, (error) => {
+        if (error) {
+          res.status(error.statusCode).json({ error: error});
+        } else {
+          res.json({ id, start, end });
+        }
+      });        
+    } else {
+      // update in db    
+      params = {
+        TableName: BOOKINGS_TABLE,
+        Key:{
+            "id": id,
+            "resourceid": resourceid
+        },
+        UpdateExpression: "set #start_name = :start, #end_name = :end, updateddate = :updateddate",
+        ExpressionAttributeValues:{
+            ":start": start,
+            ":end": end,            
+            ":updateddate": currentDateTime
+        },
+        ExpressionAttributeNames:{
+          '#start_name': start,
+          '#end_name': end
+        },
+        ReturnValues:"UPDATED_NEW"
+      };
 
-    dynamoDb.put(params, (error) => {
-      if (error) {
-        res.status(error.statusCode).json({ error: error});
-      } else {
-        res.json({ id, createddate, userid, updateddate, start, end });
-      }
-    });
+      dynamoDb.update(params, (error) => {
+        if (error) {
+          res.status(error.statusCode).json({ error: error});
+        } else {
+          res.json({ id, start, end });
+        }
+      });        
+        
+    }
 
   } catch (error) {
     res.status(500).json({ error: String(error) });

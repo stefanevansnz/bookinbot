@@ -137,6 +137,7 @@ app.put('/resource', function (req, res) {
           id: id,
           ownerid: ownerid,
           createddate: currentDateTime, 
+          updateddate: currentDateTime,           
           title: title, 
         }
       }             

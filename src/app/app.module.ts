@@ -12,6 +12,7 @@ import { ResourcesComponent } from './resources/resources.component';
 import { DataStorageService } from './shared/data-storage.service';
 import { AuthenticationService } from './shared/authentication.service';
 import { AuthenticationGuardService } from './shared/authentication-guard.service';
+import { DateRangePickerService } from './shared/date-range-picker.service';
 import { BookingsComponent } from './bookings/bookings.component';
 import { HeadingComponent } from './heading/heading.component';
 import { FooterComponent } from './footer/footer.component';
@@ -44,7 +45,7 @@ import { SplashComponent } from './splash/splash.component';
     FormsModule, 
     ModalModule  
   ],
-  providers: [DataStorageService, AuthenticationService, NotificationService, AuthenticationGuardService ],
+  providers: [DataStorageService, AuthenticationService, NotificationService, AuthenticationGuardService, DateRangePickerService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -73,30 +73,27 @@
 
 
 <div class="row">
+  <div class="row" *ngIf="message">
+      <div class="col-md-12 form-group">
+          <div class="alert alert-danger" role="alert">
+              {{ message }}
+          </div>   
+      </div>
+  </div>
+
   <div class="col-md-12">
 
     <h1>{{resourceName}} - {{resourceOwner}}</h1>
     <hr>
-<!--
-      <button id="add-booking" type="button" class="btn btn-primary" 
-        (click)="onAddObject()">Add Booking</button>
-      <hr>
--->
       <div id='calendar'></div>   
 
       <ul class="list-group">
         <li class="list-group-item" class="list-group-item" 
           style="cursor: pointer"
           *ngFor="let booking of bookings; let i = index">
-            <button 
-            id="edit-booking"
-            class="btn btn-success" 
-            (click)="onEditObject(i, booking)"            
-            type="submit" >
-            Edit</button>
             <a 
             (click)="onViewBookings(i, booking)"
-            >{{ booking.start }} - {{ booking.end }} - {{ booking.resourceid }}
+            >{{ booking.userid }} - {{ booking.start }} - {{ booking.end }} - {{ booking.resourceid }}
             </a>            
         </li>
       </ul>

@@ -8,6 +8,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Booking } from './bookings.model';
 import { environment } from '../../environments/environment';
 import { Resource } from '../resources/resources.model';
+import { AuthenticationService } from '../shared/authentication.service';
+import { DateRangePickerService } from '../shared/date-range-picker.service';
 
 declare var jQuery:any;
 declare var moment:any;
@@ -31,6 +33,8 @@ export class BookingsComponent implements OnInit {
   private editBooking: Booking;
   private editIndex: number;
 
+  private editCalendarEvent: any;
+
   private resourceId;
   private resourceName;
   private resourceOwner;  
@@ -38,9 +42,11 @@ export class BookingsComponent implements OnInit {
 
   private bookings: Booking[] = [];
 
-  constructor(private dataStorageService: DataStorageService, 
-    private router: Router, 
-    private route: ActivatedRoute) {}
+  constructor(private authenticationService: AuthenticationService,
+              private dataStorageService: DataStorageService, 
+              private dateRangePickerService: DateRangePickerService,
+              private router: Router, 
+              private route: ActivatedRoute) {}
 
   ngOnInit() {
     var self = this;
@@ -65,6 +71,7 @@ export class BookingsComponent implements OnInit {
 
             },
             (error: Response) => {
+              console.log('error is ' + messages.server_error);
               this.message = messages.server_error;             
             }
           );
@@ -87,13 +94,12 @@ export class BookingsComponent implements OnInit {
             },
             nowIndicator: true,
             height: 540,
-            eventClick: function(item, jsEvent, view) {
-              console.log('start: ' + item.start);              
-              var startItem = moment(item.start).format(self.timeFormat);
-              var endItem = moment(item.end).format(self.timeFormat);
-              console.log('start: ' + startItem);
-              var booking = new Booking( item.id,  item.userid,  item.resourceId, startItem, endItem);
-              self.onEditObject( item.id, booking);
+            eventClick: function(calEvent, jsEvent, view) {
+              var startItem = moment(calEvent.start).format(self.timeFormat);
+              var endItem = moment(calEvent.end).format(self.timeFormat);
+              console.log('item.id: ' + calEvent.id);
+              var booking = new Booking( calEvent.id,  calEvent.userid,  calEvent.resourceId, startItem, endItem);
+              self.onEditObject( calEvent, booking);
             },            
             dayClick: function(date, jsEvent, view) {
               console.log('Clicked on: ' + date.format());
@@ -103,7 +109,6 @@ export class BookingsComponent implements OnInit {
               console.log('form submitted start is ' + startItem);
               console.log('form submitted end is ' + endItem);          
               var booking = new Booking( '',  '',  '', startItem, endItem);
-              //_this.onEditObject( item.id, booking);
               // add object
               self.onAddObject(booking);
               
@@ -128,10 +133,11 @@ export class BookingsComponent implements OnInit {
                     var endItem = moment(item.end, self.timeFormat);
 
                     // need to load into an object when component created
-                    var username = 'stefanevansnz'
+                    var username = item.userid;
                     var colour = '#378006';
                     
-                    //console.log('PUSH item.start ' + item.start + ', push ' + startItem);
+                    console.log('PUSH item.start ' + item.start + ', username ' + username);
+                    // calendar events
                     events.push({
                       index: index,
                       id: item.id,
@@ -163,9 +169,13 @@ export class BookingsComponent implements OnInit {
     console.log('form submitted start is ' + value.start);
     console.log('form submitted end is ' + value.end);
 
+    var user = this.authenticationService.getUser();
+    var userid = user.username;
+    console.log('form submitted userid is ' + userid);
+
     if (this.editMode) {
       let booking = new Booking( this.editBooking.id, 
-                                 this.editBooking.userid,
+                                 userid,
                                  this.resourceId,
                                  value.start, value.end);
       this.dataStorageService.storeObject(booking)
@@ -179,15 +189,13 @@ export class BookingsComponent implements OnInit {
           var endDate = moment(value.end, this.timeFormat);
 
           // need to load into an object when component created
-          var username = 'Stefan Evans';
+          var username = userid;
           var colour = '#378006';
 
-          jQuery('#calendar').fullCalendar('renderEvent', {
-            title: username,
-            start: startDate,
-            end: endDate,
-            color: colour
-          });
+          this.editCalendarEvent.start = startDate;
+          this.editCalendarEvent.end = endDate;
+
+          jQuery('#calendar').fullCalendar('updateEvent', this.editCalendarEvent);
 
           jQuery("#editModal").modal("hide");          
         },
@@ -197,7 +205,7 @@ export class BookingsComponent implements OnInit {
       );
     } else {
       let booking = new Booking('', 
-                                'userid', // TODO add user id from token 
+                                userid,
                                 this.resourceId, 
                                 value.start, 
                                 value.end);
@@ -212,11 +220,12 @@ export class BookingsComponent implements OnInit {
           var endDate = moment(value.end, this.timeFormat);
 
           // need to load into an object when component created
-          var username = 'Stefan Evans';
+          var username = userid;
           var colour = '#378006';
 
           jQuery('#calendar').fullCalendar('renderEvent', {
             title: username,
+            id: booking.id,
             start: startDate,
             end: endDate,
             color: colour
@@ -232,10 +241,11 @@ export class BookingsComponent implements OnInit {
   }
 
   onAddObject(booking: Booking) {
-
+    console.log('onAddObject');
     this.editMode = false;
     //this.slForm.reset();
     this.editBooking = booking;
+    console.log('editBooking id is ' + this.editBooking.id);
 
     console.log('form submitted start is ' +  booking.start);
     console.log('form submitted end is ' +  booking.end); 
@@ -243,60 +253,30 @@ export class BookingsComponent implements OnInit {
     this.slForm.setValue({
       start: booking.start,
       end: booking.end      
-    });    
-
-    //date time picker
-    jQuery('#start').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 15,
-      singleDatePicker: true,
-      autoApply: true,
-      locale: {
-          format: this.timeFormat
-      }
-    });
-
-    //date time picker
-    jQuery('#end').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 15,
-      singleDatePicker: true,
-      autoApply: true,
-      locale: {
-          format: this.timeFormat
-      }
-    });    
-
-    /*
-    jQuery("#start").on("change.datetimepicker", function (e) {
-      jQuery('#end').datetimepicker('minDate', e.date);
-      let el = document.querySelector('#start > input');
-      let ev = new Event('input',{bubbles:true})
-      el.dispatchEvent(ev);
-
-    });
-    jQuery("#end").on("change.datetimepicker", function (e) {
-      jQuery('#start').datetimepicker('maxDate', e.date); 
-      let el = document.querySelector('#end > input');
-      let ev = new Event('input',{bubbles:true})
-      el.dispatchEvent(ev);
-
-    });    
-    */
+    });   
+    
+    this.dateRangePickerService.setDateRanges();
     
     jQuery("#editModal").modal("show");
 
   }    
   
-  onEditObject(index: number, booking: Booking) {
-    console.log('onEditObject ' + index);
+  onEditObject(calEvent, booking: Booking) {
+    console.log('onEditObject ' + calEvent.id);
+    console.log('booking start ' + booking.start);
+    console.log('booking end ' + booking.end);
+
+    this.editCalendarEvent = calEvent;
     this.editBooking = booking;
-    this.editIndex = index;
+    this.editIndex = calEvent.id;
     this.editMode = true;
     this.slForm.setValue({
       start: booking.start,
       end: booking.end,      
     });
+
+    this.dateRangePickerService.setDateRanges();
+
     jQuery("#editModal").modal("show");
   }  
 

@@ -17,9 +17,7 @@ export class DataStorageService {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');        
         headers.append('Authorization', user.token );
-                
-        console.log(environment.api + '/' + name + ' id is ' + id + ' token is ' + user.token);
-        
+                        
         return this.http.get(environment.api + '/' + name + '/' + id, {headers: headers});
     }
 
@@ -30,8 +28,6 @@ export class DataStorageService {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');        
         headers.append('Authorization', user.token);
-
-        console.log(environment.api + '/' + name + ' id is ' + id + ' token is ' + user.token);        
         
         return this.http.get(environment.api + '/' + 
             name + (id != null ? '/' + id : ''), {headers: headers});
