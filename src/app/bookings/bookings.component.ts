@@ -170,12 +170,21 @@ export class BookingsComponent implements OnInit {
     console.log('form submitted end is ' + value.end);
 
     var user = this.authenticationService.getUser();
-    var userid = user.username;
-    console.log('form submitted userid is ' + userid);
+    var username = user.username;
+    var colour = '#378006';
+    
+    console.log('form submitted userid is ' + username);
+    var startDate = moment(value.start, this.timeFormat);
+    var endDate = moment(value.end, this.timeFormat);
+
+    if (startDate > endDate) {
+      this.message = 'The start date is in front of the end date';
+      return;
+    }
 
     if (this.editMode) {
       let booking = new Booking( this.editBooking.id, 
-                                 userid,
+                                 username,
                                  this.resourceId,
                                  value.start, value.end);
       this.dataStorageService.storeObject(booking)
@@ -184,13 +193,6 @@ export class BookingsComponent implements OnInit {
           booking.id = success.json().id;
           this.bookings[this.editIndex] = booking;
           this.message = '';
-
-          var startDate = moment(value.start, this.timeFormat);
-          var endDate = moment(value.end, this.timeFormat);
-
-          // need to load into an object when component created
-          var username = userid;
-          var colour = '#378006';
 
           this.editCalendarEvent.start = startDate;
           this.editCalendarEvent.end = endDate;
@@ -206,7 +208,7 @@ export class BookingsComponent implements OnInit {
       );
     } else {
       let booking = new Booking('', 
-                                userid,
+                                username,
                                 this.resourceId, 
                                 value.start, 
                                 value.end);
@@ -216,13 +218,6 @@ export class BookingsComponent implements OnInit {
           booking.id = success.json().id;
           this.bookings.push(booking);
           this.message = '';
-
-          var startDate = moment(value.start, this.timeFormat);
-          var endDate = moment(value.end, this.timeFormat);
-
-          // need to load into an object when component created
-          var username = userid;
-          var colour = '#378006';
 
           jQuery('#calendar').fullCalendar('renderEvent', {
             title: username,
