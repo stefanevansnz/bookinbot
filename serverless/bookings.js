@@ -142,8 +142,8 @@ app.put('/booking', function (req, res) {
             ":updateddate": currentDateTime
         },
         ExpressionAttributeNames:{
-          '#start_name': start,
-          '#end_name': end
+          '#start_name': 'start',
+          '#end_name': 'end'
         },
         ReturnValues:"UPDATED_NEW"
       };

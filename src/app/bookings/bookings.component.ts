@@ -200,6 +200,7 @@ export class BookingsComponent implements OnInit {
           jQuery("#editModal").modal("hide");          
         },
         (error: Response) => {
+          console.log('error ' + messages.server_error)
           this.message = messages.server_error;             
         }
       );
