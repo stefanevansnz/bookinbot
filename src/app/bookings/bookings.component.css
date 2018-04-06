@@ -15,3 +15,7 @@ h1 {
     font-size: 1.5em;
 }
 
+div.input-group-append {
+    cursor: pointer;
+}
+

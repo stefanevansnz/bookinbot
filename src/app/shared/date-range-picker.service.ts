@@ -6,14 +6,24 @@ declare var jQuery:any;
 export class DateRangePickerService {
 
     private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
-    private readonly defaultTime = '10:00 AM';
           
     setDateRanges() {
 
         console.log('setDateRanges on DateRangePickerService');
 
+        var self = this;
+
+        jQuery('div#start-icon').on("click", function () {
+            jQuery('input#start').select();
+        });
+
+        jQuery('div#end-icon').on("click", function () {
+            jQuery('input#end').select();
+        });
+
         //date time picker
         jQuery('#start').daterangepicker({
+          //maxDate: endDate,             
           timePicker: true,
           timePickerIncrement: 15,
           singleDatePicker: true,
@@ -25,6 +35,7 @@ export class DateRangePickerService {
     
         //date time picker
         jQuery('#end').daterangepicker({
+          //minDate: startDate,            
           timePicker: true,
           timePickerIncrement: 15,
           singleDatePicker: true,
@@ -36,11 +47,25 @@ export class DateRangePickerService {
             
         
         jQuery("#start").on("change.datetimepicker", function (e) {
-          //jQuery('#end').daterangepicker('minDate', e.date);
           let el = document.querySelector('input#start');
           let ev = new Event('input',{bubbles:true})
           el.dispatchEvent(ev);
-    
+/*
+          let date = jQuery('input#start').val();
+          //jQuery('#end').daterangepicker('minDate', date); 
+          
+          jQuery('#end').daterangepicker({ 
+            minDate: date,
+            timePicker: true,
+            timePickerIncrement: 15,
+            singleDatePicker: true,
+            autoApply: true,
+            locale: {
+                format: self.timeFormat
+            }               
+          });
+ */         
+  
         });
         
         jQuery("#end").on("change.datetimepicker", function (e) {
@@ -48,6 +73,22 @@ export class DateRangePickerService {
           let el = document.querySelector('input#end');
           let ev = new Event('input',{bubbles:true})
           el.dispatchEvent(ev);
+
+          /*
+          let date = jQuery('input#end').val();
+          //jQuery('#start').daterangepicker('maxDate', date);           
+          jQuery('#start').daterangepicker({ 
+            maxDate: date,
+            timePicker: true,
+            timePickerIncrement: 15,
+            singleDatePicker: true,
+            autoApply: true,
+            locale: {
+                format: self.timeFormat
+            }               
+          });
+          */
+        
     
         });    
         
