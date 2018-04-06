@@ -282,22 +282,25 @@ export class BookingsComponent implements OnInit {
   }  
 
   onDelete() {
-
-    let booking = new Booking(this.editBooking.id, '', '','' ,'');    
+    var user = this.authenticationService.getUser();
+    var userid = user.username;
+    console.log('userid is ' + userid);
     console.log('delete id is ' + this.editBooking.id);
+    console.log('resource id is ' + this.resourceId);
+
+    let booking = new Booking(this.editBooking.id, userid, this.resourceId,'' ,'');    
 
     this.dataStorageService.deleteObject(booking)
     .subscribe(
       (success: Response) => {          
         this.bookings.splice(this.editIndex, 1);  
 
-
         jQuery('#calendar').fullCalendar('removeEvents', 
           [this.editBooking.id]
         );
 
         this.message = '';
-        jQuery("#editModal").modal("hide");          
+        jQuery("#editModal").modal("hide");   
       },
       (error: Response) => {
         this.message = messages.server_error;             

@@ -167,15 +167,16 @@ app.put('/booking', function (req, res) {
 app.delete('/booking', function (req, res) {
 
   try {  
-    let { id, title } = req.body;  
+    let { id, resourceid } = req.body;  
 
     console.log('id is: ' + id);
-    console.log('title: ' + title);    
+    console.log('resourceid: ' + resourceid);    
 
     const params = {
       TableName: BOOKINGS_TABLE,
       Key: {
-        id: id 
+        "id": id,
+        "resourceid": resourceid         
       },
     };
 
