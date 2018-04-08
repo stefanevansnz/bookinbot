@@ -85,7 +85,60 @@ export class AuthenticationService {
           });
           
     }
+
+    signupUser(email: string, password: string, firstname: string, lastname: string, callback ) {
+
+        let self = this;
+
+
+        let poolData : any = {
+            UserPoolId: environment.userpoolid,
+            ClientId: environment.clientid
+        };
+
+        let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
     
+        var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.
+            CognitoUserAttribute({
+                Name : 'email',
+                Value : email
+            });
+        var attributePassword = new AWSCognito.CognitoIdentityServiceProvider.
+            CognitoUserAttribute({
+                Name : 'password',
+                Value : password
+            });
+        var attributeFirstName = new AWSCognito.CognitoIdentityServiceProvider.
+            CognitoUserAttribute({
+                Name : 'given_name',
+                Value : firstname
+            });
+        var attributeLastName = new AWSCognito.CognitoIdentityServiceProvider.
+            CognitoUserAttribute({
+                Name : 'family_name',
+                Value : lastname
+            });
+    
+        var attributeList = [];
+        attributeList.push(attributeEmail);
+        attributeList.push(attributePassword);
+        attributeList.push(attributeFirstName);
+        attributeList.push(attributeLastName);                        
+
+        console.log('attributeList ' + attributeList);    
+
+        userPool.signUp(email,  password, attributeList, null, ((err, result) => {
+            if (err) {
+                console.log('There was an error ', err);
+            } else {
+                console.log('You have successfully signed up, please confirm your email ')
+            }        
+        }))
+          
+    }
+    
+
+
     createUser(userName: string, userToken: string, userAttributes: any) {            
         let givenName;
         let familyName;    
