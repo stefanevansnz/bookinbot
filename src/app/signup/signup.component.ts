@@ -13,7 +13,7 @@ import { NotificationService } from '../shared/notification.service';
 })
 export class SignupComponent implements OnInit {
 
-  @ViewChild('signupform') slForm: NgForm;
+  @ViewChild('f') suForm: NgForm;
 
   messageUpdate: Subscription;
   message: any;
@@ -26,12 +26,9 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
 
-    this.slForm.setValue({
-      firstname: 'sdfsdf',
-      lastname: 'sdfsdf'   
-    });
-
-
+    console.log('sign up');
+  
+    this.suForm.reset();
     this.messageUpdate = this.notificationService.getMessage()
     .subscribe(
       (message) => {
@@ -41,7 +38,17 @@ export class SignupComponent implements OnInit {
 
   }
 
-  onSignup(form: NgForm) {
+  onSetDefault() {
+    this.suForm.setValue({
+      email: 'stefanevansnz@hotmail.com',
+      password: 'password',
+      firstname: 'sdfsdf',
+      lastname: 'sdfsdf'   
+    });
+  }
+
+
+  onSubmit(form: NgForm) {
     //this.loading = true;
     const email = form.value.email;
     const password = form.value.password;  
