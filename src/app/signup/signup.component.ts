@@ -42,8 +42,8 @@ export class SignupComponent implements OnInit {
     this.suForm.setValue({
       email: 'stefanevansnz@hotmail.com',
       password: 'password',
-      firstname: 'sdfsdf',
-      lastname: 'sdfsdf'   
+      firstname: 'Stefan',
+      lastname: 'Evans'   
     });
   }
 
