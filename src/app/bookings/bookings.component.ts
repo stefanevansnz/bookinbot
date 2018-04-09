@@ -121,7 +121,8 @@ export class BookingsComponent implements OnInit {
                 data: {
                   // our hypothetical feed requires UNIX timestamps
                   start: start.unix(),
-                  end: end.unix()
+                  end: end.unix(),
+
                 },
                 success: function(doc) {
                   var events = [];
@@ -134,6 +135,7 @@ export class BookingsComponent implements OnInit {
 
                     // need to load into an object when component created
                     var username = item.userid;
+                    //var username = item.firstname + ' ' + item.lastname;
                     var colour = '#378006';
                     
                     //console.log('PUSH item.start ' + item.start + ', username ' + username);

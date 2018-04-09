@@ -102,14 +102,7 @@ export class AuthenticationService {
             CognitoUserAttribute({
                 Name : 'email',
                 Value : email
-            });
-/*            
-        var attributePassword = new AWSCognito.CognitoIdentityServiceProvider.
-            CognitoUserAttribute({
-                Name : 'password',
-                Value : password
-            });
-*/            
+            });           
         var attributeFirstName = new AWSCognito.CognitoIdentityServiceProvider.
             CognitoUserAttribute({
                 Name : 'given_name',
@@ -123,7 +116,6 @@ export class AuthenticationService {
     
         var attributeList = [];
         attributeList.push(attributeEmail);
-        //attributeList.push(attributePassword);
         attributeList.push(attributeFirstName);
         attributeList.push(attributeLastName);                        
 
@@ -139,8 +131,6 @@ export class AuthenticationService {
           
     }
     
-
-
     createUser(userName: string, userToken: string, userAttributes: any) {            
         let givenName;
         let familyName;    
