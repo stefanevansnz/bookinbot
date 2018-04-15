@@ -32,7 +32,11 @@ app.use((req, res, next) => {
         res.send(200);
     } else {
         next();
-    }    
+    } 
+    AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+    var CognitoIdentityServiceProvider = AWS.CognitoIdentityServiceProvider;
+    var client = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-19', region: 'ap-southeast-2' });
+   
 });
 
 app.use(
@@ -70,7 +74,35 @@ app.get('/user/:id', function (req, res) {
     // Get User
     var id = req.param('id');
 
-    console.log('id is: ' + id);
+    console.log('list a user id is: ' + id);
+    var items;
+    // get username for each result
+    //var items = items.concat(result.Items);
+
+ 
+    console.log('search for user name: ' + item.userid );
+
+    client.adminGetUser({ Username: item.userid, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+      if (!err) {
+        //console.log('successful' + JSON.stringify(data));
+        var userAttributes = data.UserAttributes;
+
+        for (let i = 0; i < userAttributes.length; i++) {      
+          //console.log('attribute ' +  userAttributes[i].Name + ' has value ' +  userAttributes[i].Value);
+          if(userAttributes[i].Name == 'family_name' ) {
+            familyName = userAttributes[i].Value;
+          } 
+          if(userAttributes[i].Name == 'given_name' ) {
+            givenName = userAttributes[i].Value;
+          }           
+        }
+        var userName = givenName + ' ' + familyName;
+
+        console.log('username is ' + userName);
+        newItem.username = userName;
+      }
+    });
+    console.log('send new items');    
 
     const params = {
       TableName: USERS_TABLE,
@@ -86,7 +118,7 @@ app.get('/user/:id', function (req, res) {
           res.status(400).json({ error: 'Could not get users' });
         }
         if (result) {
-          console.log('result found');
+          console.log('result found user firstname is ' + result.Item.firstname);
           res.json(result);
         } else {
           res.status(404).json({ error: "Users not found" });
@@ -100,32 +132,30 @@ app.get('/user/:id', function (req, res) {
 // Save User
 app.put('/user', function (req, res) {
   try {  
-    let { id, title, ownerid } = req.body;
+    let { id, email, firstname, lastname } = req.body;
 
-    var newUser = false;
+    var newUser = true;
+    // always new check if the user exists
 
     var currentDateTime = new Date().toString();
     var params;
 
-    if (id == "") {
-      newUser = true;
-      id = uuidv1();
-    }
 
     console.log('newUser is: ' + newUser);
     console.log('id is: ' + id);
-    console.log('ownerid is: ' + ownerid);    
     console.log('currentDateTime is: ' + currentDateTime);
-    console.log('title: ' + title);
 
     if (typeof id !== 'string') {
       res.status(400).json({ error: 'Id must have a value.' });
     }
-    if (typeof title !== 'string') {
-      res.status(400).json({ error: 'Title must have a value.' });
+    if (typeof email !== 'string') {
+      res.status(400).json({ error: 'email must have a value.' });
     }
-    if (typeof ownerid !== 'string') {
-      res.status(400).json({ error: 'OwnerId must have a value.' });
+    if (typeof firstname !== 'string') {
+      res.status(400).json({ error: 'Firstname must have a value.' });
+    }
+    if (typeof lastname !== 'string') {
+      res.status(400).json({ error: 'Lastname must have a value.' });
     }
 
 
@@ -135,17 +165,18 @@ app.put('/user', function (req, res) {
         TableName: USERS_TABLE,
         Item: {
           id: id,
-          ownerid: ownerid,
+          email: email,
+          firstname: firstname,
+          lastname: lastname,                    
           createddate: currentDateTime, 
-          updateddate: currentDateTime,           
-          title: title, 
+          updateddate: currentDateTime
         }
       }             
       dynamoDb.put(params, (error) => {
         if (error) {
           res.status(error.statusCode).json({ error: error});
         } else {
-          res.json({ id, title });
+          res.json({ id, email, firstname, lastname });
         }
       });        
     } else {
@@ -155,9 +186,9 @@ app.put('/user', function (req, res) {
         Key:{
             "id": id
         },
-        UpdateExpression: "set title = :title, updateddate = :updateddate",
+        UpdateExpression: "set email = :email, updateddate = :updateddate",
         ExpressionAttributeValues:{
-            ":title": title,
+            ":email": email,
             ":updateddate": currentDateTime
         },
         ReturnValues:"UPDATED_NEW"

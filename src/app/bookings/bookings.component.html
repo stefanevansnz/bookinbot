@@ -93,7 +93,7 @@
           *ngFor="let booking of bookings; let i = index">
             <a 
             (click)="onViewBookings(i, booking)"
-            >{{ booking.userid }} - {{ booking.start }} - {{ booking.end }} - {{ booking.resourceid }}
+            >{{ booking.username }} - {{ booking.start }} - {{ booking.end }}
             </a>            
         </li>
       </ul>

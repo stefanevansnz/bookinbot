@@ -11,6 +11,9 @@ const app = express()
 const BOOKINGS_TABLE = process.env.BOOKINGS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
 
+const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+const AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+
 let dynamoDb;
 
 if (IS_OFFLINE === 'true') {
@@ -76,7 +79,7 @@ app.get('/bookings/:id', function (req, res) {
 // Save Booking
 app.put('/booking', function (req, res) {
   try {  
-    let { id, resourceid, userid, start, end } = req.body;
+    let { id, resourceid, userid, username, start, end } = req.body;
     
     var newBooking = false;
 
@@ -91,7 +94,9 @@ app.put('/booking', function (req, res) {
     console.log('newBooking is: ' + newBooking);
     console.log('id is: ' + id);
     console.log('resourceid is: ' + resourceid);    
-    console.log('userid is: ' + userid);    
+    console.log('userid is: ' + userid); 
+    console.log('username is: ' + username); 
+       
     console.log('currentDateTime is: ' + currentDateTime);    
     console.log('start: ' + start);
     console.log('end: ' + end);
@@ -114,6 +119,7 @@ app.put('/booking', function (req, res) {
           id: id,
           resourceid: resourceid,
           userid: userid,
+          username: username,
           createddate: currentDateTime,
           updateddate: currentDateTime,
           start: start,

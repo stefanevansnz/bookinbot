@@ -70,11 +70,13 @@ export class ResourcesComponent implements OnInit {
     console.log('form submitted title is ' + value.title);
 
     var user = this.authenticationService.getUser();
-    var ownerid = user.username;
+    var ownerid = user.id;
     console.log('form submitted owner id is ' + ownerid);
+    var ownername = user.firstname + ' ' + user.lastname;
+    console.log('form submitted owner name is ' + ownername);    
 
     if (this.editMode) {
-      let resource = new Resource( this.editResource.id, ownerid, value.title);
+      let resource = new Resource( this.editResource.id, ownerid, ownername, value.title);
       this.dataStorageService.storeObject(resource)
       .subscribe(
         (success: Response) => {          
@@ -88,7 +90,7 @@ export class ResourcesComponent implements OnInit {
         }
       );
     } else {
-      let resource = new Resource('', ownerid, value.title);
+      let resource = new Resource('', ownerid, ownername, value.title);
       this.dataStorageService.storeObject(resource)
       .subscribe(
         (success: Response) => {          
@@ -123,7 +125,7 @@ export class ResourcesComponent implements OnInit {
 
   onDelete() {
 
-    let resource = new Resource(this.editResource.id, '', 'sdfsf');    
+    let resource = new Resource(this.editResource.id, '', '', '');    
     console.log('delete id is ' + this.editResource.id);
 
     this.dataStorageService.deleteObject(resource)

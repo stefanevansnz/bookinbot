@@ -5,6 +5,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { AuthenticationService } from '../shared/authentication.service';
 import { Subject } from 'rxjs/Subject';
 import { NotificationService } from '../shared/notification.service';
+import { DataStorageService } from '../shared/data-storage.service';
+import { User } from '../shared/user.model';
+import { Response } from '@angular/http';
+import { messages } from '../app-messages';
 
 @Component({
   selector: 'app-signup',
@@ -21,6 +25,7 @@ export class SignupComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
+              private dataStorageService: DataStorageService,
               private router: Router) { }
 
 
@@ -57,9 +62,25 @@ export class SignupComponent implements OnInit {
     this.authenticationService.signupUser(email, password, firstname, lastname, this);
   } 
 
-  successfulLogin() {
-    console.log('successfulLogin');
-    this.router.navigateByUrl('/resources'); 
+  successfulSignUp(userId, email, firstname, lastname) {
+    console.log('successfulSignUp userId is ' + userId + ' email is ' + email + ' firstname is ' + firstname + ' lastname is ' + lastname );
+
+    let user = new User(userId, email, firstname, lastname, null);
+    this.dataStorageService.storeObject(user)
+    .subscribe(
+      (success: Response) => {      
+        // add user to list    
+        user.id = success.json().id;
+        this.message = '';          
+        this.router.navigateByUrl('/signup?status=confirm'); 
+      },
+      (error: Response) => {
+        this.message = messages.server_error;
+        ;             
+      }
+    );
+
+
   }
 
   isLoading() {

@@ -90,6 +90,7 @@ export class AuthenticationService {
 
         let self = this;
 
+        console.log('email is ' + email);
 
         let poolData : any = {
             UserPoolId: environment.userpoolid,
@@ -97,7 +98,7 @@ export class AuthenticationService {
         };
 
         let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
-    
+
         var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.
             CognitoUserAttribute({
                 Name : 'email',
@@ -114,36 +115,49 @@ export class AuthenticationService {
                 Value : lastname
             });
     
-        var attributeList = [];
+        var attributeList = [];  
         attributeList.push(attributeEmail);
         attributeList.push(attributeFirstName);
         attributeList.push(attributeLastName);                        
 
         console.log('attributeList ' + attributeList);    
 
-        userPool.signUp(email,  password, attributeList, null, ((err, result) => {
+        userPool.signUp(email, password, attributeList, null, ((err, result) => {
             if (err) {
                 console.log('There was an error ', err);
+                self.notificationService.setMessage( err.message ); 
+                callback.loading = false; 
+
             } else {
-                console.log('You have successfully signed up, please confirm your email ')
+                console.log('You have successfully signed up, please confirm your email ');
+                console.log('User id is ' + result.userSub + ' firstname is ' + firstname);
+                // add user with name etc to table
+
+                // then ask to sign up
+                callback.successfulSignUp(result.userSub, email, firstname, lastname);
+
             }        
         }))
           
     }
     
-    createUser(userName: string, userToken: string, userAttributes: any) {            
+    private createUser(userId: string, userToken: string, userAttributes: any) {            
+        let email;        
         let givenName;
         let familyName;    
         for (let i = 0; i < userAttributes.length; i++) {      
-          //console.log('attribute ' +  user[i].Name + ' has value ' +  user[i].Value);
-          if(userAttributes[i].Name == 'given_name' ) {
-            givenName = userAttributes[i].Value;
+          console.log('attribute ' +  userAttributes[i].Name + ' has value ' +  userAttributes[i].Value);
+          if(userAttributes[i].Name == 'email' ) {
+            email = userAttributes[i].Value;
           } 
           if(userAttributes[i].Name == 'family_name' ) {
             familyName = userAttributes[i].Value;
           } 
+          if(userAttributes[i].Name == 'given_name' ) {
+            givenName = userAttributes[i].Value;
+          }           
         }
-        let user = new User(userName, givenName, familyName, userToken);
+        let user = new User(userId, email, givenName, familyName, userToken);
         localStorage.setItem('user',  JSON.stringify(user));
         console.log('setting fill name to ' + givenName + ' ' + familyName);    
         this.loadedUser.next(user);            

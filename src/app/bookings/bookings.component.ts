@@ -66,8 +66,9 @@ export class BookingsComponent implements OnInit {
               this.resource = result.Item;
               console.log('resource name is ' + this.resource.title);
               this.resourceName = this.resource.title;
-              console.log('resource owner is ' + this.resource.ownerid);
-              this.resourceOwner = this.resource.ownerid; 
+              console.log('resource owner is ' + this.resource.ownername);
+              this.resourceOwner = this.resource.ownername;
+
 
             },
             (error: Response) => {
@@ -97,8 +98,9 @@ export class BookingsComponent implements OnInit {
             eventClick: function(calEvent, jsEvent, view) {
               var startItem = moment(calEvent.start).format(self.timeFormat);
               var endItem = moment(calEvent.end).format(self.timeFormat);
-              console.log('item.id: ' + calEvent.id);
-              var booking = new Booking( calEvent.id,  calEvent.userid,  calEvent.resourceId, startItem, endItem);
+              console.log('calEvent.id: ' + calEvent.id);   
+              console.log('calEvent.username: ' + calEvent.username);                        
+              var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
               self.onEditObject( calEvent, booking);
             },            
             dayClick: function(date, jsEvent, view) {
@@ -108,7 +110,7 @@ export class BookingsComponent implements OnInit {
               var endItem = moment(date.format() + ' ' + self.defaultTime).add(1, 'days').format(self.timeFormat);
               console.log('form submitted start is ' + startItem);
               console.log('form submitted end is ' + endItem);          
-              var booking = new Booking( '',  '',  '', startItem, endItem);
+              var booking = new Booking( '',  '',  '', '',  startItem, endItem);
               // add object
               self.onAddObject(booking);
               
@@ -133,24 +135,23 @@ export class BookingsComponent implements OnInit {
                     var startItem = moment(item.start, self.timeFormat);
                     var endItem = moment(item.end, self.timeFormat);
 
-                    // need to load into an object when component created
-                    var username = item.userid;
-                    //var username = item.firstname + ' ' + item.lastname;
+                    // need to load into an object when component created                    
                     var colour = '#378006';
-                    
-                    //console.log('PUSH item.start ' + item.start + ', username ' + username);
+                      
+                    console.log('PUSH startItem ' + startItem + ', item.username ' + item.username);
                     // calendar events
                     events.push({
                       index: index,
                       id: item.id,
-                      title: username,
+                      title: item.username,
                       start: startItem,
                       end: endItem, 
                       color: colour                                          
                     });
                     index++;
                   });
-                  callback(events);
+                  // call back with all events
+                  callback(events);                                          
                 }
               });
             }
@@ -172,10 +173,11 @@ export class BookingsComponent implements OnInit {
     console.log('form submitted end is ' + value.end);
 
     var user = this.authenticationService.getUser();
-    var username = user.username;
+    var userid = user.id;
+    var username = user.firstname + ' ' + user.lastname;
     var colour = '#378006';
     
-    console.log('form submitted userid is ' + username);
+    console.log('form submitted userid is ' + userid);
     var startDate = moment(value.start, this.timeFormat);
     var endDate = moment(value.end, this.timeFormat);
 
@@ -186,6 +188,7 @@ export class BookingsComponent implements OnInit {
 
     if (this.editMode) {
       let booking = new Booking( this.editBooking.id, 
+                                 userid,
                                  username,
                                  this.resourceId,
                                  value.start, value.end);
@@ -210,8 +213,9 @@ export class BookingsComponent implements OnInit {
       );
     } else {
       let booking = new Booking('', 
+                                userid,
                                 username,
-                                this.resourceId, 
+                                this.resourceId,
                                 value.start, 
                                 value.end);
       this.dataStorageService.storeObject(booking)
@@ -280,12 +284,13 @@ export class BookingsComponent implements OnInit {
 
   onDelete() {
     var user = this.authenticationService.getUser();
-    var userid = user.username;
+    var userid = user.id;
+
     console.log('userid is ' + userid);
     console.log('delete id is ' + this.editBooking.id);
     console.log('resource id is ' + this.resourceId);
 
-    let booking = new Booking(this.editBooking.id, userid, this.resourceId,'' ,'');    
+    let booking = new Booking(this.editBooking.id, userid, '', this.resourceId,'' ,'');    
 
     this.dataStorageService.deleteObject(booking)
     .subscribe(

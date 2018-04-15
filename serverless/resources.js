@@ -100,7 +100,7 @@ app.get('/resource/:id', function (req, res) {
 // Save Resource
 app.put('/resource', function (req, res) {
   try {  
-    let { id, title, ownerid } = req.body;
+    let { id, title, ownerid, ownername } = req.body;
 
     var newResource = false;
 
@@ -114,7 +114,8 @@ app.put('/resource', function (req, res) {
 
     console.log('newResource is: ' + newResource);
     console.log('id is: ' + id);
-    console.log('ownerid is: ' + ownerid);    
+    console.log('ownerid is: ' + ownerid);
+    console.log('owner name is: ' + ownername);        
     console.log('currentDateTime is: ' + currentDateTime);
     console.log('title: ' + title);
 
@@ -136,6 +137,7 @@ app.put('/resource', function (req, res) {
         Item: {
           id: id,
           ownerid: ownerid,
+          ownername: ownername,
           createddate: currentDateTime, 
           updateddate: currentDateTime,           
           title: title, 

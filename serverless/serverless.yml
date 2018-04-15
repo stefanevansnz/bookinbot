@@ -8,7 +8,7 @@ plugins:
 service: bookinbot-application
 
 custom:
-  cognitoPoolArn: "arn:aws:cognito-idp:ap-southeast-2:522157531186:userpool/ap-southeast-2_Z7EKFQs4E"
+  cognitoPoolArn: ${env:COGNITOPOOLARN}
   cognitoAuthorizer:
     arn: ${self:custom.cognitoPoolArn}
   customDomain:
@@ -24,7 +24,9 @@ custom:
   tableNameResources: 'bookinbot-resources'    
   tableNameBookings: 'bookinbot-bookings'  
   tableNameUsers: 'bookinbot-users'
-  tableNameUserGroups: 'bookinbot-usergroups'  
+  tableNameUserGroups: 'bookinbot-usergroups' 
+  accessKey: ${env:ACCESSKEY}
+  secretKey: ${env:SECERTKEY}  
   dynamodb:
     start:
       migrate: true
@@ -51,7 +53,9 @@ provider:
     RESOURCES_TABLE: ${self:custom.tableNameResources}
     BOOKINGS_TABLE: ${self:custom.tableNameBookings}    
     USERS_TABLE: ${self:custom.tableNameUsers}    
-    USERGROUPS_TABLE: ${self:custom.tableNameUserGroups}    
+    USERGROUPS_TABLE: ${self:custom.tableNameUserGroups}  
+    AWS_ACCESS_KEY: ${self:custom.accessKey}   
+    AWS_SECRET_KEY: ${self:custom.secretKey}       
               
 functions:
   app-resources:
