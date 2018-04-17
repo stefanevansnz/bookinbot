@@ -11,9 +11,6 @@ const app = express()
 const BOOKINGS_TABLE = process.env.BOOKINGS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
 
-const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-const AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-
 let dynamoDb;
 
 if (IS_OFFLINE === 'true') {

@@ -26,7 +26,7 @@ custom:
   tableNameUsers: 'bookinbot-users'
   tableNameUserGroups: 'bookinbot-usergroups' 
   accessKey: ${env:ACCESSKEY}
-  secretKey: ${env:SECERTKEY}  
+  secretKey: ${env:SECRETKEY}  
   dynamodb:
     start:
       migrate: true

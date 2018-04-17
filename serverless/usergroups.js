@@ -9,8 +9,10 @@ const app = express()
 
 const USERGROUPS_TABLE = process.env.USERGROUPS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
-
+const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+const AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
 let dynamoDb;
+let client;
 
 if (IS_OFFLINE === 'true') {
   dynamoDb = new AWS.DynamoDB.DocumentClient({
@@ -21,6 +23,11 @@ if (IS_OFFLINE === 'true') {
 } else {
   dynamoDb = new AWS.DynamoDB.DocumentClient();
 };
+
+AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+var CognitoIdentityServiceProvider = AWS.CognitoIdentityServiceProvider;
+client = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-19', region: 'ap-southeast-2' });
+
 
 app.use((req, res, next) => {
     // Allow CORS
@@ -63,35 +70,27 @@ app.get('/usergroups', function (req, res) {
 });
 
 
-// List a eesource
+// List a group
 app.get('/usergroup/:id', function (req, res) {
   try {
 
     // Get Usergroup
     var id = req.param('id');
 
-    console.log('id is: ' + id);
+    console.log('id is: ' + id);    
 
-    const params = {
-      TableName: USERGROUPS_TABLE,
-      Key: {
-        id: id 
+    client.listUsersInGroup({ GroupName: id, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+      if (!err) {
+        console.log('successful' + JSON.stringify(data));
+        res.json(data.Items);
+      } else {
+        // error finding group
+        console.log('error' + JSON.stringify(err));
+        res.status(err.statusCode).json({ error: String(err) });
       }
-//      KeyConditionExpression: "id = :a",
-    };
-
-    console.log('search...');
-    dynamoDb.get(params, (error, result) => {
-        if (error) {
-          res.status(400).json({ error: 'Could not get usergroups' });
-        }
-        if (result) {
-          console.log('result found');
-          res.json(result);
-        } else {
-          res.status(404).json({ error: "Usergroups not found" });
-        }
     });
+    
+
   } catch (error) {
     res.status(500).json({ error: String(error) });
   }      
@@ -129,6 +128,16 @@ app.put('/usergroup', function (req, res) {
     }
 
 
+    this.cognitoProvider.CreateGroup({ GroupName: id, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+      if (!err) {
+        console.log('successful' + JSON.stringify(data));
+      }
+    });
+      
+
+
+
+/*
     if (newUsergroup) {
       // create in db
       params = {
@@ -172,7 +181,7 @@ app.put('/usergroup', function (req, res) {
       });        
         
     }
-
+*/
 
   } catch (error) {
     res.status(500).json({ error: String(error) });
