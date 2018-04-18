@@ -157,7 +157,7 @@ export class AuthenticationService {
             givenName = userAttributes[i].Value;
           }           
         }
-        let user = new User(userId, email, givenName, familyName, userToken);
+        let user = new User(userId, email, givenName, familyName, '', userToken);
         localStorage.setItem('user',  JSON.stringify(user));
         console.log('setting fill name to ' + givenName + ' ' + familyName);    
         this.loadedUser.next(user);            

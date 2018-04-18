@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const express = require('express')
 const AWS = require('aws-sdk');
 const uuidv1 = require('uuid/v1');
-const app = express()
+const app = express();
+
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
@@ -58,8 +59,45 @@ app.get('/users', function (req, res) {
     // Get Users
     client.listUsers({ Filter: 'email = "' + email + '"', UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
       if (!err) {
-        console.log('successful' + JSON.stringify(data));
-        res.json(data.Users);
+        let searchUsers = data.Users;
+        var users = [];       
+        // loop through data, tidy up and return
+        for (let userIndex = 0; userIndex < searchUsers.length; userIndex++) {
+          let id = searchUsers[userIndex].Username;
+          let status = searchUsers[userIndex].UserStatus;
+          //console.log('Username ' + searchUsers[userIndex].Username);
+          //console.log('UserStatus ' + searchUsers[userIndex].UserStatus);   
+          var userAttributes = searchUsers[userIndex].Attributes;
+
+          var email = '';
+          var firstname = '';
+          var lastname = '';
+          for (let attrIndex = 0; attrIndex < userAttributes.length; attrIndex++) {      
+            if(userAttributes[attrIndex].Name == 'email' ) {
+              //console.log('Email ' + userAttributes[attrIndex].Value); 
+              email = userAttributes[attrIndex].Value;             
+            }             
+            if(userAttributes[attrIndex].Name == 'given_name' ) {
+              //console.log('First Name ' + userAttributes[attrIndex].Value);              
+              firstname = userAttributes[attrIndex].Value;
+            }           
+            if(userAttributes[attrIndex].Name == 'family_name' ) {
+              //console.log('Last Name ' + userAttributes[attrIndex].Value);              
+              lastname = userAttributes[attrIndex].Value;
+            } 
+          }
+          let user = {
+            id: id,
+            email: email,
+            firstname: firstname,
+            lastname: lastname,
+            status: status
+          }
+          users.push(user);
+        }
+
+        //console.log('successful' + JSON.stringify(users));
+        res.json(users);
       } else {
         // error finding group
         console.log('error' + JSON.stringify(err));

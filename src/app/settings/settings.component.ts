@@ -19,7 +19,8 @@ export class SettingsComponent implements OnInit {
   message: any;
   loading: boolean = false; 
   
-  users: any;  
+  private users: User[] = [];
+  
 
   constructor(
     private authenticationService: AuthenticationService,              
@@ -70,7 +71,7 @@ export class SettingsComponent implements OnInit {
     .subscribe(
       (success: Response) => {
         console.log('found users for email ' + email);
-        this.users = success.json(); 
+        this.users = success.json();
         console.log('user is ' + this.users.length); 
       },
       (error: Response) => {
@@ -80,7 +81,9 @@ export class SettingsComponent implements OnInit {
       })
   } 
   
-  onAddObject
+  onAddObject() {
+    console.log('add object');
+  }
 
   isLoading() {
     return this.loading;

@@ -26,13 +26,8 @@
                 (click)="onAddObject(i, resource)"            
                 type="submit">
                 Add</button>
-                {{ user.Username }} - {{ user.UserStatus}} - 
-                {{ user.Attributes[4].Value }} - {{ user.Attributes[2].Value }} {{ user.Attributes[3].Value }}
-<!--
-                <span *ngFor="let userAttributes of user.Attributes; let attr = index">
-                    {{ userAttributes.Name }} is {{ userAttributes.Value }}
-                </span>
--->                
+                {{ user.id }} - {{ user.status}} - 
+                {{ user.email }} - {{ user.firstname }} {{ user.lastname }}
             </li>
           </ul>
           
