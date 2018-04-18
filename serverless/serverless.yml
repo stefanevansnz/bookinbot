@@ -128,7 +128,7 @@ functions:
           authorizer: ${self:custom.cognitoAuthorizer}
           method: get
           path: "users"
-          cors: true      
+          cors: true         
       - http: 
           authorizer: ${self:custom.cognitoAuthorizer}
           method: delete

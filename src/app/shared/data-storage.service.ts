@@ -21,8 +21,7 @@ export class DataStorageService {
         return this.http.get(environment.api + '/' + name + '/' + id, {headers: headers});
     }
 
-    getObjects(name: string, id: string) {  
-        
+    getObjects(name: string, id: string) {          
         let user = this.authenticationService.getUser();        
 
         let headers = new Headers();
@@ -31,8 +30,19 @@ export class DataStorageService {
         
         return this.http.get(environment.api + '/' + 
             name + (id != null ? '/' + id : ''), {headers: headers});
-
     }
+
+    getObjectsParams(name: string, params: any) {          
+        let user = this.authenticationService.getUser();        
+
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');        
+        headers.append('Authorization', user.token);
+        
+        return this.http.get(environment.api + '/' + 
+            name + (params != null ? '?' + params.name + '=' + params.value : ''), {headers: headers});
+    }
+
 
     storeObject(object: any) { 
         let name = object.constructor.name.toLowerCase();

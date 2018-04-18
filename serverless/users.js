@@ -9,8 +9,11 @@ const app = express()
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
+const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+const AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
 
 let dynamoDb;
+let client;
 
 if (IS_OFFLINE === 'true') {
   dynamoDb = new AWS.DynamoDB.DocumentClient({
@@ -22,6 +25,11 @@ if (IS_OFFLINE === 'true') {
   dynamoDb = new AWS.DynamoDB.DocumentClient();
 };
 
+AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+var CognitoIdentityServiceProvider = AWS.CognitoIdentityServiceProvider;
+client = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-19', region: 'ap-southeast-2' });
+
+
 app.use((req, res, next) => {
     // Allow CORS
     res.append('Access-Control-Allow-Origin', ['*']);
@@ -32,11 +40,7 @@ app.use((req, res, next) => {
         res.send(200);
     } else {
         next();
-    } 
-    AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
-    var CognitoIdentityServiceProvider = AWS.CognitoIdentityServiceProvider;
-    var client = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-19', region: 'ap-southeast-2' });
-   
+    }    
 });
 
 app.use(
@@ -46,21 +50,24 @@ app.use(
 // List All Users
 app.get('/users', function (req, res) {
   try {
-    // Get Users
-    const params = {
-      TableName: USERS_TABLE,
-    };
 
-    dynamoDb.scan(params, (error, result) => {
-        if (error) {
-          res.status(400).json({ error: 'Could not get users' });
-        }
-        if (result) {
-            res.json(result.Items);
-        } else {
-          res.status(404).json({ error: "Users not found" });
-        }
+    // Get Usergroup
+    var email = req.param('email');
+    console.log('email is: ' + email);  
+
+    // Get Users
+    client.listUsers({ Filter: 'email = "' + email + '"', UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+      if (!err) {
+        console.log('successful' + JSON.stringify(data));
+        res.json(data.Users);
+      } else {
+        // error finding group
+        console.log('error' + JSON.stringify(err));
+        res.status(err.statusCode).json({ error: String(err) });
+      }
     });
+
+
   } catch (error) {
     res.status(500).json({ error: String(error) });
   }      
