@@ -17,10 +17,13 @@ export class SettingsComponent implements OnInit {
   @ViewChild('f') slForm: NgForm;  
   messageUpdate: Subscription;
   message: any;
+
   loading: boolean = false; 
-  
+
+  private usergroupid: string;
+    
+  private searchusers: User[] = [];
   private users: User[] = [];
-  
 
   constructor(
     private authenticationService: AuthenticationService,              
@@ -38,15 +41,16 @@ export class SettingsComponent implements OnInit {
     );
 
     var user = this.authenticationService.getUser();
-    var userid = user.id;
+    this.usergroupid = user.id;
 
     // get user group
     console.log('find user group');
-    this.dataStorageService.getObjects('usergroup', userid)
+    this.dataStorageService.getObjects('usergroup', this.usergroupid)
     .subscribe(
       (success: Response) => {
-        console.log('found user group for userid ' + userid);
-
+        console.log('found user group for userid ' + this.usergroupid);
+        this.users = success.json();        
+        console.log('user is ' + this.users.length);         
       },
       (error: Response) => {
         console.log('error finding usergroup' + error );
@@ -70,8 +74,8 @@ export class SettingsComponent implements OnInit {
     this.dataStorageService.getObjectsParams('users', params)
     .subscribe(
       (success: Response) => {
-        console.log('found users for email ' + email);
-        this.users = success.json();
+        console.log('found users for search on email ' + email);
+        this.searchusers = success.json();
         console.log('user is ' + this.users.length); 
       },
       (error: Response) => {
@@ -81,9 +85,19 @@ export class SettingsComponent implements OnInit {
       })
   } 
   
-  onAddObject() {
-    console.log('add object');
-  }
+  onAddObject(index: number, user: User) {
+    console.log('add user object');
+    this.dataStorageService.storeObjectParams(user, 'usergroup', this.usergroupid )
+    .subscribe(
+      (success: Response) => {          
+        this.users.push(user);
+        this.message = '';
+      },
+      (error: Response) => {
+        this.message = messages.server_error;             
+      }
+    );
+}
 
   isLoading() {
     return this.loading;

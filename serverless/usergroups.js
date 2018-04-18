@@ -70,7 +70,7 @@ app.get('/usergroups', function (req, res) {
 });
 
 
-// List a group
+// List users in a user group
 app.get('/usergroup/:id', function (req, res) {
   try {
 
@@ -82,7 +82,43 @@ app.get('/usergroup/:id', function (req, res) {
     client.listUsersInGroup({ GroupName: id, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
       if (!err) {
         console.log('successful' + JSON.stringify(data));
-        res.json(data.Items);
+
+        let searchUsers = data.Users;
+        var users = [];       
+        // loop through data, tidy up and return
+        for (let userIndex = 0; userIndex < searchUsers.length; userIndex++) {
+          let id = searchUsers[userIndex].Username;
+          let status = searchUsers[userIndex].UserStatus;
+          var userAttributes = searchUsers[userIndex].Attributes;
+
+          var email = '';
+          var firstname = '';
+          var lastname = '';
+          for (let attrIndex = 0; attrIndex < userAttributes.length; attrIndex++) {      
+            if(userAttributes[attrIndex].Name == 'email' ) {
+              //console.log('Email ' + userAttributes[attrIndex].Value); 
+              email = userAttributes[attrIndex].Value;             
+            }             
+            if(userAttributes[attrIndex].Name == 'given_name' ) {
+              //console.log('First Name ' + userAttributes[attrIndex].Value);              
+              firstname = userAttributes[attrIndex].Value;
+            }           
+            if(userAttributes[attrIndex].Name == 'family_name' ) {
+              //console.log('Last Name ' + userAttributes[attrIndex].Value);              
+              lastname = userAttributes[attrIndex].Value;
+            } 
+          }
+          let user = {
+            id: id,
+            email: email,
+            firstname: firstname,
+            lastname: lastname,
+            status: status
+          }
+          users.push(user);
+        }
+
+        res.json(users);
       } else {
         // error finding group
         console.log('error' + JSON.stringify(err));
@@ -97,92 +133,41 @@ app.get('/usergroup/:id', function (req, res) {
 });
 
 // Save Usergroup
-app.put('/usergroup', function (req, res) {
+app.put('/usergroup/:id', function (req, res) {
   try {  
-    let { id, title, ownerid } = req.body;
 
-    var newUsergroup = false;
+    // Get Usergroup
+    var usergroupid = req.param('id');
+    let { id, email } = req.body;
+    let userid = id;
 
-    var currentDateTime = new Date().toString();
-    var params;
+    console.log('userid is: ' + userid);
+    console.log('usergroupid is: ' + usergroupid);    
 
-    if (id == "") {
-      newUsergroup = true;
-      id = uuidv1();
+    if (typeof usergroupid !== 'string') {
+      res.status(400).json({ error: 'usergroupid must have a value.' });
+    }
+    if (typeof userid !== 'string') {
+      res.status(400).json({ error: 'userid must have a value.' });
     }
 
-    console.log('newUsergroup is: ' + newUsergroup);
-    console.log('id is: ' + id);
-    console.log('ownerid is: ' + ownerid);    
-    console.log('currentDateTime is: ' + currentDateTime);
-    console.log('title: ' + title);
-
-    if (typeof id !== 'string') {
-      res.status(400).json({ error: 'Id must have a value.' });
-    }
-    if (typeof title !== 'string') {
-      res.status(400).json({ error: 'Title must have a value.' });
-    }
-    if (typeof ownerid !== 'string') {
-      res.status(400).json({ error: 'OwnerId must have a value.' });
-    }
-
-
-    this.cognitoProvider.CreateGroup({ GroupName: id, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+    client.createGroup({ GroupName: usergroupid, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
       if (!err) {
-        console.log('successful' + JSON.stringify(data));
+        console.log('createGroup successful' + JSON.stringify(data));
+      } else {
+        console.log('error was ' + err.error);
       }
+      // add user to group
+      client.adminAddUserToGroup({ Username: userid, GroupName: usergroupid, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+        if (!err) {
+          console.log('adminAddUserToGroup successful' + JSON.stringify(data)); 
+          res.json(data);         
+        } else {
+          res.status(err.statusCode).json({ error: String(err) });
+        }
+      });
     });
       
-
-
-
-/*
-    if (newUsergroup) {
-      // create in db
-      params = {
-        TableName: USERGROUPS_TABLE,
-        Item: {
-          id: id,
-          ownerid: ownerid,
-          createddate: currentDateTime, 
-          updateddate: currentDateTime,           
-          title: title, 
-        }
-      }             
-      dynamoDb.put(params, (error) => {
-        if (error) {
-          res.status(error.statusCode).json({ error: error});
-        } else {
-          res.json({ id, title });
-        }
-      });        
-    } else {
-      // update in db    
-      params = {
-        TableName: USERGROUPS_TABLE,
-        Key:{
-            "id": id
-        },
-        UpdateExpression: "set title = :title, updateddate = :updateddate",
-        ExpressionAttributeValues:{
-            ":title": title,
-            ":updateddate": currentDateTime
-        },
-        ReturnValues:"UPDATED_NEW"
-      };
-
-      dynamoDb.update(params, (error) => {
-        if (error) {
-          res.status(error.statusCode).json({ error: error});
-        } else {
-          res.json({ id, title });
-        }
-      });        
-        
-    }
-*/
-
   } catch (error) {
     res.status(500).json({ error: String(error) });
   } 

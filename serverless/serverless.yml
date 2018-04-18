@@ -140,7 +140,7 @@ functions:
       - http: 
           authorizer: ${self:custom.cognitoAuthorizer}
           method: put
-          path: "usergroup"
+          path: "usergroup/{id}"
           cors: true 
       - http: 
           authorizer: ${self:custom.cognitoAuthorizer}

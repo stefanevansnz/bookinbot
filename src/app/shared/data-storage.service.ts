@@ -50,6 +50,11 @@ export class DataStorageService {
         return this.http.put(environment.api + '/' + name, object)
     }
 
+    storeObjectParams(object: any, name: string, value: string) { 
+        console.log(environment.api + '/' + name, object);
+        return this.http.put(environment.api + '/' + name + '/' + value, object)
+    }
+
     deleteObject(object: any) { 
         let name = object.constructor.name.toLowerCase();
         console.log(environment.api + '/' + name, object);
