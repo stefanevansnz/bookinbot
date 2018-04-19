@@ -23,6 +23,7 @@ import { SignoutComponent } from './signout/signout.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SplashComponent } from './splash/splash.component';
+import { BookingsColourPickerService } from './bookings/bookings-colour-picker.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,7 @@ import { SplashComponent } from './splash/splash.component';
     FormsModule, 
     ModalModule  
   ],
-  providers: [DataStorageService, AuthenticationService, NotificationService, AuthenticationGuardService, DateRangePickerService ],
+  providers: [DataStorageService, AuthenticationService, NotificationService, AuthenticationGuardService, DateRangePickerService, BookingsColourPickerService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

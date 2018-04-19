@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 import { Resource } from '../resources/resources.model';
 import { AuthenticationService } from '../shared/authentication.service';
 import { DateRangePickerService } from '../shared/date-range-picker.service';
+import { BookingsColourPickerService } from './bookings-colour-picker.service';
 
 declare var jQuery:any;
 declare var moment:any;
@@ -45,6 +46,7 @@ export class BookingsComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService,
               private dataStorageService: DataStorageService, 
               private dateRangePickerService: DateRangePickerService,
+              private bookingsColourPickerService: BookingsColourPickerService,              
               private router: Router, 
               private route: ActivatedRoute) {}
 
@@ -135,8 +137,8 @@ export class BookingsComponent implements OnInit {
                     var startItem = moment(item.start, self.timeFormat);
                     var endItem = moment(item.end, self.timeFormat);
 
-                    // need to load into an object when component created                    
-                    var colour = '#378006';
+                    // need to load into an object when component created                        
+                    var colour = self.bookingsColourPickerService.pickBookingColour(item.username);
                       
                     console.log('PUSH startItem ' + startItem + ', item.username ' + item.username);
                     // calendar events
@@ -175,7 +177,7 @@ export class BookingsComponent implements OnInit {
     var user = this.authenticationService.getUser();
     var userid = user.id;
     var username = user.firstname + ' ' + user.lastname;
-    var colour = '#378006';
+    var colour = this.bookingsColourPickerService.pickBookingColour(username);
     
     console.log('form submitted userid is ' + userid);
     var startDate = moment(value.start, this.timeFormat);
