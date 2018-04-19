@@ -159,7 +159,7 @@ functions:
       - http: 
           authorizer: ${self:custom.cognitoAuthorizer}
           method: delete
-          path: "usergroup"
+          path: "usergroup/{id}"
           cors: true  
 
 

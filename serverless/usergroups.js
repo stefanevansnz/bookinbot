@@ -174,26 +174,30 @@ app.put('/usergroup/:id', function (req, res) {
 });    
 
 // Delete Usergroup
-app.delete('/usergroup', function (req, res) {
+app.delete('/usergroup/:id', function (req, res) {
+  try {
+    // Get Usergroup
+    var usergroupid = req.param('id');
+    let { id, email } = req.body;
+    let userid = id;
 
-  try {  
-    let { id, title } = req.body;  
+    console.log('userid is: ' + userid);
+    console.log('usergroupid is: ' + usergroupid);    
 
-    console.log('id is: ' + id);
-    console.log('title: ' + title);    
+    if (typeof usergroupid !== 'string') {
+      res.status(400).json({ error: 'usergroupid must have a value.' });
+    }
+    if (typeof userid !== 'string') {
+      res.status(400).json({ error: 'userid must have a value.' });
+    }
 
-    const params = {
-      TableName: USERGROUPS_TABLE,
-      Key: {
-        id: id 
-      },
-    };
-
-    dynamoDb.delete(params, (error) => {
-      if (error) {
-        res.status(error.statusCode).json({ error: error});
+    // add user to group
+    client.adminRemoveUserFromGroup({ Username: userid, GroupName: usergroupid, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+      if (!err) {
+        console.log('adminAddUserToGroup successful' + JSON.stringify(data)); 
+        res.json(data);         
       } else {
-        res.json({ id });
+        res.status(err.statusCode).json({ error: String(err) });
       }
     });
 

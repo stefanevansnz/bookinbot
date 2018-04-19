@@ -67,5 +67,16 @@ export class DataStorageService {
         return this.http.delete(environment.api + '/' + name, options)
     }
 
+    deleteObjectParams(object: any, name: string, value: string) { 
+        console.log(environment.api + '/' + name, object);
+
+        let options = new RequestOptions({
+            //headers: headers,
+            body: object
+        })
+
+        return this.http.delete(environment.api + '/' + name +  '/' + value, options)
+    }
+
 
 }

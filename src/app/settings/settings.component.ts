@@ -85,7 +85,7 @@ export class SettingsComponent implements OnInit {
       })
   } 
   
-  onAddObject(index: number, user: User) {
+onAddObject(index: number, user: User) {
     console.log('add user object');
     this.dataStorageService.storeObjectParams(user, 'usergroup', this.usergroupid )
     .subscribe(
@@ -99,9 +99,25 @@ export class SettingsComponent implements OnInit {
     );
 }
 
-  isLoading() {
-    return this.loading;
-  }
+onDeleteObject(index: number, user: User) {
+
+  this.dataStorageService.deleteObjectParams(user, 'usergroup', this.usergroupid)
+  .subscribe(
+    (success: Response) => {          
+      this.users.splice(index, 1);        
+      this.message = '';
+    },
+    (error: Response) => {
+      this.message = messages.server_error;             
+    }
+  );    
+
+
+}
+
+isLoading() {
+  return this.loading;
+}
 
   
 
