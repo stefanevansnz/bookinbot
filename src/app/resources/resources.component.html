@@ -53,20 +53,23 @@
       <button id="add-resource" type="button" class="btn btn-primary" 
         (click)="onAddObject()">Add Resource</button>
       <ul class="list-group">
-        <li class="list-group-item" class="list-group-item" 
+        <li
+          class="list-group-item" class="list-group-item" 
           style="cursor: pointer"
           *ngFor="let resource of resources; let i = index">
+            {{ resource.title }}         
             <button 
             id="edit-resource"
-            class="btn btn-success" 
+            class="btn btn-success float-right edit" 
             (click)="onEditObject(i, resource)"            
             type="submit" >
             Edit</button>
-            <a 
-            (click)="onViewBookings(i, resource)"
-            >
-            {{ resource.title }}
-            </a>
+            <button 
+            id="view-resource"
+            class="btn btn-success float-right" 
+            (click)="onViewBookings(i, resource)"           
+            type="submit" >
+            View</button>            
         </li>
       </ul>
   </div>

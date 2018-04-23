@@ -19,11 +19,15 @@ export class SettingsComponent implements OnInit {
   message: any;
 
   loading: boolean = false; 
+  searched: boolean = false;
+  inviteready: boolean = false;
 
   private usergroupid: string;
     
   private searchusers: User[] = [];
   private users: User[] = [];
+  private searchMessage: string;
+  private inviteMessage: string;
 
   constructor(
     private authenticationService: AuthenticationService,              
@@ -62,12 +66,19 @@ export class SettingsComponent implements OnInit {
       })
   }
 
+  keyDownFunction(event) {
+    if(event.keyCode == 13) {      
+      // rest of your code
+    }
+  }
+
   onSearchUsers(form: NgForm) {
     var self = this;
 
     //this.loading = true;
     const email = form.value.email;
     console.log('find users ' + email);
+    this.searchMessage = 'Search for users...';
 
     var params = {'name':'email', 'value': email};
 
@@ -76,7 +87,15 @@ export class SettingsComponent implements OnInit {
       (success: Response) => {
         console.log('found users for search on email ' + email);
         this.searchusers = success.json();
-        console.log('user is ' + this.users.length); 
+        if (this.searchusers.length == 0) {
+          this.inviteMessage = "Invite " + email + " to join your group.";
+          this.searchMessage = "User not found. Press 'Invite' to send an invite to join your group.";
+        } else {
+          this.searchMessage = "User found. Press 'Add' to add to your group.";
+        }
+        this.searched = true;
+        console.log(this.searchMessage); 
+      
       },
       (error: Response) => {
         console.log('error finding users' + error );
