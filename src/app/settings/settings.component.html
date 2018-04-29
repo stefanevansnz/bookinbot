@@ -19,25 +19,38 @@
             </div>                    
         </form>        
 
+
         <ul class="list-group">
             <label *ngIf="searched">{{ searchMessage }}</label>
+
+            <li class="list-group-item" class="list-group-item" 
+              *ngIf="userNotFound">
+              Send invite to {{ emailInvite }}
+              <button 
+              class="invite-user float-right btn btn-success"                 
+              (click)="onInviteUser(emailInvite)"            
+              type="submit">
+              Invite</button>  
+            </li>            
+
             <li class="list-group-item" class="list-group-item" 
               *ngFor="let user of searchusers; let i = index">
                 {{ user.firstname }} {{ user.lastname }} ({{ user.email }})              
                 <button 
                 class="add-user float-right btn btn-success"                 
-                (click)="onAddObject(i, user)"            
+                (click)="onAddUser(user)"            
                 type="submit">
                 Add</button>                
             </li>
-          </ul>
+        </ul>
           
 
         <h1>Users in your group</h1>        
         <ul class="list-group">
             <li class="list-group-item" class="list-group-item"
               *ngFor="let user of users; let i = index">
-                {{ user.firstname }} {{ user.lastname }} ({{ user.email }})  
+                {{ user.firstname }} {{ user.lastname }} ({{ user.email }} 
+                <span class="badge badge-success">{{ user.status }}</span>)
                 <button 
                 class="remove-user float-right btn btn-danger" 
                 (click)="onDeleteObject(i, user)"            

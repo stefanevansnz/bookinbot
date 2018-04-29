@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthenticationService } from '../shared/authentication.service';
@@ -22,16 +22,26 @@ export class SignupComponent implements OnInit {
   messageUpdate: Subscription;
   message: any;
   loading: boolean = false;
+  newpassword: boolean = false;
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
               private dataStorageService: DataStorageService,
-              private router: Router) { }
+              private router: Router,
+              private activatedRoute: ActivatedRoute) { }
 
 
   ngOnInit() {
 
     console.log('sign up');
+    this.activatedRoute.params.subscribe((params: Params) => {
+      let status = params['status'];
+      console.log('status of sign up is ' + status);
+      if (status == 'newpassword') {
+        console.log('set newpassword to true');
+        this.newpassword = true;
+      }
+    });    
   
     this.suForm.reset();
     this.messageUpdate = this.notificationService.getMessage()
@@ -56,31 +66,21 @@ export class SignupComponent implements OnInit {
   onSubmit(form: NgForm) {
     //this.loading = true;
     const email = form.value.email;
-    const password = form.value.password;  
+    const password = form.value.password;
+    const newpassword = form.value.newpassword;      
     const firstname = form.value.firstname;
-    const lastname = form.value.lastname;          
-    this.authenticationService.signupUser(email, password, firstname, lastname, this);
+    const lastname = form.value.lastname;
+
+    if (this.newpassword) {
+      this.authenticationService.completeNewPasswordChallenge(email, password, newpassword, firstname, lastname, this);
+    } else {
+      this.authenticationService.signupUser(email, password, firstname, lastname, this);
+    }
   } 
 
-  successfulSignUp(userId, email, firstname, lastname) {
-    console.log('successfulSignUp userId is ' + userId + ' email is ' + email + ' firstname is ' + firstname + ' lastname is ' + lastname );
-
-    let user = new User(userId, email, firstname, lastname, null);
-    this.dataStorageService.storeObject(user)
-    .subscribe(
-      (success: Response) => {      
-        // add user to list    
-        user.id = success.json().id;
-        this.message = '';          
-        this.router.navigateByUrl('/signup?status=confirm'); 
-      },
-      (error: Response) => {
-        this.message = messages.server_error;
-        ;             
-      }
-    );
-
-
+  successfulSignUp() {
+    console.log('successfulSignUp');
+    this.router.navigateByUrl('/signup?status=confirm');    
   }
 
   isLoading() {

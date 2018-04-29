@@ -44,6 +44,11 @@ export class SigninComponent implements OnInit {
     this.router.navigateByUrl('/resources'); 
   }
 
+  newPasswordRequired() {
+    this.router.navigateByUrl('/signup/newpassword');
+  }
+
+
   isLoading() {
     return this.loading;
   }

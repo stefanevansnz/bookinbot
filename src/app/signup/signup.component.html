@@ -12,6 +12,7 @@
             <input required email id="email" name="email" ngModel class="form-control">
             </div> 
           </div>
+
           <div class="form-group">
             <label for="password">Password</label>
 
@@ -19,6 +20,15 @@
             <input required password type="password" id="password" name="password" ngModel class="form-control">
             </div>            
           </div> 
+
+          <div *ngIf="newpassword" class="form-group">
+              <label for="newpassword">New Password</label>
+  
+              <div class="input-group">
+              <input required password type="newpassword" id="newpassword" name="newpassword" ngModel class="form-control">
+              </div>            
+          </div> 
+  
 
           <div class="form-group">
             <label for="firstname">First Name</label>

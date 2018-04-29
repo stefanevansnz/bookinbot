@@ -27,7 +27,7 @@ if (IS_OFFLINE === 'true') {
 AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 var CognitoIdentityServiceProvider = AWS.CognitoIdentityServiceProvider;
 client = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-19', region: 'ap-southeast-2' });
-
+userPoolId = 'ap-southeast-2_WJTRV1aco';
 
 app.use((req, res, next) => {
     // Allow CORS
@@ -79,7 +79,10 @@ app.get('/usergroup/:id', function (req, res) {
 
     console.log('id is: ' + id);    
 
-    client.listUsersInGroup({ GroupName: id, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+    client.listUsersInGroup({ 
+      GroupName: id, 
+      UserPoolId: userPoolId
+    }, function(err, data) {
       if (!err) {
         console.log('successful' + JSON.stringify(data));
 
@@ -132,9 +135,11 @@ app.get('/usergroup/:id', function (req, res) {
   }      
 });
 
-// Save Usergroup
+// Save User in Usergroup
 app.put('/usergroup/:id', function (req, res) {
   try {  
+
+    var self = this;
 
     // Get Usergroup
     var usergroupid = req.param('id');
@@ -142,36 +147,94 @@ app.put('/usergroup/:id', function (req, res) {
     let userid = id;
 
     console.log('userid is: ' + userid);
-    console.log('usergroupid is: ' + usergroupid);    
+    console.log('email is: ' + email);
+    console.log('usergroupid is: ' + usergroupid);
 
     if (typeof usergroupid !== 'string') {
       res.status(400).json({ error: 'usergroupid must have a value.' });
     }
-    if (typeof userid !== 'string') {
-      res.status(400).json({ error: 'userid must have a value.' });
+    if (typeof email !== 'string') {
+      res.status(400).json({ error: 'email must have a value.' });
     }
 
-    client.createGroup({ GroupName: usergroupid, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
-      if (!err) {
-        console.log('createGroup successful' + JSON.stringify(data));
+
+    var saveUserInGroup = function (userid, email, usergroupid) {
+      console.log('email in function is ' + email);
+      // create group first if required
+      client.createGroup({ 
+        GroupName: usergroupid, 
+        UserPoolId: userPoolId
+        }, function(err, data) {
+          if (!err) {
+            console.log('createGroup successful' + JSON.stringify(data));
+          } else {
+            console.log('createGroup error was ' + err.error);
+          }
+          // then create user
+          createUser(userid, email);
+      });
+      
+    }
+
+    var createUser = function (userid, email) {
+      if (userid == null) {
+        // add user to group if not found.
+        console.log('AdminCreateUser for ' + email);
+        var userAttributes = {
+          'email': email 
+        }
+        client.adminCreateUser({ 
+          //DesiredDeliveryMediums: ['EMAIL'], 
+          //UserAttributes: userAttributes, 
+          Username: email,
+          UserPoolId: userPoolId
+        }, function(err, data) {
+          if (!err) {
+            console.log('adminCreateUser successful' + JSON.stringify(data)); 
+            // set new user id
+            userid = data.User.Username; 
+            console.log('user id returned is ' + userid);   
+          } else {
+            //res.status(err.statusCode).json({ error: String(err) });
+            console.log('adminCreateUser error was ' + err.error);
+          }
+          // add user to group once done.
+          addUserToGroup(userid);
+        });            
       } else {
-        console.log('error was ' + err.error);
+        // no need to create user and just add to group
+        addUserToGroup(userid);
       }
+    
+    }
+
+    var addUserToGroup = function(userid) {
       // add user to group
-      client.adminAddUserToGroup({ Username: userid, GroupName: usergroupid, UserPoolId: 'ap-southeast-2_WJTRV1aco'}, function(err, data) {
+      client.adminAddUserToGroup({ 
+        Username: userid, 
+        GroupName: usergroupid, 
+        UserPoolId: userPoolId
+        }, function(err, data) {
         if (!err) {
           console.log('adminAddUserToGroup successful' + JSON.stringify(data)); 
           res.json(data);         
         } else {
+          console.log('adminAddUserToGroup err.statusCode:' + err.statusCode + ', err:' + err);
           res.status(err.statusCode).json({ error: String(err) });
         }
       });
-    });
-      
+    }
+
+    // create group and add user
+    saveUserInGroup(userid, email, usergroupid);
+
+
   } catch (error) {
     res.status(500).json({ error: String(error) });
   } 
-});    
+});
+
+
 
 // Delete Usergroup
 app.delete('/usergroup/:id', function (req, res) {

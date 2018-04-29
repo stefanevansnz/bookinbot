@@ -20,8 +20,9 @@ export class SettingsComponent implements OnInit {
 
   loading: boolean = false; 
   searched: boolean = false;
-  inviteready: boolean = false;
-
+  userNotFound: boolean = false;
+  
+  private emailInvite: string;
   private usergroupid: string;
     
   private searchusers: User[] = [];
@@ -48,7 +49,7 @@ export class SettingsComponent implements OnInit {
     this.usergroupid = user.id;
 
     // get user group
-    console.log('find user group');
+    console.log('find user group for user ' + this.usergroupid);
     this.dataStorageService.getObjects('usergroup', this.usergroupid)
     .subscribe(
       (success: Response) => {
@@ -85,15 +86,17 @@ export class SettingsComponent implements OnInit {
     this.dataStorageService.getObjectsParams('users', params)
     .subscribe(
       (success: Response) => {
-        console.log('found users for search on email ' + email);
         this.searchusers = success.json();
         if (this.searchusers.length == 0) {
-          this.inviteMessage = "Invite " + email + " to join your group.";
           this.searchMessage = "User not found. Press 'Invite' to send an invite to join your group.";
+          this.userNotFound = true;
+          this.emailInvite = email;
         } else {
           this.searchMessage = "User found. Press 'Add' to add to your group.";
+          this.userNotFound = false;          
         }
         this.searched = true;
+        this.message = '';
         console.log(this.searchMessage); 
       
       },
@@ -104,18 +107,32 @@ export class SettingsComponent implements OnInit {
       })
   } 
   
-onAddObject(index: number, user: User) {
-    console.log('add user object');
+onAddUser(user: User) {  
+    console.log('add user object user id is ' + user.id);
+    var message = 'User has been added to your group.';
+    if (user.id == null) {
+      message = 'User has been added to your group and an invite email has been sent';
+    }
+    
     this.dataStorageService.storeObjectParams(user, 'usergroup', this.usergroupid )
     .subscribe(
-      (success: Response) => {          
+      (success: Response) => {  
+        user.id = success.json().id;                
         this.users.push(user);
+        this.searchusers.splice(0, 1); 
+        this.searchMessage = message;
         this.message = '';
       },
       (error: Response) => {
         this.message = messages.server_error;             
       }
     );
+}
+
+onInviteUser(email: string) {
+  console.log('invite user object. email is ' + email);
+  var user = new User(null, email, null, null, null, null);
+  this.onAddUser(user);
 }
 
 onDeleteObject(index: number, user: User) {

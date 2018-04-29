@@ -6,11 +6,12 @@
               <label for="email">Mail</label>
               <input type="email" id="email" name="email" ngModel class="form-control">
             </div>
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" ngModel class="form-control">
             </div> 
-            
+                
             <div *ngIf="message" class="alert alert-danger" role="alert">
                 {{ message }}
             </div>        

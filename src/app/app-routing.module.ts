@@ -9,6 +9,7 @@ import { SignoutComponent } from "./signout/signout.component";
 import { PageNotFoundComponent } from "./pagenotfound/pagenotfound.component";
 import { AuthenticationGuardService as AuthenticationGuard } from "./shared/authentication-guard.service";
 import { SettingsComponent } from "./settings/settings.component";
+import { SignupcompleteComponent } from "./signupcomplete/signupcomplete.component";
 
 const appRoutes: Routes = [
 
@@ -17,7 +18,7 @@ const appRoutes: Routes = [
     { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },    
     { path: 'signout', component: SignoutComponent, canActivate: [AuthenticationGuard] },    
     { path: '', component: SplashComponent },        
-    { path: 'signup', component: SignupComponent },
+    { path: 'signup/:status', component: SignupComponent },
     { path: 'signin', component: SigninComponent },    
     { path: '**', component: PageNotFoundComponent}    
 ];

@@ -65,6 +65,7 @@ export class BookingsComponent implements OnInit {
           .subscribe(
             (success: Response) => { 
               var result = success.json();
+              console.log('success loading resource info');
               this.resource = result.Item;
               console.log('resource name is ' + this.resource.title);
               this.resourceName = this.resource.title;
@@ -85,8 +86,9 @@ export class BookingsComponent implements OnInit {
 
       this.dataStorageService.getObjects('bookings', this.resourceId)
       .subscribe(
-        (success: Response) => {          
-          this.bookings = success.json();  
+        (response: Response) => {          
+          this.bookings = response.json();  
+          console.log('success loading bookings info');          
           // load calendar
           jQuery("#calendar").fullCalendar({           
             themeSystem: 'bootstrap4',
@@ -209,8 +211,8 @@ export class BookingsComponent implements OnInit {
           jQuery("#editModal").modal("hide");          
         },
         (error: Response) => {
-          console.log('error ' + messages.server_error)
-          this.message = messages.server_error;             
+          console.log('found error');
+          this.message = error.json().error;             
         }
       );
     } else {
@@ -238,7 +240,8 @@ export class BookingsComponent implements OnInit {
           jQuery("#editModal").modal("hide");          
         },
         (error: Response) => {
-          this.message = messages.server_error;             
+          console.log('found error');
+          this.message = error.json().error;             
         }
       );
     }
