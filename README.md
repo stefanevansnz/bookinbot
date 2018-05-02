@@ -71,9 +71,11 @@ sls dynamodb start --migrate
 
 
 3) Test backend locally
-curl -H "Content-Type: application/json" -X POST http://localhost:3000/resource -d '{"id": "1", "title": "Sydney Apartment"}'
+curl -H "Content-Type: application/json" -X POST http://localhost:3000/resource -d '{"id": "1", "ownerid": "1", "title": "Apartment"}'
+curl -H "Content-Type: application/json" -X POST http://localhost:3000/resource -d '{"id": "2", "ownerid": "1", "title": "Bike"}'
+curl -H "Content-Type: application/json" -X POST http://localhost:3000/resource -d '{"id": "3", "ownerid": "1", "title": "Car"}'
 
-curl -H "Content-Type: application/json" -X GET http://localhost:3000/resources
+curl -H "Content-Type: application/json" -X GET http://localhost:3000/resources/1
 
 4) Clean and Deploy
 serverless remove

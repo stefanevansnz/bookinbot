@@ -56,7 +56,8 @@ app.get('/bookings/:id', function (req, res) {
         },
         ExpressionAttributeValues: {
             ":resourceid": resourceid
-        }    }
+        }    
+    }
     dynamoDb.query(params, (error, result) => {
         if (error) {
           res.status(400).json({ error: 'Could not get bookings' });

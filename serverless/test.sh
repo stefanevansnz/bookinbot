@@ -1,0 +1,1 @@
+npm test resources/resources.spec.js

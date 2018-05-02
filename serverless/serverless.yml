@@ -58,33 +58,9 @@ provider:
     AWS_SECRET_KEY: ${self:custom.secretKey}       
               
 functions:
-  app-resources:
-    handler: resources.handler
-    events:
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: put
-          path: "resource"
-          cors: true 
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: get
-          path: "resource/{id}"
-          cors: true         
-          request: 
-            parameters: 
-              paths: 
-                id: true           
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: get
-          path: "resources"
-          cors: true      
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: delete
-          path: "resource"
-          cors: true  
+  resources:
+      handler: resources/resources.handler
+      events: ${file(resources/resources.yml):events} 
   app-bookings:           
     handler: bookings.handler
     events:
