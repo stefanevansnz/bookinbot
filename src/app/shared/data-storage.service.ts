@@ -7,6 +7,14 @@ import { AuthenticationService } from "./authentication.service";
 @Injectable()
 export class DataStorageService {
 
+    private addHeaders() {
+        let user = this.authenticationService.getUser();                
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');        
+        headers.append('Authorization', user.token);
+        return headers;
+    }
+
     constructor(private http: Http,
                 private authenticationService: AuthenticationService) { }
 
@@ -34,7 +42,6 @@ export class DataStorageService {
 
     getObjectsParams(name: string, params: any) {          
         let user = this.authenticationService.getUser();        
-
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');        
         headers.append('Authorization', user.token);
@@ -46,13 +53,15 @@ export class DataStorageService {
 
     storeObject(object: any) { 
         let name = object.constructor.name.toLowerCase();
+        let headers = this.addHeaders();
         console.log(environment.api + '/' + name, object);
-        return this.http.put(environment.api + '/' + name, object)
+        return this.http.post(environment.api + '/' + name, object, {headers: headers})
     }
 
     storeObjectParams(object: any, name: string, value: string) { 
+        let headers = this.addHeaders();
         console.log(environment.api + '/' + name, object);
-        return this.http.put(environment.api + '/' + name + '/' + value, object)
+        return this.http.post(environment.api + '/' + name + '/' + value, object)
     }
 
     deleteObject(object: any) { 

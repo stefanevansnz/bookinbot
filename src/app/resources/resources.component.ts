@@ -46,7 +46,7 @@ export class ResourcesComponent implements OnInit {
               this.resources = success.json()         
             },
             (error: Response) => {
-              this.message = messages.server_error;             
+              this.message = error.text();             
             }
           );          
         }
@@ -76,7 +76,7 @@ export class ResourcesComponent implements OnInit {
     console.log('form submitted owner name is ' + ownername);    
 
     if (this.editMode) {
-      let resource = new Resource( this.editResource.id, ownerid, ownername, value.title);
+      let resource = new Resource( this.editResource.id, null, null, value.title);
       this.dataStorageService.storeObject(resource)
       .subscribe(
         (success: Response) => {          
@@ -86,11 +86,11 @@ export class ResourcesComponent implements OnInit {
           jQuery("#editModal").modal("hide");          
         },
         (error: Response) => {
-          this.message = messages.server_error;             
+          this.message = error;             
         }
       );
     } else {
-      let resource = new Resource('', ownerid, ownername, value.title);
+      let resource = new Resource(null, null, null, value.title);
       this.dataStorageService.storeObject(resource)
       .subscribe(
         (success: Response) => {          

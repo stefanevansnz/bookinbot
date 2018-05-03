@@ -2,14 +2,21 @@ const DynamoDb = require('../shared/dynamodb.js');
 const Resources = require('./resources.service.js');
   
 var responseFunction = function(error, result, callback) {
-  console.log('result is ' + result + 'error is ' + error);  
+  console.log('result is ' + result + ' error is ' + error);  
   // response
+  let statusCode = 200;
+  let message = result;
+  if (error != null) {
+    statusCode = 500;
+    message = error.message;
+  }
+
   let response = {
-    statusCode: 200,
+    statusCode: statusCode,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-    body: JSON.stringify(result) 
+    body: JSON.stringify(message) 
   }; 
   callback(null, response);     
 }; 
@@ -20,17 +27,19 @@ module.exports.handler = (event, context, callback) => {
     let db = new DynamoDb(process.env.RESOURCES_TABLE);
     let resources = new Resources(db);
 
+    console.log('event.body is ' + JSON.stringify(event.body));
+
+    var username = event.requestContext.authorizer.claims.username;
+    console.log('username is ' + JSON.stringify(username));    
     console.log('method is ' + event.httpMethod);
-    console.log('method is ' + JSON.stringify(event.body));
     switch(event.httpMethod) {
       case "POST":
         let resource = JSON.parse(event.body);
-        resources.putResource(resource, responseFunction, callback);
+        resource.ownerid = username;
+        resources.putResource(responseFunction, callback, resource);
         break;
       case "GET":
-        ownerid = event.pathParameters.ownerid;
-        console.log('Put ownerid is ' + ownerid);
-        resources.getResources(ownerid, responseFunction, callback);
+        resources.getResources(responseFunction, callback, username);
         break;
       }
 

@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const uuidv1 = require('uuid/v1');
 
 class DynamoDb {
 
@@ -10,12 +11,16 @@ class DynamoDb {
         this.tableName = tableName;
     }
 
-    putInTable(object, responseFunction, callback) {
+    putInTable(responseFunction, callback, object) {
         // create in db
+        if (object.id == null) {
+            object.id = uuidv1();
+        }        
         let params = {
             TableName: this.tableName,
             Item: object
-        }             
+        }    
+        console.log('putInTable is ' + JSON.stringify(params));         
         this.dynamoDb.put(params, (error, result) => {
             responseFunction(error, result, callback);
         });      
@@ -37,6 +42,9 @@ class DynamoDb {
         }
         console.log('running a query where ' + name + ' = ' + id);
         this.dynamoDb.query(params, (error, result) => {
+            console.log('result is ' + JSON.stringify(result));
+            console.log('error is ' + JSON.stringify(error))
+            //console.log('count is ' + result.Items.length);
             responseFunction(error, result, callback);
         });
     }

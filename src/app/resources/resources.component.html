@@ -52,6 +52,12 @@
       <h1>Resources</h1>
       <button id="add-resource" type="button" class="btn btn-primary" 
         (click)="onAddObject()">Add Resource</button>
+
+      <div *ngIf="message" class="alert alert-danger" role="alert">
+          {{ message }}
+      </div>                    
+
+
       <ul class="list-group">
         <li
           class="list-group-item" class="list-group-item" 

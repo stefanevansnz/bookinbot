@@ -4,12 +4,12 @@ class Resources {
       this.db = db;
     }  
 
-    getResources(ownerid, responseFunction, callback) {
-        return this.db.getFromTable("id", ownerid, responseFunction, callback);
+    getResources(responseFunction, callback, ownerid) {
+        return this.db.getFromTable("ownerid", ownerid, responseFunction, callback);
     }
 
-    putResource(resource, responseFunction, callback) {
-        return this.db.putInTable(resource, responseFunction, callback);        
+    putResource(responseFunction, callback, resource ) {
+        return this.db.putInTable(responseFunction, callback, resource);        
     }
 }
 
