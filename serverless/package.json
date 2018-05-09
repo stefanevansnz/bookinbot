@@ -4,7 +4,8 @@
   "description": "",
   "main": "resources.js",
   "scripts": {
-    "test": "jasmine"
+    "lint": "tslint *.ts",
+    "test": "jasmine-ts"
   },
   "keywords": [],
   "author": "",
@@ -13,12 +14,22 @@
     "express": "^4.16.2",
     "serverless-finch": "^1.4.0",
     "serverless-http": "^1.5.3",
+    "tslint-angular": "^1.1.1",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
+    "@types/jasmine": "^2.8.7",
     "jasmine": "^3.1.0",
+    "jasmine-ts": "^0.2.1",
     "serverless-domain-manager": "^2.3.4",
     "serverless-dynamodb-local": "^0.2.28",
-    "serverless-offline": "^3.18.0"
+    "serverless-offline": "^3.18.0",
+    "serverless-webpack": "^5.1.5",
+    "ts-loader": "^4.2.0",
+    "ts-mockito": "^2.3.0",
+    "tslint": "^5.10.0",
+    "tslint-config-olo": "^0.4.0",
+    "typescript": "^2.8.3",
+    "webpack": "^4.7.0"
   }
 }

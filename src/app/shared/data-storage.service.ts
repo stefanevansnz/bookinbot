@@ -19,37 +19,22 @@ export class DataStorageService {
                 private authenticationService: AuthenticationService) { }
 
     getObject(name: string, id: string) {  
-
-        let user = this.authenticationService.getUser();        
-
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');        
-        headers.append('Authorization', user.token );
-                        
+        let headers = this.addHeaders();
         return this.http.get(environment.api + '/' + name + '/' + id, {headers: headers});
     }
 
     getObjects(name: string, id: string) {          
-        let user = this.authenticationService.getUser();        
-
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');        
-        headers.append('Authorization', user.token);
-        
+        let headers = this.addHeaders();
+    
         return this.http.get(environment.api + '/' + 
             name + (id != null ? '/' + id : ''), {headers: headers});
     }
 
     getObjectsParams(name: string, params: any) {          
-        let user = this.authenticationService.getUser();        
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');        
-        headers.append('Authorization', user.token);
-        
+        let headers = this.addHeaders();        
         return this.http.get(environment.api + '/' + 
             name + (params != null ? '?' + params.name + '=' + params.value : ''), {headers: headers});
     }
-
 
     storeObject(object: any) { 
         let name = object.constructor.name.toLowerCase();
@@ -66,24 +51,22 @@ export class DataStorageService {
 
     deleteObject(object: any) { 
         let name = object.constructor.name.toLowerCase();
+        let headers = this.addHeaders();        
         console.log(environment.api + '/' + name, object);
-
         let options = new RequestOptions({
-            //headers: headers,
+            headers: headers,
             body: object
          })
-
         return this.http.delete(environment.api + '/' + name, options)
     }
 
     deleteObjectParams(object: any, name: string, value: string) { 
+        let headers = this.addHeaders();                
         console.log(environment.api + '/' + name, object);
-
         let options = new RequestOptions({
-            //headers: headers,
+            headers: headers,
             body: object
         })
-
         return this.http.delete(environment.api + '/' + name +  '/' + value, options)
     }
 

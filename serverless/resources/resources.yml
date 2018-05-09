@@ -9,3 +9,8 @@ events:
         method: post
         path: "resource"
         cors: true  
+    - http: 
+        authorizer: ${self:custom.cognitoAuthorizer}
+        method: delete
+        path: "resource"
+        cors: true  

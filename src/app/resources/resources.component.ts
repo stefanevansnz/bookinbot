@@ -86,7 +86,7 @@ export class ResourcesComponent implements OnInit {
           jQuery("#editModal").modal("hide");          
         },
         (error: Response) => {
-          this.message = error;             
+          this.message = error.text();             
         }
       );
     } else {
@@ -100,7 +100,7 @@ export class ResourcesComponent implements OnInit {
           jQuery("#editModal").modal("hide");          
         },
         (error: Response) => {
-          this.message = messages.server_error;             
+          this.message = error.text();             
         }
       );
     }
@@ -136,7 +136,7 @@ export class ResourcesComponent implements OnInit {
         jQuery("#editModal").modal("hide");          
       },
       (error: Response) => {
-        this.message = messages.server_error;             
+        this.message = error.text();           
       }
     );    
   }

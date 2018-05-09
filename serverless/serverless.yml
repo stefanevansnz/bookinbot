@@ -4,6 +4,7 @@ plugins:
   - serverless-domain-manager  
   - serverless-dynamodb-local
   - serverless-offline #serverless-offline needs to be last in the list  
+  - serverless-webpack
 
 service: bookinbot-application
 
@@ -58,8 +59,14 @@ provider:
     AWS_SECRET_KEY: ${self:custom.secretKey}       
               
 functions:
+  hello:
+    handler: handler.hello
+    events:
+     - http:
+         path: hello
+         method: get
   resources:
-      handler: resources/resources.handler
+      handler: handler.hello
       events: ${file(resources/resources.yml):events} 
   app-bookings:           
     handler: bookings.handler
@@ -146,12 +153,18 @@ resources:
       Properties:
         AttributeDefinitions:
           - 
+            AttributeName: ownerid
+            AttributeType: S          
+          - 
             AttributeName: id
             AttributeType: S
         KeySchema:
           - 
+            AttributeName: ownerid
+            KeyType: HASH          
+          - 
             AttributeName: id
-            KeyType: HASH
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

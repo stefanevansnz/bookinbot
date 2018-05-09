@@ -9,7 +9,6 @@ import { SignoutComponent } from "./signout/signout.component";
 import { PageNotFoundComponent } from "./pagenotfound/pagenotfound.component";
 import { AuthenticationGuardService as AuthenticationGuard } from "./shared/authentication-guard.service";
 import { SettingsComponent } from "./settings/settings.component";
-import { SignupcompleteComponent } from "./signupcomplete/signupcomplete.component";
 
 const appRoutes: Routes = [
 
