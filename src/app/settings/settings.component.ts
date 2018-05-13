@@ -25,8 +25,8 @@ export class SettingsComponent implements OnInit {
   private emailInvite: string;
   private usergroupid: string;
     
-  private searchusers: User[] = [];
-  private users: User[] = [];
+  searchusers: User[] = [];
+  users: User[] = [];
   private searchMessage: string;
   private inviteMessage: string;
 

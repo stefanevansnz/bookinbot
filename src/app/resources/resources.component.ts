@@ -19,13 +19,12 @@ export class ResourcesComponent implements OnInit {
 
   @ViewChild('f') slForm: NgForm;
 
-  private message;
+  message;
+  editMode = false;
+  resources: Resource[] = [];
 
-  private editMode = false;
   private editResource: Resource;
   private editIndex: number;
-
-  private resources: Resource[] = [];
 
   constructor(private authenticationService: AuthenticationService,
               private dataStorageService: DataStorageService, 

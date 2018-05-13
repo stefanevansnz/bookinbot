@@ -1,7 +1,7 @@
 # serverless.yml
 plugins:
   - serverless-finch
-  - serverless-domain-manager  
+#  - serverless-domain-manager  
   - serverless-dynamodb-local
   - serverless-offline #serverless-offline needs to be last in the list  
   - serverless-webpack
@@ -12,13 +12,15 @@ custom:
   cognitoPoolArn: ${env:COGNITOPOOLARN}
   cognitoAuthorizer:
     arn: ${self:custom.cognitoPoolArn}
-  customDomain:
-    domainName: api.bookinbot.com
-    basePath: ''
-    stage: ${self:provider.stage}
-    createRoute53Record: false    
+
+#  customDomain:
+#    domainName: ${env:DOMAINNAME}
+#    basePath: ''
+#    stage: ${self:provider.stage}
+#    createRoute53Record: false    
+
   client:
-    bucketName: '${self:provider.url}'
+    bucketName: '${self:provider.url}-dist'
     distributionFolder: ../dist 
     indexDocument: index.html 
     errorDocument: index.html 
@@ -37,7 +39,7 @@ provider:
   name: aws
   runtime: nodejs6.10
   stage: prod
-  url: bookinbot.com  
+  url: ${env:DOMAINNAME}    
   region: ap-southeast-2
   iamRoleStatements:
     - Effect: Allow
@@ -49,102 +51,20 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - { "Fn::GetAtt": ["ResourcesDynamoDBTable", "Arn", "BookingsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["ResourcesDynamoDBTable", "Arn"] }
+        - { "Fn::GetAtt": ["BookingsDynamoDBTable", "Arn"] }        
   environment:
     RESOURCES_TABLE: ${self:custom.tableNameResources}
     BOOKINGS_TABLE: ${self:custom.tableNameBookings}    
     USERS_TABLE: ${self:custom.tableNameUsers}    
     USERGROUPS_TABLE: ${self:custom.tableNameUserGroups}  
-    AWS_ACCESS_KEY: ${self:custom.accessKey}   
-    AWS_SECRET_KEY: ${self:custom.secretKey}       
+#    AWS_ACCESS_KEY: ${self:custom.accessKey}   
+#    AWS_SECRET_KEY: ${self:custom.secretKey}       
               
 functions:
-  hello:
-    handler: handler.hello
-    events:
-     - http:
-         path: hello
-         method: get
   resources:
-      handler: handler.hello
+      handler: handler.process
       events: ${file(resources/resources.yml):events} 
-  app-bookings:           
-    handler: bookings.handler
-    events:
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: put
-          path: "booking"
-          cors: true 
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: get
-          path: "bookings/{id}"
-          cors: true 
-          request: 
-            parameters: 
-              paths: 
-                id: true                 
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: delete
-          path: "booking"
-          cors: true   
-  app-users:
-    handler: users.handler
-    events:
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: put
-          path: "user"
-          cors: true 
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: get
-          path: "user/{id}"
-          cors: true         
-          request: 
-            parameters: 
-              paths: 
-                id: true           
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: get
-          path: "users"
-          cors: true         
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: delete
-          path: "user"
-          cors: true  
-  app-usergroups:
-    handler: usergroups.handler
-    events:
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: put
-          path: "usergroup/{id}"
-          cors: true 
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: get
-          path: "usergroup/{id}"
-          cors: true         
-          request: 
-            parameters: 
-              paths: 
-                id: true           
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: get
-          path: "usergroups"
-          cors: true      
-      - http: 
-          authorizer: ${self:custom.cognitoAuthorizer}
-          method: delete
-          path: "usergroup/{id}"
-          cors: true  
-
 
 resources:
   Resources:
@@ -190,35 +110,3 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:custom.tableNameBookings}
-    UsersDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        AttributeDefinitions:
-          - 
-            AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - 
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:custom.tableNameUsers}
-    UserGroupsDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
-      Properties:
-        AttributeDefinitions:
-          - 
-            AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - 
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:custom.tableNameUserGroups}
-        
-      

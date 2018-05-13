@@ -24,24 +24,20 @@ declare var moment:any;
 export class BookingsComponent implements OnInit {
   
   @ViewChild('f') slForm: NgForm;
+  
+  message;
+  editMode = false;
+  resourceName;
+  resourceOwner;  
+  resource: Resource;
+  bookings: Booking[] = [];
 
   private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
-  private readonly defaultTime = '10:00 AM';
-
-  private message;
-
-  private editMode = false;
+  private readonly defaultTime = '10:00 AM';  
   private editBooking: Booking;
   private editIndex: number;
-
   private editCalendarEvent: any;
-
   private resourceId;
-  private resourceName;
-  private resourceOwner;  
-  private resource: Resource;
-
-  private bookings: Booking[] = [];
 
   constructor(private authenticationService: AuthenticationService,
               private dataStorageService: DataStorageService, 

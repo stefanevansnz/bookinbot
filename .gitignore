@@ -48,4 +48,13 @@ Thumbs.db
 /src/environments/*.ts
 
 # serverless
+serverless/.serverless/*
+serverless/.webpack/*
+serverless/test.sh
 serverless/run.sh
+serverless/deploy.sh
+
+# angular
+test.sh
+run.sh
+deploy.sh

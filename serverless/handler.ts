@@ -5,7 +5,7 @@ import { ResponseModel } from './shared/response.model';
 import { DataAccessObject } from './shared/data.access.object';
 import { RequestProcessor } from './shared/request.processor';
 
-export function hello(event: any, context, callback: any) {
+export function process(event: any, context, callback: any) {
 
     let requestExtractor = new RequestExtractor();
     let db = new DynamoDb('bookinbot-resources');

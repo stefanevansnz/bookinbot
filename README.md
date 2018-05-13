@@ -1,49 +1,5 @@
 # BookInBot
 
-## Tasks
-https://trello.com/b/LpDMQOWF/bookusin
-
-## UX (edit with pop ups - mobile friendly)
-Users and Groups - Cognito
-bookinbot/admin - add users for my group
-
-bookinbot - one Bookable e.g. Sydney Apartment
-bookinbot/bookables - many bookables
-bookinbot/bookables/#id - calendar of bookings
-
-bookinbot/bookables/#id/booking/new
-
-https://fullcalendar.io/
-
-## DataStructures
-
-User
-    - id (UUID)
-    - email
-    - password
-    - firstname
-    - lastname
-
-Resource
-    - id (UUID)
-    - ownerid
-    - title e.g. Sydney Apartment
-
-    - description (optional)
-    - photo(s) (optional)
-
-Booking
-    - id (UUID)
-    - resourceid (UUID)
-    - starttime
-    - endtime
-
-## Sync code
-
-aws s3api create-bucket --bucket bookinbotcode --region ap-southeast-2 --create-bucket-configuration LocationConstraint=ap-southeast-2
-
-aws s3 sync . s3://bookinbotcode/ --exclude 'node_modules/*' --exclude 'serverless/node_modules/*' 
-
 ## Set up and test a local serverless backend API:
 
 1) Install and set up Serverless framework with database (required once)
@@ -59,7 +15,6 @@ npm install npm
 
 https://github.com/aws/aws-sdk-js/issues/1271
 
-
 sls dynamodb install
 
 2) Run locally (open a new prompt)
@@ -68,7 +23,6 @@ sls offline start
 
 #create databases
 sls dynamodb start --migrate
-
 
 3) Test backend locally
 curl -H "Content-Type: application/json" -X POST http://localhost:3000/resource -d '{"id": "1", "ownerid": "1", "title": "Apartment"}'
