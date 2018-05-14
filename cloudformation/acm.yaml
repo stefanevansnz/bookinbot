@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  DomainName:
+    Type: String
+    Description: Domain Name for ACM
+Resources:
+  Cert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub '${DomainName}'
+      SubjectAlternativeNames: 
+      - !Sub 'www.${DomainName}'
+      - !Sub 'api.${DomainName}'
+      DomainValidationOptions:
+      - DomainName: !Sub '${DomainName}'
+        ValidationDomain: !Sub '${DomainName}'

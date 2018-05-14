@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  DomainName:
+    Type: String
+    Description: Domain Name for CloudFront Distribution
+  AcmCertificateArn:
+    Type: String
+    Description: The ARN of the SSL certificate to use for the CloudFront distribution.    
+Resources:
+  TheCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+        - DomainName: !Sub '${DomainName}-dist.s3.amazonaws.com'
+          Id: S3Origin
+          S3OriginConfig:
+            OriginAccessIdentity: ''
+        Enabled: 'true'
+        Comment: Domain Name for CloudFront Distribution
+        DefaultRootObject: index.html
+#        Aliases:
+#        - bookinbot.com
+#        - www.bookinbot.com
+#        - api.bookinbot.com
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ForwardedValues:
+            QueryString: 'false'
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: allow-all
+        ViewerCertificate:
+          AcmCertificateArn: !Ref AcmCertificateArn
+          MinimumProtocolVersion: TLSv1
+          SslSupportMethod: sni-only

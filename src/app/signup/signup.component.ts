@@ -55,10 +55,10 @@ export class SignupComponent implements OnInit {
 
   onSetDefault() {
     this.suForm.setValue({
-      email: 'stefanevansnz@hotmail.com',
+      email: 'test@test.com',
       password: 'password',
-      firstname: 'Stefan',
-      lastname: 'Evans'   
+      firstname: 'Test',
+      lastname: 'Test'   
     });
   }
 

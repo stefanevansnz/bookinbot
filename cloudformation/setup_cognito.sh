@@ -1,0 +1,1 @@
+cfn-create-or-update --region ap-southeast-2 --template-body file://cognito.yaml --stack-name bookinbot-cognito --parameters ParameterKey=AuthName,ParameterValue=BookInBot
