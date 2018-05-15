@@ -33,3 +33,16 @@ Resources:
           AcmCertificateArn: !Ref AcmCertificateArn
           MinimumProtocolVersion: TLSv1
           SslSupportMethod: sni-only
+Outputs:
+  TheCloudFrontDistribution:
+    Value: !Ref TheCloudFrontDistribution
+    Export:
+      Name: "TheCloudFrontDistribution::Id"
+  TheCloudFrontDistributionDNSName:
+    Value: !GetAtt TheCloudFrontDistribution.DomainName
+    Export:
+      Name: "TheCloudFrontDistribution::DomainName"
+
+
+
+       

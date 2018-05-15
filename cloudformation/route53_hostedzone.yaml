@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  DomainName:
+    Type: String
+    Default: bookinbot.com
+Resources:
+  HostedZone:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "bookinbot.com"
+      HostedZoneConfig:
+        Comment: !Join
+          - " "
+          - ["Hosted zone", !Ref DomainName]
+Outputs:
+  HostedZone:
+    Value: !Ref HostedZone
+    Export:
+      Name: "HostedZone::Id"          
+
+         
