@@ -1,0 +1,1 @@
+cfn-create-or-update --region ap-southeast-2 --template-body file://route53.yaml --stack-name bookinbot-route53

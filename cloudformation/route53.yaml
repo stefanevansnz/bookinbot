@@ -4,11 +4,27 @@ Parameters:
     Type: String
     Default: bookinbot.com
 Resources:
-  DNS:
+  HostedZone:
     Type: "AWS::Route53::HostedZone"
     Properties:
       Name: !Ref DomainName
       HostedZoneConfig:
         Comment: !Join
           - " "
-          - ["Hosted zone for bookinbot.com", !Ref DomainName]
+          - ["Hosted zone", !Ref DomainName]
+  RecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Type: A    
+      AliasTarget:
+        DNSName: 'd3j2ty0bi4nhtu.cloudfront.net'
+        HostedZoneId: !Ref 'HostedZone'
+      HostedZoneName: !Ref 'HostedZone'
+      Comment: !Join
+          - " "
+          - ["RecordSet", !Ref DomainName]
+      Name: !Join
+          - " "
+          - ["RecordSet", !Ref DomainName]
+
+         

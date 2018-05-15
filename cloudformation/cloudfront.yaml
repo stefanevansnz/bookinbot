@@ -19,10 +19,9 @@ Resources:
         Enabled: 'true'
         Comment: Domain Name for CloudFront Distribution
         DefaultRootObject: index.html
-#        Aliases:
-#        - bookinbot.com
-#        - www.bookinbot.com
-#        - api.bookinbot.com
+        Aliases:
+          - bookinbot.com
+          - www.bookinbot.com
         DefaultCacheBehavior:
           TargetOriginId: S3Origin
           ForwardedValues:
