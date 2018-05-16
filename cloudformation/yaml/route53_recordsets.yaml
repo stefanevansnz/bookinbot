@@ -13,12 +13,12 @@ Resources:
         Type: A
         AliasTarget:
           HostedZoneId: Z2FDTNDATAQYW2
-          DNSName: !ImportValue 'TheCloudFrontDistribution::DomainName'
-      - Name: !Sub www.${DomainName}
-        Type: A
-        AliasTarget:
-          HostedZoneId: Z2FDTNDATAQYW2
-          DNSName: !ImportValue 'TheCloudFrontDistribution::DomainName'
+          DNSName: !ImportValue 'CloudFrontDistribution::DomainName'
+#      - Name: !Sub www.${DomainName}
+#        Type: A
+#        AliasTarget:
+#          HostedZoneId: Z2FDTNDATAQYW2
+#          DNSName: !ImportValue 'CloudFrontDistribution::DomainName'
 
 
          

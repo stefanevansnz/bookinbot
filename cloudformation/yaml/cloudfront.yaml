@@ -7,7 +7,7 @@ Parameters:
     Type: String
     Description: The ARN of the SSL certificate to use for the CloudFront distribution.    
 Resources:
-  TheCloudFrontDistribution:
+  CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
@@ -20,8 +20,8 @@ Resources:
         Comment: Domain Name for CloudFront Distribution
         DefaultRootObject: index.html
         Aliases:
+          - www.bookinbot.com        
           - bookinbot.com
-          - www.bookinbot.com
         DefaultCacheBehavior:
           TargetOriginId: S3Origin
           ForwardedValues:
@@ -42,14 +42,14 @@ Resources:
           MinimumProtocolVersion: TLSv1
           SslSupportMethod: sni-only
 Outputs:
-  TheCloudFrontDistribution:
-    Value: !Ref TheCloudFrontDistribution
+  CloudFrontDistribution:
+    Value: !Ref CloudFrontDistribution
     Export:
-      Name: "TheCloudFrontDistribution::Id"
-  TheCloudFrontDistributionDNSName:
-    Value: !GetAtt TheCloudFrontDistribution.DomainName
+      Name: "CloudFrontDistribution::Id"
+  CloudFrontDistributionDNSName:
+    Value: !GetAtt CloudFrontDistribution.DomainName
     Export:
-      Name: "TheCloudFrontDistribution::DomainName"
+      Name: "CloudFrontDistribution::DomainName"
 
 
 
