@@ -41,6 +41,10 @@ Resources:
           AcmCertificateArn: !Ref AcmCertificateArn
           MinimumProtocolVersion: TLSv1
           SslSupportMethod: sni-only
+        CustomErrorResponses:
+        - ErrorCode: 403
+          ResponsePagePath: '/index.html'
+          ResponseCode: 200 
 Outputs:
   CloudFrontDistribution:
     Value: !Ref CloudFrontDistribution

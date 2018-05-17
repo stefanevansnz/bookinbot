@@ -1,7 +1,7 @@
 # serverless.yml
 plugins:
   - serverless-finch
-#  - serverless-domain-manager  
+  - serverless-domain-manager  
   - serverless-dynamodb-local
   - serverless-offline #serverless-offline needs to be last in the list  
   - serverless-webpack
@@ -13,11 +13,11 @@ custom:
   cognitoAuthorizer:
     arn: ${self:custom.cognitoPoolArn}
 
-#  customDomain:
-#    domainName: ${env:DOMAINNAME}
-#    basePath: ''
-#    stage: ${self:provider.stage}
-#    createRoute53Record: false    
+  customDomain:
+    domainName: api.${env:DOMAINNAME}
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true    
 
   client:
     bucketName: '${self:provider.url}-dist'
