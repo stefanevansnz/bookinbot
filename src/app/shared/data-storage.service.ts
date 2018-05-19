@@ -48,8 +48,7 @@ export class DataStorageService {
         return this.http.post(environment.api + '/' + name + '/' + value, object)
     }
 
-    deleteObject(object: any) { 
-        let name = object.constructor.name.toLowerCase();
+    deleteObject(object: any, name: string) { 
         let headers = this.addHeaders();        
         console.log(environment.api + '/' + name, object);
         let options = new RequestOptions({

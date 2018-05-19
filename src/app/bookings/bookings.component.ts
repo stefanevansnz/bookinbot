@@ -293,7 +293,7 @@ export class BookingsComponent implements OnInit {
 
     let booking = new Booking(this.editBooking.id, userid, '', this.resourceId,'' ,'');    
 
-    this.dataStorageService.deleteObject(booking)
+    this.dataStorageService.deleteObject(booking, 'booking')
     .subscribe(
       (success: Response) => {          
         this.bookings.splice(this.editIndex, 1);  

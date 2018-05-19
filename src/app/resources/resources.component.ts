@@ -129,7 +129,7 @@ export class ResourcesComponent implements OnInit {
     let resource = new Resource(this.editResource.id, '', '', '');    
     console.log('delete id is ' + this.editResource.id);
 
-    this.dataStorageService.deleteObject(resource)
+    this.dataStorageService.deleteObject(resource, 'resource')
     .subscribe(
       (success: Response) => {          
         this.resources.splice(this.editIndex, 1);        
