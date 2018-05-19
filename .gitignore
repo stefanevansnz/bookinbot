@@ -52,8 +52,4 @@ serverless/.serverless/*
 serverless/.webpack/*
 serverless/test.sh
 serverless/run.sh
-
-# angular
-test.sh
-run.sh
-deploy.sh
+deploy_serverless.sh

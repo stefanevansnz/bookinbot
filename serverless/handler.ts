@@ -5,14 +5,18 @@ import { ResponseModel } from './shared/response.model';
 import { DataAccessObject } from './shared/data.access.object';
 import { RequestProcessor } from './shared/request.processor';
 
-export function process(event: any, context, callback: any) {
 
+
+export function execute(event: any, context, callback: any) {
+
+    const STAGE = process.env.STAGE;
     let requestExtractor = new RequestExtractor();
-    let db = new DynamoDb('bookinbot-resources');
+    let db = new DynamoDb('bookinbot-resources', STAGE);
     let dataAccessObject = new DataAccessObject(db);
     let responseBuilder = new ResponseBuilder();
 
     console.log('event is ' + event.requestContext.authorizer);
+    console.log('event is ' + JSON.stringify(event));
     let body = event.body;
     let method = event.httpMethod;
     let authorizer = event.requestContext.authorizer;

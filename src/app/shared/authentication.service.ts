@@ -55,8 +55,11 @@ export class AuthenticationService {
               if (cognitoGetUser != null) {
                 cognitoGetUser.getSession(function(err, result) {
                   if (result) {
-                    console.log ("Authenticated to Cognito User Pools! result is " + result);
-                    let token = result.getAccessToken().getJwtToken();                                                        
+                    console.log("Authenticated to Cognito User Pools! result is " + result);
+                    let token = result.getAccessToken().getJwtToken(); 
+                    console.log('access token is ' + token);                    
+                    let idToken = result.idToken.jwtToken;
+                    console.log('idToken is ' + idToken);
                     cognitoGetUser.getUserAttributes(function (err, result) {
                         if (err) {
                             console.log('getUserAttributes() ERROR: ' + err);
@@ -64,7 +67,7 @@ export class AuthenticationService {
                             callback.loading = false;                                                      
                         } else {
                             console.log('getUserAttributes() OK: ' + result);
-                            self.createUser(cognitoUser.username, token, result);
+                            self.createUser(cognitoUser.username, idToken, result);
                             callback.successfulLogin();                           
                         }
                       });
@@ -123,7 +126,10 @@ export class AuthenticationService {
                 cognitoGetUser.getSession(function(err, result) {
                   if (result) {
                     console.log ("Authenticated to Cognito User Pools! result is " + result);
-                    let token = result.getAccessToken().getJwtToken();                                                        
+                    let token = result.getAccessToken().getJwtToken();
+                    console.log('access token is ' + token);                    
+                    let idToken = result.idToken.jwtToken;
+                    console.log('idToken is ' + idToken);
                     cognitoGetUser.getUserAttributes(function (err, result) {
                         if (err) {
                             console.log('getUserAttributes() ERROR: ' + err);

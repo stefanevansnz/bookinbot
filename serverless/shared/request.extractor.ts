@@ -9,7 +9,8 @@ export class RequestExtractor {
         console.log('in getUserName');
         let username = null;
         if (authorizer.claims != null) {
-            username = authorizer.claims.username;
+            //console.log('authorizer.claims is ' + JSON.stringify(authorizer.claims));
+            username = authorizer.claims.sub;
         }        
         return username;
     }

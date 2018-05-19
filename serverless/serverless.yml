@@ -58,12 +58,13 @@ provider:
     BOOKINGS_TABLE: ${self:custom.tableNameBookings}    
     USERS_TABLE: ${self:custom.tableNameUsers}    
     USERGROUPS_TABLE: ${self:custom.tableNameUserGroups}  
+    STAGE: ${opt:stage}
 #    AWS_ACCESS_KEY: ${self:custom.accessKey}   
 #    AWS_SECRET_KEY: ${self:custom.secretKey}       
               
 functions:
   resources:
-      handler: handler.process
+      handler: handler.execute
       events: ${file(resources/resources.yml):events} 
 
 resources:

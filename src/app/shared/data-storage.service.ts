@@ -25,7 +25,7 @@ export class DataStorageService {
 
     getObjects(name: string, id: string) {          
         let headers = this.addHeaders();
-    
+        console.log('headers.Authorization: ' + headers.get('Authorization'));
         return this.http.get(environment.api + '/' + 
             name + (id != null ? '/' + id : ''), {headers: headers});
     }

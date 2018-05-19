@@ -9,11 +9,17 @@ export class DynamoDb {
     tableName: string;
     dynamoDb: any;
 
-    constructor(tableName) {
-        this.dynamoDb = new AWS.DynamoDB.DocumentClient({
-            region: 'localhost',
-            endpoint: 'http://localhost:8000'
-        });
+    constructor(tableName: string, stage: string) {
+        console.log('DynamoDb stage is ' + stage);
+        if (stage == 'dev') {
+            this.dynamoDb = new AWS.DynamoDB.DocumentClient({
+                region: 'localhost',
+                endpoint: 'http://localhost:8000'
+            });    
+        } else {
+            // go production
+            this.dynamoDb = new AWS.DynamoDB.DocumentClient();
+        }
         this.tableName = tableName;
     }
 
@@ -30,6 +36,7 @@ export class DynamoDb {
                 [expressionValue]: id
             }    
         }
+        console.log('db params: ' + JSON.stringify(params));
         console.log('running a query where ' + name + ' = ' + id);
         this.dynamoDb.query(params, (error, result) => {
             responseFunction(error, result.Items, callback);

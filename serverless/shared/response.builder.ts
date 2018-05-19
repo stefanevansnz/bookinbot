@@ -8,7 +8,7 @@ export class ResponseBuilder {
         if (error != null) {
           statusCode = 500;
           message = error.message;
-        }      
+        }              
         let response = {
           statusCode: statusCode,
           headers: {
@@ -17,7 +17,8 @@ export class ResponseBuilder {
             'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token'
           },
           body: JSON.stringify(message) 
-        }; 
+        };         
+        console.log('response is ' + JSON.stringify(response))
         callback(null, response);     
     };           
 
