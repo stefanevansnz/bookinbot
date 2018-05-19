@@ -75,8 +75,9 @@ export class ResourcesComponent implements OnInit {
     console.log('form submitted owner name is ' + ownername);    
 
     if (this.editMode) {
+      console.log('edit mode');
       let resource = new Resource( this.editResource.id, null, null, value.title);
-      this.dataStorageService.storeObject(resource)
+      this.dataStorageService.storeObject(resource, 'resource')
       .subscribe(
         (success: Response) => {          
           resource.id = success.json().id;
@@ -89,8 +90,9 @@ export class ResourcesComponent implements OnInit {
         }
       );
     } else {
+      console.log('add mode');        
       let resource = new Resource(null, null, null, value.title);
-      this.dataStorageService.storeObject(resource)
+      this.dataStorageService.storeObject(resource, 'resource')
       .subscribe(
         (success: Response) => {          
           resource.id = success.json().id;

@@ -192,7 +192,7 @@ export class BookingsComponent implements OnInit {
                                  username,
                                  this.resourceId,
                                  value.start, value.end);
-      this.dataStorageService.storeObject(booking)
+      this.dataStorageService.storeObject(booking, 'booking')
       .subscribe(
         (success: Response) => {          
           booking.id = success.json().id;
@@ -218,7 +218,7 @@ export class BookingsComponent implements OnInit {
                                 this.resourceId,
                                 value.start, 
                                 value.end);
-      this.dataStorageService.storeObject(booking)
+      this.dataStorageService.storeObject(booking, 'booking')
       .subscribe(
         (success: Response) => {          
           booking.id = success.json().id;

@@ -36,16 +36,15 @@ export class DataStorageService {
             name + (params != null ? '?' + params.name + '=' + params.value : ''), {headers: headers});
     }
 
-    storeObject(object: any) { 
-        let name = object.constructor.name.toLowerCase();
+    storeObject(object: any, name: string) { 
         let headers = this.addHeaders();
-        console.log(environment.api + '/' + name, object);
+        console.log('storeObject ' + environment.api + '/' + name, object);
         return this.http.post(environment.api + '/' + name, object, {headers: headers})
     }
 
     storeObjectParams(object: any, name: string, value: string) { 
         let headers = this.addHeaders();
-        console.log(environment.api + '/' + name, object);
+        console.log('storeObjectParams ' + environment.api + '/' + name, object);
         return this.http.post(environment.api + '/' + name + '/' + value, object)
     }
 
