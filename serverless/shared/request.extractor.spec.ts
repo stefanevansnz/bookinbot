@@ -13,7 +13,7 @@ describe("The request extractor ", function() {
     it("gets the user name when in request.", function() {        
         let authorizer =  {
             claims: {
-                username: 'abc',
+                sub: 'abc',
             },
         };        
         let username = new RequestExtractor().getUserName(authorizer);
