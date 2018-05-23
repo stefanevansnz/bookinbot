@@ -6,3 +6,14 @@ h1 {
 button.edit {
     margin-left: 0.5em;    
 }
+
+ul.list-group li:hover {
+    background-color: rgba(0,0,0,.2);
+    cursor: pointer;
+}
+
+ul.list-group li a {
+    display:block;
+    width:100%;
+}
+

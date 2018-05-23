@@ -109,10 +109,13 @@ https://www.linkedin.com/pulse/20140806003615-11158662-sample-list-of-50-real-na
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
+./test_serverless.sh
+
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-ng e2e --no-serve
+./test_e2e.sh
+
 https://coryrylan.com/blog/introduction-to-e2e-testing-with-the-angular-cli-and-protractor
 https://www.protractortest.org/#/locators

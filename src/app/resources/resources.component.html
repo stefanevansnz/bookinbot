@@ -48,7 +48,7 @@
 
 
 <div class="row">
-  <div class="col-md-12">
+  <div id="resources" class="col-md-12">
       <h1>Resources</h1>
       <button id="add-resource" type="button" class="btn btn-primary" 
         (click)="onAddObject()">Add Resource</button>
@@ -60,22 +60,17 @@
 
       <ul class="list-group">
         <li
-          class="list-group-item" class="list-group-item" 
-          style="cursor: pointer"
+          class="list-group-item" class="list-group-item"        
           *ngFor="let resource of resources; let i = index">
+          <button 
+          id="edit-resource"
+          class="btn btn-success float-right edit" 
+          (click)="onEditObject(i, resource)"         
+          type="submit" >
+          Edit</button>        
+          <a (click)="onViewBookings(i, resource)">
             {{ resource.title }}         
-            <button 
-            id="edit-resource"
-            class="btn btn-success float-right edit" 
-            (click)="onEditObject(i, resource)"            
-            type="submit" >
-            Edit</button>
-            <button 
-            id="view-resource"
-            class="btn btn-success float-right" 
-            (click)="onViewBookings(i, resource)"           
-            type="submit" >
-            View</button>            
+          </a> 
         </li>
       </ul>
   </div>
