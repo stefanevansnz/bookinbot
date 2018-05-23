@@ -20,6 +20,7 @@ export class ResourcesComponent implements OnInit {
   @ViewChild('f') slForm: NgForm;
 
   message;
+  loading;
   editMode = false;
   resources: Resource[] = [];
 
@@ -33,6 +34,8 @@ export class ResourcesComponent implements OnInit {
 
   ngOnInit() {
 
+    this.loading = true;
+
     this.route.params
       .subscribe(
         (params: Params) => {
@@ -41,10 +44,12 @@ export class ResourcesComponent implements OnInit {
           this.initForm();
           this.dataStorageService.getObjects('resources', null)
           .subscribe(
-            (success: Response) => {          
+            (success: Response) => {   
+              this.loading = false;                     
               this.resources = success.json()         
             },
             (error: Response) => {
+              this.loading = false;
               this.message = error.text();             
             }
           );          

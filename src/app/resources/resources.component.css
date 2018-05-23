@@ -8,7 +8,7 @@ button.edit {
 }
 
 ul.list-group li:hover {
-    background-color: rgba(0,0,0,.2);
+    background-color:#F0F8FF;
     cursor: pointer;
 }
 
