@@ -61,6 +61,7 @@
               {{ editMode ? 'Update' : 'Add' }}</button>   
             <button 
               class="btn btn-danger" 
+              id="delete-booking"              
               type="button"
               (click)="onDelete()" 
               *ngIf="editMode">Delete</button>                                 
@@ -88,7 +89,7 @@
       <div id='calendar'></div>   
 
       <ul class="list-group">
-        <li class="list-group-item" class="list-group-item" 
+        <li id="resource-list" class="list-group-item" 
           style="cursor: pointer"
           *ngFor="let booking of bookings; let i = index">
             <a 

@@ -35,11 +35,16 @@
               [disabled]="!f.valid">
               {{ editMode ? 'Update' : 'Add' }}</button>   
             <button 
+              id="delete-resource"             
               class="btn btn-danger" 
               type="button"
               (click)="onDelete()" 
               *ngIf="editMode">Delete</button>                                 
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button 
+              id="cancel-resource" 
+              type="button" 
+              class="btn btn-secondary" 
+              data-dismiss="modal">Close</button>
           </div>
         </form>           
       </div>
@@ -63,12 +68,10 @@
 
 
       <ul class="list-group">
-        <li
-          class="list-group-item" class="list-group-item"        
+        <li class="list-group-item"        
           *ngFor="let resource of resources; let i = index">
           <button 
-          id="edit-resource"
-          class="btn btn-success float-right edit" 
+          class="edit-resource btn btn-success float-right edit" 
           (click)="onEditObject(i, resource)"         
           type="submit" >
           Edit</button>        

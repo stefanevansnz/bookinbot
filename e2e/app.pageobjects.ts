@@ -1,9 +1,20 @@
 import { browser, by, element, Browser } from 'protractor';
+require('./waitReady.js');
 
 export class AppPage {
 
   navigateTo(url: string) {
     return browser.get(url);
+  }
+
+  waitForId(id: string) {
+    var dialog = element(by.id(id));
+    expect(dialog.waitReady()).toBeTruthy();
+  }
+
+  waitForClass(className: string) {
+    var dialog = element(by.className(className));
+    expect(dialog.waitReady()).toBeTruthy();
   }
 
   enterValueToTitleField(resourceName: string) {
@@ -24,16 +35,33 @@ export class AppPage {
   }
 
   clickAddResourceModalButton() {
-    element(by.id('add-resource')).click();
+    element(by.id('add-resource')).click();    
   }
 
   clickSaveResourceButton() {
     element(by.id('save-resource')).click();
   }
 
+  clickDeleteResourceButton() {
+    element(by.id('delete-resource')).click();
+    // wait for modal to open
+  }
+
+  clickCancelResourceButton() {
+    element(by.id('cancel-resource')).click();    
+  }
+
+  clickFirstEditResourceButton() {
+    console.log('click first button');
+    element.all(by.css('.list-group li button')).first().click();          
+  }
+
+
   /*
-  getResourceHeadingText() {
-    return element(by.css('h2')).getText();
+  async clickEditResourceButton(button) {
+    //console.log(innerElement);
+    await element(button).click();    
+    //await element(by.xpath('/button.edit-resource[' + index + ']')).click();
   }
   */
 
@@ -46,7 +74,7 @@ export class AppPage {
   }
 
   getResourceList() {
-    return element.all(by.css('.list-group a'));
+    return element.all(by.css('ul.list-group li'));
   }
 
 
