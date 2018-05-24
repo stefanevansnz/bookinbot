@@ -56,15 +56,6 @@ export class AppPage {
     element.all(by.css('.list-group li button')).first().click();          
   }
 
-
-  /*
-  async clickEditResourceButton(button) {
-    //console.log(innerElement);
-    await element(button).click();    
-    //await element(by.xpath('/button.edit-resource[' + index + ']')).click();
-  }
-  */
-
   getModalTitleText() {
     return element(by.css('div.modal-header h4')).getText();
   }

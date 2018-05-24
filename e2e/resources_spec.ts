@@ -7,20 +7,16 @@ describe('website ', () => {
     page = new AppPage();
   });
 
-  it('should remove current resources', () => {
-    const modalHeadingName = 'Heading';
-    //const resourceName = 'Cancel';
-        
-    let resources = page.getResourceList();
+  it('should edit and delete all current resources', () => {
+    const modalHeadingName = 'Edit Resource';
 
+    let resources = page.getResourceList();
     resources.each(function(element, index) {
       page.clickFirstEditResourceButton();   
-      page.waitForClass('modal-dialog');
-      
+      page.waitForClass('modal-dialog');      
       expect(page.getModalTitleText()).toEqual(modalHeadingName); 
-
       page.clickDeleteResourceButton();
-      page.waitForId('add-resource');
+      page.waitForId('resources');
 
     });
 
@@ -29,19 +25,19 @@ describe('website ', () => {
 
   it('should open modal and save resource', () => {
     const resourceName = 'Apartment';
-    const modalHeadingName = 'Heading';
+    const modalHeadingName = 'Add Resource';
 
     page.clickAddResourceModalButton();
     page.waitForClass('modal-dialog');
-
     expect(page.getModalTitleText()).toEqual(modalHeadingName);    
     page.enterValueToTitleField(resourceName);
-
     page.clickSaveResourceButton();
-    page.waitForId('add-resource');
+    page.waitForId('resources');
   
-    expect(page.getResourceList().count()).toBeGreaterThan(0);
-    //expect(page.getResourceList().first().getText()).toEqual(resourceName);
+    let resources = page.getResourceList();
+
+    expect(resources.count()).toBeGreaterThan(0);
+    expect(resources.first().getText()).toContain(resourceName);
   });
 
 
