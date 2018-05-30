@@ -1,10 +1,10 @@
-import {mock, instance, when, verify} from 'ts-mockito';
+import {mock, instance, when, verify, anyOfClass} from 'ts-mockito';
 import { RequestExtractor } from './request.extractor';
 import { DataAccessObject } from './data.access.object';
 import { ResponseBuilder } from './response.builder';
 import { RequestProcessor } from './request.processor';
 
-describe("The response builder ", function() {
+describe("The request processor ", function() {
 
   let mockedRequestExtractor:RequestExtractor;
   let mockedDataAccessObject:DataAccessObject;
@@ -22,14 +22,24 @@ describe("The response builder ", function() {
     let object = JSON.parse(testBodyInput);
     let authorizer =  {
       claims: {
-          username: username,
+        sub: {
+            username: username,
+        }
+      }
+    }; 
+    let inputEvent =  {
+      requestContext: {
+        authorizer
       },
-    };  
+    };        
+
+    
     let method = 'GET';        
     let callback = function() {};
 
     when(this.mockedRequestExtractor.getUserName(authorizer)).thenReturn("abc");
     when(this.mockedRequestExtractor.getObject(testBodyInput)).thenReturn(object);  
+    
     let requestExtractor: RequestExtractor = instance(this.mockedRequestExtractor);
     let dataAccessObject: DataAccessObject = instance(this.mockedDataAccessObject);
     let responseBuilder:  ResponseBuilder = instance(this.mockedResponseBuilder);    
@@ -37,7 +47,8 @@ describe("The response builder ", function() {
     let processor = new RequestProcessor( requestExtractor, 
                                           dataAccessObject,
                                           responseBuilder);                                                                              
-    processor.processRequest(testBodyInput, authorizer, method, callback);
-    verify(this.mockedDataAccessObject.execute(responseBuilder, callback, method, username, object)).once();    
+    processor.processRequest(inputEvent, callback);
+    verify(this.mockedDataAccessObject.execute(responseBuilder, requestExtractor, callback, inputEvent, username)).once();    
+    
   });
 });

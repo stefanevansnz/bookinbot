@@ -1,15 +1,13 @@
-//const AWS = require('aws-sdk');
-//const uuidv1 = require('uuid/v1');
 import * as AWS from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
-//const uuidv1: string = uuid();
+import { Parameter } from './parameter';
 
 export class DynamoDb {
 
     tableName: string;
     dynamoDb: any;
 
-    constructor(tableName: string, stage: string) {
+    constructor(stage: string) {
         console.log('DynamoDb stage is ' + stage);
         if (stage == 'dev') {
             this.dynamoDb = new AWS.DynamoDB.DocumentClient({
@@ -20,49 +18,81 @@ export class DynamoDb {
             // go production
             this.dynamoDb = new AWS.DynamoDB.DocumentClient();
         }
+    }
+
+    setTableName(tableName: string) {
         this.tableName = tableName;
     }
 
-    getFromTable(name, id, responseFunction, callback) {
-        let expressionName = '#' + name;
-        let expressionValue = ':' + name;
+    getFromTable(parameters: Parameter[], responseFunction, callback) {
+
+        let numberOfParameters = parameters.length;
+        let keyConditionExpression = '';
+        let expressionAttributeNames = '';
+        let expressionAttributeValues = '';
+        let expressionCount = 1;
+        parameters.forEach((param) => {
+            keyConditionExpression += '#' + param.name + ' = :' + param.name;
+            expressionAttributeNames += '"#' + param.name + '" : "' + param.name + '"';
+            expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
+            if (expressionCount < numberOfParameters) {
+                keyConditionExpression += ' AND ';   
+                expressionAttributeNames += ', ';   
+                expressionAttributeValues += ', ';          
+            }
+            expressionCount++;
+            //console.log('param name is ' + param.name + ' - ' + param.value );
+        });
+
+        console.log('keyConditionExpression is ' + keyConditionExpression);
+        console.log('expressionAttributeNames is ' + expressionAttributeNames);
+        console.log('expressionAttributeValues is ' + expressionAttributeValues);
+
         let params = {
             TableName: this.tableName,
-            KeyConditionExpression: expressionName + " = " + expressionValue,
-            ExpressionAttributeNames:{
-                [expressionName] : name
-            },
-            ExpressionAttributeValues: {
-                [expressionValue]: id
-            }    
-        }
-        console.log('db params: ' + JSON.stringify(params));
-        console.log('running a query where ' + name + ' = ' + id);
+            KeyConditionExpression: keyConditionExpression,
+            ExpressionAttributeNames:                
+                JSON.parse('{' + expressionAttributeNames + '}'),
+            ExpressionAttributeValues: 
+                JSON.parse('{' + expressionAttributeValues + '}')                
+        } 
+
+        console.log('running DB query params: ' + JSON.stringify(params));
+
         this.dynamoDb.query(params, (error, result) => {
-            responseFunction(error, result.Items, callback);
+            console.log('result is' + JSON.stringify(result));
+            console.log('error is' + JSON.stringify(error));                
+            if (result.Items) {
+                result = result.Items;
+            }
+            responseFunction(error, result, callback);
         });
     }
 
+    
     putInTable(object, responseFunction, callback) {
         // create in db
         if (object.id == null) {
             object.id = uuid();
         }        
+        console.log('object.id is ' + object.id); 
         let params = {
             TableName: this.tableName,
             Item: object
         }    
         console.log('putInTable is ' + JSON.stringify(params));         
         this.dynamoDb.put(params, (error, result) => {
+            //console.log('putInTable result is ' + JSON.stringify(result));                     
+            result.id = object.id;
             responseFunction(error, result, callback);
         });      
     }
     
-    deleteFromTable(id, ownerid, responseFunction, callback) {
+    deleteFromTable(inputId, ownerid, responseFunction, callback) {
         let params = {
             TableName: this.tableName,
             Key: {
-                id: id,
+                id: inputId,
                 ownerid: ownerid 
             }
         }      

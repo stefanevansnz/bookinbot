@@ -1,5 +1,6 @@
 import { DynamoDb } from "./dynamodb";
 import { ResponseBuilder } from "./response.builder";
+import { RequestExtractor } from "./request.extractor";
 
 export class DataAccessObject {
 
@@ -9,23 +10,32 @@ export class DataAccessObject {
         this.db = db;
     }
 
-    execute(responseBuilder: ResponseBuilder, 
-            callback: any, 
-            method: string, 
-            username: string, 
-            object: any) {
-        console.log('Method is ' + method);
+    execute(responseBuilder, requestExtractor, callback, event, username) {
+
+        let body = event.body;
+        let method = event.httpMethod;
+        let path = event.path.split("/")[1];
+        let id = event.path.split("/")[2];
+
+        let object = requestExtractor.getObject(body, username);
+        let tableName = requestExtractor.getTableName(path);
+        let parameters = requestExtractor.getParameters(path, id, username);
+
+        this.db.setTableName('bookinbot-' +tableName);
+                        
+        console.log('Method is ' + method + ' Table Name is ' + tableName);
+        console.log('Object is ' + JSON.stringify(object));
+        console.log('Parameters is ' + JSON.stringify(parameters));
+
         switch(method) {
             case "POST":
-                object.ownerid = username;
                 this.db.putInTable(object, responseBuilder.build, callback);              
                 break;
             case "GET":                
-                this.db.getFromTable("ownerid", username, responseBuilder.build, callback);
+                this.db.getFromTable(parameters, responseBuilder.build, callback);
                 break;
             case "DELETE":
-                let id = object.id;            
-                this.db.deleteFromTable(id, username, responseBuilder.build, callback);
+                this.db.deleteFromTable(1, username, responseBuilder.build, callback);
                 break;
             }        
     }    

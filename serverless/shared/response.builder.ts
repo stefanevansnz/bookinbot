@@ -1,13 +1,17 @@
 export class ResponseBuilder {
 
     build(error, result, callback) {
-        console.log('result is ' + result + ' error is ' + error);  
         // response
-        let statusCode = 200;
-        let message = result;
-        if (error != null) {
+        let statusCode;
+        let message;
+        if (error == null) {
+          console.log('result is ' + JSON.stringify(result) );  
+          let statusCode = 200;
+          message = result;
+        } else {
+          console.log('error is ' + JSON.stringify(error));            
           statusCode = 500;
-          message = error.message;
+          message = { 'error' : error.message};
         }              
         let response = {
           statusCode: statusCode,

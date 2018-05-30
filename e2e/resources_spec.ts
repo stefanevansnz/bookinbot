@@ -33,11 +33,16 @@ describe('website ', () => {
     page.enterValueToTitleField(resourceName);
     page.clickSaveResourceButton();
     page.waitForId('resources');
+    //page.waitForClass('list-group');
   
     let resources = page.getResourceList();
 
-    expect(resources.count()).toBeGreaterThan(0);
-    expect(resources.first().getText()).toContain(resourceName);
+    resources.count().then(function(count) {
+      expect(count).toBeGreaterThan(0);
+    });
+    
+    //expect(resources.count()).toBeGreaterThan(0);
+    //expect(resources.first().getText()).toContain(resourceName);
   });
 
 

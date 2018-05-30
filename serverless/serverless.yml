@@ -26,8 +26,6 @@ custom:
     errorDocument: index.html 
   tableNameResources: 'bookinbot-resources'    
   tableNameBookings: 'bookinbot-bookings'  
-  tableNameUsers: 'bookinbot-users'
-  tableNameUserGroups: 'bookinbot-usergroups' 
   accessKey: ${env:ACCESSKEY}
   secretKey: ${env:SECRETKEY}  
   dynamodb:
@@ -56,8 +54,6 @@ provider:
   environment:
     RESOURCES_TABLE: ${self:custom.tableNameResources}
     BOOKINGS_TABLE: ${self:custom.tableNameBookings}    
-    USERS_TABLE: ${self:custom.tableNameUsers}    
-    USERGROUPS_TABLE: ${self:custom.tableNameUserGroups}  
     STAGE: ${opt:stage}
 #    AWS_ACCESS_KEY: ${self:custom.accessKey}   
 #    AWS_SECRET_KEY: ${self:custom.secretKey}       
@@ -66,6 +62,9 @@ functions:
   resources:
       handler: handler.execute
       events: ${file(resources/resources.yml):events} 
+  bookings:
+      handler: handler.execute
+      events: ${file(bookings/bookings.yml):events} 
 
 resources:
   Resources:

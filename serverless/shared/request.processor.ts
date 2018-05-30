@@ -19,13 +19,21 @@ export class RequestProcessor {
         this.responseBuilder = responseBuilder;
     }  
 
-    processRequest(body, authorizer, method, callback) {
-        console.log('process request');        
+    processRequest(event, callback) {
+        console.log('process request');     
+        console.log('processRequest is ' + JSON.stringify(event))
+
+        let authorizer = event.requestContext.authorizer;
         let username = this.requestExtractor.getUserName(authorizer);
-        let object = this.requestExtractor.getObject(body);
+
         if (username == null) {
             console.log('username is null');
+            let error = new Error('User session no longer valid');
+            this.responseBuilder.build(error, null, callback);
+            // return error
+        } else {
+            console.log('execute');
+            this.dataAccessObject.execute(this.responseBuilder, this.requestExtractor, callback, event, username);
         }
-        this.dataAccessObject.execute(this.responseBuilder, callback, method, username, object);
     }
 }

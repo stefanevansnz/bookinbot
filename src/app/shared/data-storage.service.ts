@@ -7,7 +7,7 @@ import { AuthenticationService } from "./authentication.service";
 @Injectable()
 export class DataStorageService {
 
-    private addHeaders() {
+    addHeaders() {
         let user = this.authenticationService.getUser();                
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');        
@@ -20,12 +20,14 @@ export class DataStorageService {
 
     getObject(name: string, id: string) {  
         let headers = this.addHeaders();
+        console.log('get data storage object /' + name + '/' + id);        
         return this.http.get(environment.api + '/' + name + '/' + id, {headers: headers});
     }
 
     getObjects(name: string, id: string) {          
         let headers = this.addHeaders();
-        console.log('headers.Authorization: ' + headers.get('Authorization'));
+        //console.log('headers.Authorization: ' + headers.get('Authorization'));
+        console.log('get data storage objects /' + name + (id != null ? '/' + id : ''));
         return this.http.get(environment.api + '/' + 
             name + (id != null ? '/' + id : ''), {headers: headers});
     }
@@ -39,13 +41,21 @@ export class DataStorageService {
     storeObject(object: any, name: string) { 
         let headers = this.addHeaders();
         console.log('storeObject ' + environment.api + '/' + name, object);
-        return this.http.post(environment.api + '/' + name, object, {headers: headers})
+        let options = new RequestOptions({
+            headers: headers,
+            body: object
+        })
+        return this.http.post(environment.api + '/' + name, object, options)
     }
 
     storeObjectParams(object: any, name: string, value: string) { 
         let headers = this.addHeaders();
+        let options = new RequestOptions({
+            headers: headers,
+            body: object
+        })        
         console.log('storeObjectParams ' + environment.api + '/' + name, object);
-        return this.http.post(environment.api + '/' + name + '/' + value, object)
+        return this.http.post(environment.api + '/' + name + '/' + value, object, options)
     }
 
     deleteObject(object: any, name: string) { 

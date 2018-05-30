@@ -32,6 +32,7 @@ export class BookingsComponent implements OnInit {
   resource: Resource;
   bookings: Booking[] = [];
 
+  private readonly dateFormat = 'DD/MM/YYYY';
   private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
   private readonly defaultTime = '10:00 AM';  
   private editBooking: Booking;
@@ -46,123 +47,128 @@ export class BookingsComponent implements OnInit {
               private router: Router, 
               private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  private loadResourceDetails(resourceId : string, mainComponent) {
+    console.log('loading resource object...');
+    this.resourceName = 'Loading...';
+    this.dataStorageService.getObject('resource', resourceId)
+    .subscribe(
+      (success: Response) => { 
+        var result = success.json();
+        console.log('success loading resource info');
+        //this.resource = result.Item;
+        this.resource = result[0];
+        console.log('resource name is ' + this.resource.title);
+        this.resourceName = this.resource.title;
+        console.log('resource owner is ' + this.resource.ownername);
+        this.resourceOwner = this.resource.ownername;
+        mainComponent.loadBookingDetails(mainComponent);
+
+      },
+      (error: Response) => {
+        console.log('error is ' + messages.server_error);
+        this.message = messages.server_error;             
+      }
+    );
+  }
+
+  private loadBookingDetails(mainComponent) {
     var self = this;
+    console.log('loading booking objects...');
+
+    let headers = mainComponent.dataStorageService.addHeaders();
+    let authHeader = { Authorization: headers.get('Authorization')};
+//    console.log('headers ' + JSON.stringify(authHeader));
+    
+    jQuery("#calendar").fullCalendar({           
+      themeSystem: 'bootstrap4',
+      header: {
+        left: 'prev title next today',
+        center: '',
+        right: 'month,agendaWeek,agendaDay '
+      },
+      nowIndicator: true,
+      height: 540,
+      eventClick: function(calEvent, jsEvent, view) {
+        var startItem = moment(calEvent.start).format(self.timeFormat);
+        var endItem = moment(calEvent.end).format(self.timeFormat);
+        console.log('calEvent.id: ' + calEvent.id);   
+        console.log('calEvent.username: ' + calEvent.username);                        
+        var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
+        this.onEditObject( calEvent, booking);
+      },            
+      dayClick: function(date, jsEvent, view) {
+        console.log('Clicked on: ' + date.format());
+        var startItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).format(self.timeFormat);
+        // add a day
+        var endItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).add(1, 'days').format(self.timeFormat);
+        console.log('form submitted start is ' + startItem);
+        console.log('form submitted end is ' + endItem);          
+        var booking = new Booking(null, null, null, null, startItem, endItem);
+        // add object
+        self.onAddObject(booking);
+        
+      },           
+      events: function(start, end, timezone, callback) {            
+
+        jQuery.ajax({
+          url: environment.api + '/bookings/' + self.resourceId,
+          headers: authHeader,
+          dataType: 'json',
+          data: {
+            // our hypothetical feed requires UNIX timestamps
+            start: start.unix(),
+            end: end.unix(),
+
+          },
+          success: function(doc) {
+            var events = [];
+            console.log('Loaded events...');
+            var index = 0;  
+            doc.forEach( function (item) {
+
+              var startItem = moment(item.start, self.timeFormat);
+              var endItem = moment(item.end, self.timeFormat);
+
+              // need to load into an object when component created                        
+              var colour = self.bookingsColourPickerService.pickBookingColour(item.username);
+                
+              console.log('PUSH startItem ' + startItem + ', item.username ' + item.username);
+              // calendar events
+              events.push({
+                index: index,
+                id: item.id,
+                title: item.username,
+                start: startItem,
+                end: endItem, 
+                color: colour                                          
+              });
+              index++;
+            });
+            // call back with all events
+            callback(events);                                          
+          }
+        });
+      }
+    });
+                    
+  }
+
+
+  ngOnInit() {
 
     this.route.params
       .subscribe(
         (params: Params) => {
-          // something has changed
+
           console.log('resourceId = ' + params['id']);
           // get all bookings with this booking id
           this.resourceId = params['id'];
 
-          this.dataStorageService.getObject('resource', this.resourceId)
-          .subscribe(
-            (success: Response) => { 
-              var result = success.json();
-              console.log('success loading resource info');
-              this.resource = result.Item;
-              console.log('resource name is ' + this.resource.title);
-              this.resourceName = this.resource.title;
-              console.log('resource owner is ' + this.resource.ownername);
-              this.resourceOwner = this.resource.ownername;
-
-
-            },
-            (error: Response) => {
-              console.log('error is ' + messages.server_error);
-              this.message = messages.server_error;             
-            }
-          );
-
+          this.loadResourceDetails(this.resourceId, this);
 
         }
       );
 
-      this.dataStorageService.getObjects('bookings', this.resourceId)
-      .subscribe(
-        (response: Response) => {          
-          this.bookings = response.json();  
-          console.log('success loading bookings info');          
-          // load calendar
-          jQuery("#calendar").fullCalendar({           
-            themeSystem: 'bootstrap4',
-            header: {
-              left: 'prev title next today',
-              center: '',
-              right: 'month,agendaWeek,agendaDay '
-            },
-            nowIndicator: true,
-            height: 540,
-            eventClick: function(calEvent, jsEvent, view) {
-              var startItem = moment(calEvent.start).format(self.timeFormat);
-              var endItem = moment(calEvent.end).format(self.timeFormat);
-              console.log('calEvent.id: ' + calEvent.id);   
-              console.log('calEvent.username: ' + calEvent.username);                        
-              var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
-              self.onEditObject( calEvent, booking);
-            },            
-            dayClick: function(date, jsEvent, view) {
-              console.log('Clicked on: ' + date.format());
-              var startItem = moment(date.format() + ' ' + self.defaultTime).format(self.timeFormat);
-              // add a day
-              var endItem = moment(date.format() + ' ' + self.defaultTime).add(1, 'days').format(self.timeFormat);
-              console.log('form submitted start is ' + startItem);
-              console.log('form submitted end is ' + endItem);          
-              var booking = new Booking( '',  '',  '', '',  startItem, endItem);
-              // add object
-              self.onAddObject(booking);
-              
-            },           
-            events: function(start, end, timezone, callback) {            
-
-              jQuery.ajax({
-                url: environment.api + '/bookings/' + self.resourceId,
-                dataType: 'json',
-                data: {
-                  // our hypothetical feed requires UNIX timestamps
-                  start: start.unix(),
-                  end: end.unix(),
-
-                },
-                success: function(doc) {
-                  var events = [];
-                  //console.log('loop events start = ' + start);
-                  var index = 0;  
-                  doc.forEach( function (item) {
-
-                    var startItem = moment(item.start, self.timeFormat);
-                    var endItem = moment(item.end, self.timeFormat);
-
-                    // need to load into an object when component created                        
-                    var colour = self.bookingsColourPickerService.pickBookingColour(item.username);
-                      
-                    console.log('PUSH startItem ' + startItem + ', item.username ' + item.username);
-                    // calendar events
-                    events.push({
-                      index: index,
-                      id: item.id,
-                      title: item.username,
-                      start: startItem,
-                      end: endItem, 
-                      color: colour                                          
-                    });
-                    index++;
-                  });
-                  // call back with all events
-                  callback(events);                                          
-                }
-              });
-            }
-          });
-                      
-
-        },
-        (error: Response) => {
-          this.message = messages.server_error;             
-        }
-      );
 
   }
 
@@ -212,7 +218,7 @@ export class BookingsComponent implements OnInit {
         }
       );
     } else {
-      let booking = new Booking('', 
+      let booking = new Booking(null, 
                                 userid,
                                 username,
                                 this.resourceId,
@@ -220,7 +226,8 @@ export class BookingsComponent implements OnInit {
                                 value.end);
       this.dataStorageService.storeObject(booking, 'booking')
       .subscribe(
-        (success: Response) => {          
+        (success: Response) => {  
+          console.log('success');        
           booking.id = success.json().id;
           this.bookings.push(booking);
           this.message = '';

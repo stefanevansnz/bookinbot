@@ -10,17 +10,14 @@ import { RequestProcessor } from './shared/request.processor';
 export function execute(event: any, context, callback: any) {
 
     const STAGE = process.env.STAGE;
+
     let requestExtractor = new RequestExtractor();
-    let db = new DynamoDb('bookinbot-resources', STAGE);
+    let db = new DynamoDb(STAGE);
     let dataAccessObject = new DataAccessObject(db);
     let responseBuilder = new ResponseBuilder();
-
-    console.log('event is ' + event.requestContext.authorizer);
-    console.log('event is ' + JSON.stringify(event));
-    let body = event.body;
-    let method = event.httpMethod;
-    let authorizer = event.requestContext.authorizer;
-
+    
     let processor = new RequestProcessor(requestExtractor, dataAccessObject, responseBuilder);
-    processor.processRequest(body, authorizer, method, callback)
+    //console.log('processRequest is ' + JSON.stringify(event))
+
+    processor.processRequest(event, callback)
 }
