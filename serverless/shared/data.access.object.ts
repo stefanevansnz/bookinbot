@@ -35,7 +35,7 @@ export class DataAccessObject {
                 this.db.getFromTable(parameters, responseBuilder.build, callback);
                 break;
             case "DELETE":
-                this.db.deleteFromTable(1, username, responseBuilder.build, callback);
+                this.db.deleteFromTable(object, responseBuilder.build, callback);
                 break;
             }        
     }    

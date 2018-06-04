@@ -25,6 +25,29 @@ export class AuthenticationService {
         AWSCognito.config.update({accessKeyId: 'null', secretAccessKey: 'null'});
     } 
 
+    getUserSession(callback) {
+        let poolData : any = {
+            UserPoolId: environment.userpoolid,
+            ClientId: environment.clientid
+        };    
+        let idToken = '';
+        let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+        let cognitoGetUser = userPool.getCurrentUser();
+        console.log('getUserSession');
+        if (cognitoGetUser != null) {
+            cognitoGetUser.getSession(function(err, result) {
+              if (result) {
+                let idToken = result.getIdToken().getJwtToken();
+                callback( idToken );         
+              } else {
+                console.log(' error is ' + JSON.stringify(err));
+              }
+            });
+        } 
+
+        
+    }
+
     signinUser(email: string, password: string, callback ) {
 
         let self = this;
@@ -58,8 +81,12 @@ export class AuthenticationService {
                     console.log("Authenticated to Cognito User Pools! result is " + result);
                     let token = result.getAccessToken().getJwtToken(); 
                     console.log('access token is ' + token);                    
-                    let idToken = result.idToken.jwtToken;
+                    //let idToken = result.idToken.jwtToken;
+                    let idToken = result.getIdToken().getJwtToken();
                     console.log('idToken is ' + idToken);
+                    let refreshToken = result.getRefreshToken().getToken()
+                    console.log('refreshToken is ' + refreshToken);
+
                     cognitoGetUser.getUserAttributes(function (err, result) {
                         if (err) {
                             console.log('getUserAttributes() ERROR: ' + err);
@@ -238,7 +265,7 @@ export class AuthenticationService {
         console.log('setting fill name to ' + givenName + ' ' + familyName);    
         this.loadedUser.next(user);            
     }
-    
+   
     deleteUser() {
         localStorage.removeItem("user");
         this.loadedUser.next();    

@@ -33,36 +33,21 @@ export class ResourcesComponent implements OnInit {
               private route: ActivatedRoute) {}
 
   ngOnInit() {
-
+    let self = this;
     this.loading = true;
-
     this.route.params
       .subscribe(
         (params: Params) => {
           // something has changed
-          console.log('id = ' + params['id']);
-          this.initForm();
-          this.dataStorageService.getObjects('resources', null)
-          .subscribe(
-            (success: Response) => {   
-              this.loading = false;                     
-              this.resources = success.json()         
-            },
-            (error: Response) => {
-              this.loading = false;
-              this.message = error.text();             
-            }
-          );          
+          let id = params['id'];
+          console.log('id = ' + id);          
+          this.dataStorageService.getObjectsFromServer('resources', id, self);          
         }
       );
 
 
     
   }
-
-
-  private initForm() {  }  
-
 
   onViewBookings(index: number, resource: Resource) {
     console.log('onViewBookings resource id ' + resource.id);
@@ -72,55 +57,32 @@ export class ResourcesComponent implements OnInit {
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log('form submitted title is ' + value.title);
-
-    var user = this.authenticationService.getUser();
-    var ownerid = user.id;
-    console.log('form submitted owner id is ' + ownerid);
-    var ownername = user.firstname + ' ' + user.lastname;
-    console.log('form submitted owner name is ' + ownername);    
+    let self = this; 
+    let resource = new Resource(null, null, null, value.title);
 
     if (this.editMode) {
       console.log('edit mode');
-      let resource = new Resource( this.editResource.id, null, null, value.title);
-      this.dataStorageService.storeObject(resource, 'resource')
-      .subscribe(
-        (success: Response) => {          
-          resource.id = success.json().id;
-          this.resources[this.editIndex] = resource;
-          this.message = '';
-          jQuery("#editModal").modal("hide");          
-        },
-        (error: Response) => {
-          this.message = error.text();             
-        }
-      );
-    } else {
-      console.log('add mode');        
-      let resource = new Resource(null, null, null, value.title);
-      this.dataStorageService.storeObject(resource, 'resource')
-      .subscribe(
-        (success: Response) => {          
-          resource.id = success.json().id;
-          this.resources.push(resource);
-          this.message = '';
-          jQuery("#editModal").modal("hide");          
-        },
-        (error: Response) => {
-          this.message = error.text();             
-        }
-      );
+      resource = new Resource( this.editResource.id, null, null, value.title);
+
     }
+    this.dataStorageService.setObjectOnServer('resources', resource, self);          
+  
   }
 
   onAddObject() {
     this.editMode = false;
     this.slForm.reset();
     jQuery("#editModal").modal("show");
-  }    
+  }  
+  
+  closeModel() {
+    jQuery("#editModal").modal("hide");
+  }
   
   onEditObject(index: number, resource: Resource) {
     //console.log('onEditObject ' + index);
     this.editResource = resource;
+    console.log('this.editResource.id is ' + this.editResource.id);
     this.editIndex = index;
     this.editMode = true;
     this.slForm.setValue({
@@ -130,21 +92,10 @@ export class ResourcesComponent implements OnInit {
   }  
 
   onDelete() {
-
+    let self = this;
     let resource = new Resource(this.editResource.id, '', '', '');    
-    console.log('delete id is ' + this.editResource.id);
-
-    this.dataStorageService.deleteObject(resource, 'resource')
-    .subscribe(
-      (success: Response) => {          
-        this.resources.splice(this.editIndex, 1);        
-        this.message = '';
-        jQuery("#editModal").modal("hide");          
-      },
-      (error: Response) => {
-        this.message = error.text();           
-      }
-    );    
+    console.log('resource is ' + JSON.stringify(resource));
+    this.dataStorageService.deleteObjectsOnServer('resources', resource, self);              
   }
 
 }

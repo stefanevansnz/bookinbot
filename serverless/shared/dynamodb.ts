@@ -88,12 +88,12 @@ export class DynamoDb {
         });      
     }
     
-    deleteFromTable(inputId, ownerid, responseFunction, callback) {
+    deleteFromTable(object, responseFunction, callback) {
         let params = {
             TableName: this.tableName,
             Key: {
-                id: inputId,
-                ownerid: ownerid 
+                id: object.id,
+                ownerid: object.ownerid 
             }
         }      
         console.log('deleteFromTable is ' + JSON.stringify(params));         

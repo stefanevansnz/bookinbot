@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http, Headers, RequestOptions } from "@angular/http";
+import { Http, Headers, RequestOptions, Response } from "@angular/http";
 import { environment } from '../../environments/environment';
 import { Subject } from "rxjs/Subject";
 import { AuthenticationService } from "./authentication.service";
@@ -7,76 +7,97 @@ import { AuthenticationService } from "./authentication.service";
 @Injectable()
 export class DataStorageService {
 
-    addHeaders() {
-        let user = this.authenticationService.getUser();                
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');        
-        headers.append('Authorization', user.token);
-        return headers;
+    private addAuthorization(callback) {
+        this.authenticationService.getUserSession(function(token) {
+            // got token
+            console.log('end of token value is ' + token.substr(token.length - 5));
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');        
+            headers.append('Authorization', token);
+            callback(headers);
+        }); 
+
     }
 
     constructor(private http: Http,
                 private authenticationService: AuthenticationService) { }
 
-    getObject(name: string, id: string) {  
-        let headers = this.addHeaders();
-        console.log('get data storage object /' + name + '/' + id);        
-        return this.http.get(environment.api + '/' + name + '/' + id, {headers: headers});
+
+    getObjectsFromServer(name: string, id: string, component: any) {
+        let self = this;
+        this.addAuthorization(function(headers) {
+            self.http.get(environment.api + '/' + 
+                name + (id != undefined ? '/' + id : ''), {headers: headers})            
+            .subscribe(
+              (success: Response) => {   
+                component.loading = false;                     
+                component[name] = success.json();                
+              },
+              (error: Response) => {
+                console.log('error' + JSON.stringify(error));
+                component.loading = false;
+                component.message = error.text();             
+              }
+            );          
+        });
     }
 
-    getObjects(name: string, id: string) {          
-        let headers = this.addHeaders();
-        //console.log('headers.Authorization: ' + headers.get('Authorization'));
-        console.log('get data storage objects /' + name + (id != null ? '/' + id : ''));
-        return this.http.get(environment.api + '/' + 
-            name + (id != null ? '/' + id : ''), {headers: headers});
+    setObjectOnServer(name: string, object: any, component: any) {
+        let self = this;
+        this.addAuthorization(function(headers) {
+            let options = new RequestOptions({
+                headers: headers,
+                body: object
+            })
+            self.http.post(environment.api + '/' + name, object, options)            
+            .subscribe(
+              (success: Response) => {   
+                component.loading = false;                     
+                object.id = success.json().id;  
+                if (component.editMode) {
+                    component[name][component.editIndex] = object;
+                } else {
+                    component[name].push(object);
+                }
+                component.message = '';
+                component.closeModel();                             
+              },
+              (error: Response) => {
+                console.log('error' + JSON.stringify(error));
+                component.loading = false;
+                component.message = error.text();             
+              }
+            );          
+        });
     }
 
-    getObjectsParams(name: string, params: any) {          
-        let headers = this.addHeaders();        
-        return this.http.get(environment.api + '/' + 
-            name + (params != null ? '?' + params.name + '=' + params.value : ''), {headers: headers});
+    deleteObjectsOnServer(name: string, object: any, component: any) {
+        let self = this;
+        this.addAuthorization(function(headers) {
+            let options = new RequestOptions({
+                headers: headers,
+                body: object
+            })
+            self.http.delete(environment.api + '/' + name, options)            
+            .subscribe(
+              (success: Response) => {   
+                component.loading = false;                     
+                //component[name] = success.json() ;   
+                component[name].splice(component.editIndex, 1);
+                component.message = '';                     
+                component.closeModel();                        
+              },
+              (error: Response) => {
+                console.log('error' + JSON.stringify(error));
+                component.loading = false;
+                component.message = error.text();             
+              }
+            );          
+        });
     }
 
-    storeObject(object: any, name: string) { 
-        let headers = this.addHeaders();
-        console.log('storeObject ' + environment.api + '/' + name, object);
-        let options = new RequestOptions({
-            headers: headers,
-            body: object
-        })
-        return this.http.post(environment.api + '/' + name, object, options)
-    }
 
-    storeObjectParams(object: any, name: string, value: string) { 
-        let headers = this.addHeaders();
-        let options = new RequestOptions({
-            headers: headers,
-            body: object
-        })        
-        console.log('storeObjectParams ' + environment.api + '/' + name, object);
-        return this.http.post(environment.api + '/' + name + '/' + value, object, options)
-    }
 
-    deleteObject(object: any, name: string) { 
-        let headers = this.addHeaders();        
-        console.log(environment.api + '/' + name, object);
-        let options = new RequestOptions({
-            headers: headers,
-            body: object
-         })
-        return this.http.delete(environment.api + '/' + name, options)
-    }
-
-    deleteObjectParams(object: any, name: string, value: string) { 
-        let headers = this.addHeaders();                
-        console.log(environment.api + '/' + name, object);
-        let options = new RequestOptions({
-            headers: headers,
-            body: object
-        })
-        return this.http.delete(environment.api + '/' + name +  '/' + value, options)
-    }
-
+    
 
 }
