@@ -175,6 +175,8 @@ export class BookingsComponent implements OnInit {
     console.log('form submitted start is ' + value.start);
     console.log('form submitted end is ' + value.end);
 
+    console.log('this.editBooking is ' + JSON.stringify(this.editBooking));
+
     var user = this.authenticationService.getUser();
     var userid = user.id;
     var username = user.firstname + ' ' + user.lastname;
@@ -188,22 +190,24 @@ export class BookingsComponent implements OnInit {
       return;
     }
 
-//    let resource = new Resource(null, null, null, value.title);
-    let booking = new Booking(null, 
-      userid,
-      username,
-      this.resourceId,
-      value.start, 
-      value.end);
-
+    let booking;
+    console.log('edit mode is ' + this.editMode);
     if (this.editMode) {
-      console.log('edit mode');
       //resource = new Resource( this.editResource.id, null, null, value.title);
-      let booking = new Booking( this.editBooking.id, 
+      console.log('this.editBooking.id is ' + this.editBooking.id);
+      booking = new Booking( this.editBooking.id, 
         userid,
         username,
         this.resourceId,
         value.start, value.end);      
+    } else {
+      //let resource = new Resource(null, null, null, value.title);
+      booking = new Booking(null, 
+        userid,
+        username,
+        this.resourceId,
+        value.start, 
+        value.end);      
     }
     
     this.dataStorageService.setObjectOnServer('bookings', 'editBooking', booking, this);          
@@ -261,6 +265,7 @@ export class BookingsComponent implements OnInit {
     console.log('onEditObject ' + calEvent.id);
     console.log('booking start ' + booking.start);
     console.log('booking end ' + booking.end);
+    console.log('booking id ' + booking.id);    
 
     this.editCalendarEvent = calEvent;
     this.editBooking = booking;

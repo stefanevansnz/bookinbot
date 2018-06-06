@@ -49,7 +49,7 @@ export class DataStorageService {
     }
 
     setObjectOnServer(componentObjectList: string, componentObject: string, newObject: any, component: any) {
-        console.log('setObjectOnServer componentObjectList:' + componentObjectList + ' newObject:' + newObject + ' component:' + component);
+        console.log('setObjectOnServer componentObjectList:' + componentObjectList + ' newObject:' + JSON.stringify(newObject) + ' component:' + component);
         let self = this;
         this.addAuthorization(function(headers) {
             let options = new RequestOptions({
