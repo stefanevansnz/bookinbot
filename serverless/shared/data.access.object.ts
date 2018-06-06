@@ -12,20 +12,23 @@ export class DataAccessObject {
 
     execute(responseBuilder, requestExtractor, callback, event, username) {
 
+        console.log('UsernameId is ' + username);        
         let body = event.body;
         let method = event.httpMethod;
         let path = event.path.split("/")[1];
         let id = event.path.split("/")[2];
+        console.log('Path is ' + path);
+        console.log('Id is ' + id);
 
         let object = requestExtractor.getObject(body, username);
+        let parameters = requestExtractor.getParameters(path, id, username, object, method);
         let tableName = requestExtractor.getTableName(path);
-        let parameters = requestExtractor.getParameters(path, id, username);
+        console.log('Object is ' + JSON.stringify(object));
+        console.log('Parameters is ' + JSON.stringify(parameters));
 
         this.db.setTableName('bookinbot-' +tableName);
                         
         console.log('Method is ' + method + ' Table Name is ' + tableName);
-        console.log('Object is ' + JSON.stringify(object));
-        console.log('Parameters is ' + JSON.stringify(parameters));
 
         switch(method) {
             case "POST":
@@ -35,7 +38,7 @@ export class DataAccessObject {
                 this.db.getFromTable(parameters, responseBuilder.build, callback);
                 break;
             case "DELETE":
-                this.db.deleteFromTable(object, responseBuilder.build, callback);
+                this.db.deleteFromTable(parameters, responseBuilder.build, callback);
                 break;
             }        
     }    

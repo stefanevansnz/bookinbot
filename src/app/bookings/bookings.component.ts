@@ -11,6 +11,7 @@ import { Resource } from '../resources/resources.model';
 import { AuthenticationService } from '../shared/authentication.service';
 import { DateRangePickerService } from '../shared/date-range-picker.service';
 import { BookingsColourPickerService } from './bookings-colour-picker.service';
+import { truncate } from 'fs';
 
 declare var jQuery:any;
 declare var moment:any;
@@ -27,20 +28,21 @@ export class BookingsComponent implements OnInit {
   
   message;
   editMode = false;
+  loading;
   resourceName;
   resourceOwner;  
   resource: Resource;
   bookings: Booking[] = [];
-
+  editBooking: Booking;
+  
   private readonly dateFormat = 'DD/MM/YYYY';
   private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
   //private readonly defaultTime = '10:00 AM';  
   private readonly defaultTime = '10:00';  
-  private editBooking: Booking;
   private editIndex: number;
   private editCalendarEvent: any;
   private resourceId;
-
+  
   constructor(private authenticationService: AuthenticationService,
               private dataStorageService: DataStorageService, 
               private dateRangePickerService: DateRangePickerService,
@@ -48,133 +50,127 @@ export class BookingsComponent implements OnInit {
               private router: Router, 
               private route: ActivatedRoute) {}
 
-  private loadResourceDetails(resourceId : string, mainComponent) {
-    console.log('loading resource object...');
-    this.resourceName = 'Loading...';
-    this.dataStorageService.getObject('resource', resourceId)
-    .subscribe(
-      (success: Response) => { 
-        var result = success.json();
-        console.log('success loading resource info');
-        //this.resource = result.Item;
-        this.resource = result[0];
-        console.log('resource name is ' + this.resource.title);
-        this.resourceName = this.resource.title;
-        console.log('resource owner is ' + this.resource.ownername);
-        this.resourceOwner = this.resource.ownername;
-        mainComponent.loadBookingDetails(mainComponent);
-
-      },
-      (error: Response) => {
-        console.log('error is ' + messages.server_error);
-        this.message = messages.server_error;             
-      }
-    );
-  }
-
-  private loadBookingDetails(mainComponent) {
-    var self = this;
-    console.log('loading booking objects...');
-
-    let headers = mainComponent.dataStorageService.addHeaders();
-    let authHeader = { Authorization: headers.get('Authorization')};
-//    console.log('headers ' + JSON.stringify(authHeader));
-    
-    jQuery("#calendar").fullCalendar({           
-      themeSystem: 'bootstrap4',
-      header: {
-        left: 'prev title next today',
-        center: '',
-        right: 'month,agendaWeek,agendaDay '
-      },
-      nowIndicator: true,
-      height: 540,
-      eventClick: function(calEvent, jsEvent, view) {
-        var startItem = moment(calEvent.start).format(self.timeFormat);
-        var endItem = moment(calEvent.end).format(self.timeFormat);
-        console.log('calEvent.id: ' + calEvent.id);   
-        console.log('calEvent.username: ' + calEvent.username);                        
-        var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
-        this.onEditObject( calEvent, booking);
-      },            
-      dayClick: function(date, jsEvent, view) {
-        console.log('Clicked on: ' + date.format());
-        var startItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).format(self.timeFormat);
-        // add a day
-        var endItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).add(1, 'days').format(self.timeFormat);
-        console.log('form submitted start is ' + startItem);
-        console.log('form submitted end is ' + endItem);          
-        var booking = new Booking(null, null, null, null, startItem, endItem);
-        // add object
-        self.onAddObject(booking);
-        
-      },           
-      events: function(start, end, timezone, callback) {            
-
-        jQuery.ajax({
-          url: environment.api + '/bookings/' + self.resourceId,
-          headers: authHeader,
-          dataType: 'json',
-          data: {
-            // our hypothetical feed requires UNIX timestamps
-            start: start.unix(),
-            end: end.unix(),
-
-          },
-          success: function(doc) {
-            var events = [];
-            console.log('Loaded events...');
-            var index = 0;  
-            doc.forEach( function (item) {
-
-              var startItem = moment(item.start, self.timeFormat);
-              var endItem = moment(item.end, self.timeFormat);
-
-              // need to load into an object when component created                        
-              var colour = self.bookingsColourPickerService.pickBookingColour(item.username);
-                
-              console.log('PUSH startItem ' + startItem + ', item.username ' + item.username);
-              // calendar events
-              events.push({
-                index: index,
-                id: item.id,
-                title: item.username,
-                start: startItem,
-                end: endItem, 
-                color: colour                                          
-              });
-              index++;
-            });
-            // call back with all events
-            callback(events);                                          
-          }
-        });
-      }
-    });
-                    
-  }
-
 
   ngOnInit() {
+    this.loading = true;
 
     this.route.params
       .subscribe(
         (params: Params) => {
-
-          console.log('resourceId = ' + params['id']);
           // get all bookings with this booking id
-          this.resourceId = params['id'];
-
-          this.loadResourceDetails(this.resourceId, this);
-
+          let id = params['id'];
+          console.log('resourceId = ' + id);
+          this.resourceId = id;
+          this.loadResourceDetails();
+          this.loadBookingDetails();
         }
       );
-
-
   }
 
 
+  private loadResourceDetails() {
+    console.log('loading resource object...');
+    let self = this;
+
+    //this.resource.title = 'Loading...';
+    this.dataStorageService.getObjectsFromServer('resource', this.resourceId, self);          
+    
+  }
+
+  private loadBookingDetails() {
+    var self = this;
+    console.log('loading booking objects...');
+
+    //this.dataStorageService.getObjectsFromServer('bookings', this.resourceId, self);          
+
+//    let headers = this.dataStorageService.addHeaders();
+    this.dataStorageService.addAuthorization(function(headers) {
+      let authHeader = { Authorization: headers.get('Authorization')};
+    
+
+//    console.log('headers ' + JSON.stringify(authHeader));
+    
+      jQuery("#calendar").fullCalendar({           
+        themeSystem: 'bootstrap4',
+        header: {
+          left: 'prev title next today',
+          center: '',
+          right: 'month,agendaWeek,agendaDay '
+        },
+        nowIndicator: true,
+        height: 540,
+        eventClick: function(calEvent, jsEvent, view) {
+          var startItem = moment(calEvent.start).format(self.timeFormat);
+          var endItem = moment(calEvent.end).format(self.timeFormat);
+          console.log('calEvent.id: ' + calEvent.id);   
+          console.log('calEvent.username: ' + calEvent.username);                        
+          var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
+          self.onEditObject( calEvent, booking);
+        },            
+        dayClick: function(date, jsEvent, view) {
+          console.log('Clicked on: ' + date.format());
+          var startItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).format(self.timeFormat);
+          // add a day
+          var endItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).add(1, 'days').format(self.timeFormat);
+          console.log('form submitted start is ' + startItem);
+          console.log('form submitted end is ' + endItem);          
+          var booking = new Booking(null, null, null, null, startItem, endItem);
+          // add object
+          self.onAddObject(booking);
+          
+        },           
+        events: function(start, end, timezone, callback) {            
+
+          jQuery.ajax({
+            url: environment.api + '/bookings/' + self.resourceId,
+            headers: authHeader,
+            dataType: 'json',
+            data: {
+              // our hypothetical feed requires UNIX timestamps
+              start: start.unix(),
+              end: end.unix(),
+
+            },
+            success: function(doc) {
+              var events = [];
+              console.log('Loading events...');
+              var index = 0;  
+              doc.forEach( function (item) {
+
+                var startItem = moment(item.start, self.timeFormat);
+                var endItem = moment(item.end, self.timeFormat);
+
+                // need to load into an object when component created                        
+                var colour = self.bookingsColourPickerService.pickBookingColour(item.username);
+                  
+                console.log('PUSH startItem ' + startItem + ', item.username ' + item.username);
+                // calendar events
+                events.push({
+                  index: index,
+                  id: item.id,
+                  title: item.username,
+                  start: startItem,
+                  end: endItem, 
+                  color: colour                                          
+                });
+                //console.log('push bookings');
+                //self.bookings.push(new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
+                index++;
+              });
+              console.log('Loaded ' + index + ' event onto calendar');
+              // call back with all events
+              callback(events);                                          
+            }
+          });
+        }
+      });
+    });    
+                    
+  }
+
   onSubmit(form: NgForm) {
+    let self = this;
+
     const value = form.value;
     console.log('form submitted start is ' + value.start);
     console.log('form submitted end is ' + value.end);
@@ -182,7 +178,6 @@ export class BookingsComponent implements OnInit {
     var user = this.authenticationService.getUser();
     var userid = user.id;
     var username = user.firstname + ' ' + user.lastname;
-    var colour = this.bookingsColourPickerService.pickBookingColour(username);
     
     console.log('form submitted userid is ' + userid);
     var startDate = moment(value.start, this.timeFormat);
@@ -193,62 +188,51 @@ export class BookingsComponent implements OnInit {
       return;
     }
 
+//    let resource = new Resource(null, null, null, value.title);
+    let booking = new Booking(null, 
+      userid,
+      username,
+      this.resourceId,
+      value.start, 
+      value.end);
+
     if (this.editMode) {
+      console.log('edit mode');
+      //resource = new Resource( this.editResource.id, null, null, value.title);
       let booking = new Booking( this.editBooking.id, 
-                                 userid,
-                                 username,
-                                 this.resourceId,
-                                 value.start, value.end);
-      this.dataStorageService.storeObject(booking, 'booking')
-      .subscribe(
-        (success: Response) => {          
-          booking.id = success.json().id;
-          this.bookings[this.editIndex] = booking;
-          this.message = '';
-
-          this.editCalendarEvent.start = startDate;
-          this.editCalendarEvent.end = endDate;
-
-          jQuery('#calendar').fullCalendar('updateEvent', this.editCalendarEvent);
-
-          jQuery("#editModal").modal("hide");          
-        },
-        (error: Response) => {
-          console.log('found error');
-          this.message = error.json().error;             
-        }
-      );
-    } else {
-      let booking = new Booking(null, 
-                                userid,
-                                username,
-                                this.resourceId,
-                                value.start, 
-                                value.end);
-      this.dataStorageService.storeObject(booking, 'booking')
-      .subscribe(
-        (success: Response) => {  
-          console.log('success');        
-          booking.id = success.json().id;
-          this.bookings.push(booking);
-          this.message = '';
-
-          jQuery('#calendar').fullCalendar('renderEvent', {
-            title: username,
-            id: booking.id,
-            start: startDate,
-            end: endDate,
-            color: colour
-          });
-
-          jQuery("#editModal").modal("hide");          
-        },
-        (error: Response) => {
-          console.log('found error');
-          this.message = error.json().error;             
-        }
-      );
+        userid,
+        username,
+        this.resourceId,
+        value.start, value.end);      
     }
+    
+    this.dataStorageService.setObjectOnServer('bookings', 'editBooking', booking, this);          
+    
+  }
+  
+  closeSetModal() { 
+    console.log('editMode is ' + this.editMode);
+    console.log('booking is ' + JSON.stringify(this.editBooking));
+    let colour = this.bookingsColourPickerService.pickBookingColour(this.editBooking.username);
+    let startDate = moment(this.editBooking.start, this.timeFormat);
+    let endDate = moment(this.editBooking.end, this.timeFormat);
+  
+    if (this.editMode) {
+      this.editCalendarEvent.start = startDate;
+      this.editCalendarEvent.end = endDate;
+      jQuery('#calendar').fullCalendar('updateEvent', this.editCalendarEvent);  
+    } else {
+      //console.log('Add booking to calender as renderEvent');
+      jQuery('#calendar').fullCalendar('renderEvent', {
+        title: this.editBooking.username,
+        id: this.editBooking.id,
+        start: startDate,
+        end: endDate,
+        color: colour
+      });  
+    }
+    
+    jQuery("#editModal").modal("hide");
   }
 
   onAddObject(booking: Booking) {
@@ -271,7 +255,8 @@ export class BookingsComponent implements OnInit {
     jQuery("#editModal").modal("show");
 
   }    
-  
+
+
   onEditObject(calEvent, booking: Booking) {
     console.log('onEditObject ' + calEvent.id);
     console.log('booking start ' + booking.start);
@@ -292,6 +277,7 @@ export class BookingsComponent implements OnInit {
   }  
 
   onDelete() {
+    let self = this;    
     var user = this.authenticationService.getUser();
     var userid = user.id;
 
@@ -299,8 +285,11 @@ export class BookingsComponent implements OnInit {
     console.log('delete id is ' + this.editBooking.id);
     console.log('resource id is ' + this.resourceId);
 
-    let booking = new Booking(this.editBooking.id, userid, '', this.resourceId,'' ,'');    
+    let booking = new Booking(this.editBooking.id, '', '', this.resourceId,'' ,'');    
 
+    this.dataStorageService.deleteObjectsOnServer('bookings', booking, self);          
+
+/*
     this.dataStorageService.deleteObject(booking, 'booking')
     .subscribe(
       (success: Response) => {          
@@ -316,7 +305,18 @@ export class BookingsComponent implements OnInit {
       (error: Response) => {
         this.message = messages.server_error;             
       }
-    );    
+    );
+    */    
   }  
+
+  closeDeleteModal() { 
+    console.log('editMode is ' + this.editMode);
+    console.log('booking is ' + JSON.stringify(this.editBooking));
+    jQuery('#calendar').fullCalendar('removeEvents', 
+      [this.editBooking.id]
+    );    
+    jQuery("#editModal").modal("hide");
+  }
+  
 
 }

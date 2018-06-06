@@ -88,14 +88,27 @@ export class DynamoDb {
         });      
     }
     
-    deleteFromTable(object, responseFunction, callback) {
+    deleteFromTable(parameters: Parameter[], responseFunction, callback) {
+
+        let keyNameValues = '';
+        let expressionCount = 1; 
+        let numberOfParameters = parameters.length;       
+        parameters.forEach((param) => {
+            console.log('param name is ' + param.name + ' - ' + param.value );
+            keyNameValues += '"' + param.name  + '": "' +  param.value  + '"';
+            if (expressionCount < numberOfParameters) {
+                keyNameValues += ', ';                    
+            }  
+            expressionCount++;
+        });
+
+        console.log('keyNameValues is ' + keyNameValues);
+        
         let params = {
             TableName: this.tableName,
-            Key: {
-                id: object.id,
-                ownerid: object.ownerid 
-            }
-        }      
+            Key: JSON.parse('{' + keyNameValues + '}')
+        }     
+        
         console.log('deleteFromTable is ' + JSON.stringify(params));         
         this.dynamoDb.delete(params, (error, result) => {
             responseFunction(error, result, callback);

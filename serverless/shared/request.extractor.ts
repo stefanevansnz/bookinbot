@@ -34,16 +34,26 @@ export class RequestExtractor {
         return '';
     }
 
-    getParameters(path, id, username) {
+    getParameters(path, id, username, object, method) {
         let parameters: Parameter[] = [];
         if (path.includes('resource')) {
-            parameters.push(new Parameter('ownerid', username));
-            if (id != null) {
-                parameters.push(new Parameter('id', id));
-            }
+            if (method == 'DELETE') {
+                parameters.push(new Parameter('ownerid', username));
+                parameters.push(new Parameter('id', object.id));
+            } else {
+                parameters.push(new Parameter('ownerid', username));
+                if (id != null) {
+                    parameters.push(new Parameter('id', id));
+                }
+            }            
         }
         if (path.includes('booking')) {
-            parameters.push(new Parameter('resourceid', id));
+            if (method == 'DELETE') {
+                parameters.push(new Parameter('resourceid', object.resourceid));
+                parameters.push(new Parameter('id', object.id));
+            } else {
+                parameters.push(new Parameter('resourceid', id));
+            }
         }
         
         return parameters;

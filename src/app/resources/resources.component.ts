@@ -23,8 +23,8 @@ export class ResourcesComponent implements OnInit {
   loading;
   editMode = false;
   resources: Resource[] = [];
+  editResource: Resource;
 
-  private editResource: Resource;
   private editIndex: number;
 
   constructor(private authenticationService: AuthenticationService,
@@ -43,10 +43,7 @@ export class ResourcesComponent implements OnInit {
           console.log('id = ' + id);          
           this.dataStorageService.getObjectsFromServer('resources', id, self);          
         }
-      );
-
-
-    
+      );    
   }
 
   onViewBookings(index: number, resource: Resource) {
@@ -65,7 +62,7 @@ export class ResourcesComponent implements OnInit {
       resource = new Resource( this.editResource.id, null, null, value.title);
 
     }
-    this.dataStorageService.setObjectOnServer('resources', resource, self);          
+    this.dataStorageService.setObjectOnServer('resources', 'editResource', resource, self);          
   
   }
 
@@ -75,10 +72,15 @@ export class ResourcesComponent implements OnInit {
     jQuery("#editModal").modal("show");
   }  
   
-  closeModel() {
+  closeSetModal() { 
     jQuery("#editModal").modal("hide");
   }
-  
+
+  closeDeleteModal() { 
+    jQuery("#editModal").modal("hide");
+  }
+
+
   onEditObject(index: number, resource: Resource) {
     //console.log('onEditObject ' + index);
     this.editResource = resource;
@@ -93,7 +95,10 @@ export class ResourcesComponent implements OnInit {
 
   onDelete() {
     let self = this;
-    let resource = new Resource(this.editResource.id, '', '', '');    
+    var user = this.authenticationService.getUser();
+    var userid = user.id;
+
+    let resource = new Resource(this.editResource.id, userid, '', '');    
     console.log('resource is ' + JSON.stringify(resource));
     this.dataStorageService.deleteObjectsOnServer('resources', resource, self);              
   }

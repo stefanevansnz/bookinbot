@@ -49,6 +49,7 @@ export class SettingsComponent implements OnInit {
     this.usergroupid = user.id;
 
     // get user group
+    /*
     console.log('find user group for user ' + this.usergroupid);
     this.dataStorageService.getObjects('usergroup', this.usergroupid)
     .subscribe(
@@ -65,6 +66,7 @@ export class SettingsComponent implements OnInit {
           self.notificationService.setMessage( messages.server_error + message.error ); 
         }
       })
+      */
   }
 
   keyDownFunction(event) {
@@ -82,7 +84,7 @@ export class SettingsComponent implements OnInit {
     this.searchMessage = 'Search for users...';
 
     var params = {'name':'email', 'value': email};
-
+/*
     this.dataStorageService.getObjectsParams('users', params)
     .subscribe(
       (success: Response) => {
@@ -105,6 +107,7 @@ export class SettingsComponent implements OnInit {
         self.notificationService.setMessage( messages.server_error ); 
         // create if doesn't exist.
       })
+      */
   } 
   
 onAddUser(user: User) {  
@@ -113,7 +116,7 @@ onAddUser(user: User) {
     if (user.id == null) {
       message = 'User has been added to your group and an invite email has been sent';
     }
-    
+    /*
     this.dataStorageService.storeObjectParams(user, 'usergroup', this.usergroupid )
     .subscribe(
       (success: Response) => {  
@@ -127,6 +130,7 @@ onAddUser(user: User) {
         this.message = messages.server_error;             
       }
     );
+    */
 }
 
 onInviteUser(email: string) {
@@ -136,7 +140,7 @@ onInviteUser(email: string) {
 }
 
 onDeleteObject(index: number, user: User) {
-
+/*
   this.dataStorageService.deleteObjectParams(user, 'usergroup', this.usergroupid)
   .subscribe(
     (success: Response) => {          
@@ -147,7 +151,7 @@ onDeleteObject(index: number, user: User) {
       this.message = messages.server_error;             
     }
   );    
-
+*/
 
 }
 

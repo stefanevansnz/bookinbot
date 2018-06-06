@@ -7,7 +7,7 @@ import { AuthenticationService } from "./authentication.service";
 @Injectable()
 export class DataStorageService {
 
-    private addAuthorization(callback) {
+    addAuthorization(callback) {
         this.authenticationService.getUserSession(function(token) {
             // got token
             console.log('end of token value is ' + token.substr(token.length - 5));
@@ -31,7 +31,13 @@ export class DataStorageService {
             .subscribe(
               (success: Response) => {   
                 component.loading = false;                     
-                component[name] = success.json();                
+                let result = success.json();
+                console.log('result is ' + JSON.stringify(result));                
+                component[name] = result;
+                if (id != undefined) {
+                    // if there is an id get first result
+                    component[name] = result[0];
+                } 
               },
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
@@ -42,25 +48,29 @@ export class DataStorageService {
         });
     }
 
-    setObjectOnServer(name: string, object: any, component: any) {
+    setObjectOnServer(componentObjectList: string, componentObject: string, newObject: any, component: any) {
+        console.log('setObjectOnServer componentObjectList:' + componentObjectList + ' newObject:' + newObject + ' component:' + component);
         let self = this;
         this.addAuthorization(function(headers) {
             let options = new RequestOptions({
                 headers: headers,
-                body: object
+                body: newObject
             })
-            self.http.post(environment.api + '/' + name, object, options)            
+            self.http.post(environment.api + '/' + componentObjectList, newObject, options)            
             .subscribe(
               (success: Response) => {   
                 component.loading = false;                     
-                object.id = success.json().id;  
+                newObject.id = success.json().id;  
                 if (component.editMode) {
-                    component[name][component.editIndex] = object;
+                    console.log('set object on ' + component[name] + ' at ' + component.editIndex);
+                    component[componentObjectList][component.editIndex] = newObject;
+                    component[componentObject] = newObject;                    
                 } else {
-                    component[name].push(object);
+                    component[componentObjectList].push(newObject);
+                    component[componentObject] = newObject;
                 }
                 component.message = '';
-                component.closeModel();                             
+                component.closeSetModal();                             
               },
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
@@ -73,6 +83,7 @@ export class DataStorageService {
 
     deleteObjectsOnServer(name: string, object: any, component: any) {
         let self = this;
+        console.log('delete object ' + JSON.stringify(object));
         this.addAuthorization(function(headers) {
             let options = new RequestOptions({
                 headers: headers,
@@ -85,7 +96,7 @@ export class DataStorageService {
                 //component[name] = success.json() ;   
                 component[name].splice(component.editIndex, 1);
                 component.message = '';                     
-                component.closeModel();                        
+                component.closeDeleteModal();                        
               },
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));

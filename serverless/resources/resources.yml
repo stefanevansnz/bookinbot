@@ -7,7 +7,7 @@ events:
     - http: 
         authorizer: ${self:custom.cognitoAuthorizer}
         method: get
-        path: "resources/{id}"
+        path: "resource/{id}"
         cors: true  
     - http: 
         authorizer: ${self:custom.cognitoAuthorizer}

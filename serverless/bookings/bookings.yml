@@ -7,10 +7,10 @@ events:
     - http: 
         authorizer: ${self:custom.cognitoAuthorizer}
         method: post
-        path: "booking"
+        path: "bookings"
         cors: true  
     - http: 
         authorizer: ${self:custom.cognitoAuthorizer}
         method: delete
-        path: "booking"
+        path: "bookings"
         cors: true  
