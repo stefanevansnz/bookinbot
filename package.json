@@ -24,9 +24,11 @@
     "amazon-cognito-identity-js": "^2.0.5",
     "aws-sdk": "^2.242.1",
     "bootstrap": "^4.1.1",
+    "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.6",
     "ngx-bootstrap": "^2.0.5",
     "rxjs": "^5.5.10",
+    "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
