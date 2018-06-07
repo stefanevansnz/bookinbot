@@ -22,7 +22,8 @@ export class SignupComponent implements OnInit {
   messageUpdate: Subscription;
   message: any;
   loading: boolean = false;
-  newpassword: boolean = false;
+  status: string;
+  signUpEmail: string;
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
@@ -35,23 +36,24 @@ export class SignupComponent implements OnInit {
 
     console.log('sign up');
     this.activatedRoute.params.subscribe((params: Params) => {
-      let status = params['status'];
-      console.log('status of sign up is ' + status);
-      if (status == 'newpassword') {
-        console.log('set newpassword to true');
-        this.newpassword = true;
-      }
-    });    
+      this.status = params['status'];
+      console.log('status of sign up is ' + this.status);
+      this.messageUpdate = this.notificationService.getMessage()
+      .subscribe(
+        (message) => {
+          this.message = message;
+        }
+      );
   
-    this.suForm.reset();
-    this.messageUpdate = this.notificationService.getMessage()
-    .subscribe(
-      (message) => {
-        this.message = message;
-      }
-    );
-
+    });    
   }
+
+  ngAfterViewInit() {
+    console.log('on after view init');
+    if (this.status == 'new') {
+      this.suForm.reset();
+    }
+} 
 
   onSetDefault() {
     this.suForm.setValue({
@@ -71,7 +73,7 @@ export class SignupComponent implements OnInit {
     const firstname = form.value.firstname;
     const lastname = form.value.lastname;
 
-    if (this.newpassword) {
+    if (this.status == 'newpassword') {
       this.authenticationService.completeNewPasswordChallenge(email, password, newpassword, firstname, lastname, this);
     } else {
       this.authenticationService.signupUser(email, password, firstname, lastname, this);
@@ -80,7 +82,7 @@ export class SignupComponent implements OnInit {
 
   successfulSignUp() {
     console.log('successfulSignUp');
-    this.router.navigateByUrl('/signup?status=confirm');    
+    this.router.navigateByUrl('/signup/confirm');    
   }
 
   isLoading() {
