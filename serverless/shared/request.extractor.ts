@@ -31,6 +31,9 @@ export class RequestExtractor {
         if (path.includes('booking')) {
             return 'bookings';
         }
+        if (path.includes('share')) {
+            return 'shares';
+        }
         return '';
     }
 
@@ -53,6 +56,14 @@ export class RequestExtractor {
                 parameters.push(new Parameter('id', object.id));
             } else {
                 parameters.push(new Parameter('resourceid', id));
+            }
+        }
+        if (path.includes('share')) {
+            if (method == 'DELETE') {
+                parameters.push(new Parameter('ownerid', object.resourceid));
+                parameters.push(new Parameter('id', object.id));
+            } else {
+                parameters.push(new Parameter('ownerid', id));
             }
         }
         

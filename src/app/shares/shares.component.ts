@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
-import { Resource } from './resources.model';
+import { Share } from './shares.model';
 import { Response } from "@angular/http";
 import { DataStorageService } from '../shared/data-storage.service';
 import { messages } from '../app-messages';
@@ -11,21 +11,22 @@ import { AuthenticationService } from '../shared/authentication.service';
 declare var jQuery:any;
 
 @Component({
-  selector: 'app-resources',
-  templateUrl: './resources.component.html',
-  styleUrls: ['./resources.component.css']
+  selector: 'app-shares',
+  templateUrl: './shares.component.html',
+  styleUrls: ['./shares.component.css']
 })
-export class ResourcesComponent implements OnInit {
+export class SharesComponent implements OnInit {
 
   @ViewChild('f') slForm: NgForm;
 
   message;
   loading;
   editMode = false;
-  resources: Resource[] = [];
-  editResource: Resource;
+  shares: Share[] = [];
+  editShare: Share;
 
   private editIndex: number;
+  private resourceId;  
 
   constructor(private authenticationService: AuthenticationService,
               private dataStorageService: DataStorageService, 
@@ -40,34 +41,32 @@ export class ResourcesComponent implements OnInit {
         (params: Params) => {
           // something has changed
           let id = params['id'];
-          console.log('id = ' + id);          
-          this.dataStorageService.getObjectsFromServer('resources', id, self);          
+          console.log('resourceId = ' + id);
+          this.resourceId = id;          
+          console.log('id = ' + id); 
+          this.dataStorageService.getObjectsFromServer('resource', this.resourceId, self);                   
+          this.dataStorageService.getObjectsFromServer('shares', id, self);          
         }
       );    
   }
 
-  onViewBookings(index: number, resource: Resource) {
-    console.log('onViewBookings resource id ' + resource.id);
-    this.router.navigate(['/bookings/' + resource.id]);
-  }
- 
-  onShareResource(index: number, resource: Resource) {
-    console.log('onShareResource resource id ' + resource.id);
-    this.router.navigate(['/shares/' + resource.id]);
+  onViewBookings(index: number, share: Share) {
+    console.log('onViewBookings share id ' + share.id);
+    this.router.navigate(['/bookings/' + share.id]);
   }
 
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log('form submitted title is ' + value.title);
     let self = this; 
-    let resource = new Resource(null, null, null, value.title);
+    let share = new Share(null, null, null, value.title);
 
     if (this.editMode) {
       console.log('edit mode');
-      resource = new Resource( this.editResource.id, null, null, value.title);
+      share = new Share( this.editShare.id, null, null, value.title);
 
     }
-    this.dataStorageService.setObjectOnServer('resources', 'editResource', resource, self);          
+    this.dataStorageService.setObjectOnServer('shares', 'editShare', share, self);          
   
   }
 
@@ -86,14 +85,14 @@ export class ResourcesComponent implements OnInit {
   }
 
 
-  onEditObject(index: number, resource: Resource) {
+  onEditObject(index: number, share: Share) {
     //console.log('onEditObject ' + index);
-    this.editResource = resource;
-    console.log('this.editResource.id is ' + this.editResource.id);
+    this.editShare = share;
+    console.log('this.editShare.id is ' + this.editShare.id);
     this.editIndex = index;
     this.editMode = true;
     this.slForm.setValue({
-      title: resource.title,
+      title: share.userid,
     });
     jQuery("#editModal").modal("show");
   }  
@@ -103,9 +102,9 @@ export class ResourcesComponent implements OnInit {
     var user = this.authenticationService.getUser();
     var userid = user.id;
 
-    let resource = new Resource(this.editResource.id, userid, '', '');    
-    console.log('resource is ' + JSON.stringify(resource));
-    this.dataStorageService.deleteObjectsOnServer('resources', resource, self);              
+    let share = new Share(this.editShare.id, userid, '', '');    
+    console.log('share is ' + JSON.stringify(share));
+    this.dataStorageService.deleteObjectsOnServer('shares', share, self);              
   }
 
 }

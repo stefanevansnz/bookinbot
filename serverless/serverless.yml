@@ -25,7 +25,8 @@ custom:
     indexDocument: index.html 
     errorDocument: index.html 
   tableNameResources: 'bookinbot-resources'    
-  tableNameBookings: 'bookinbot-bookings'  
+  tableNameBookings: 'bookinbot-bookings' 
+  tableNameShares: 'bookinbot-shares'    
   accessKey: ${env:ACCESSKEY}
   secretKey: ${env:SECRETKEY}  
   dynamodb:
@@ -51,9 +52,11 @@ provider:
       Resource:
         - { "Fn::GetAtt": ["ResourcesDynamoDBTable", "Arn"] }
         - { "Fn::GetAtt": ["BookingsDynamoDBTable", "Arn"] }        
+        - { "Fn::GetAtt": ["SharesDynamoDBTable", "Arn"] }        
   environment:
     RESOURCES_TABLE: ${self:custom.tableNameResources}
     BOOKINGS_TABLE: ${self:custom.tableNameBookings}    
+    SHARES_TABLE: ${self:custom.tableNameShares}    
     STAGE: ${opt:stage}
 #    AWS_ACCESS_KEY: ${self:custom.accessKey}   
 #    AWS_SECRET_KEY: ${self:custom.secretKey}       
@@ -65,6 +68,9 @@ functions:
   bookings:
       handler: handler.execute
       events: ${file(bookings/bookings.yml):events} 
+  shares:
+      handler: handler.execute
+      events: ${file(shares/shares.yml):events} 
 
 resources:
   Resources:
@@ -110,3 +116,24 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:custom.tableNameBookings}
+    SharesDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          - 
+            AttributeName: ownerid
+            AttributeType: S
+          - 
+            AttributeName: userid
+            AttributeType: S            
+        KeySchema:
+          - 
+            AttributeName: ownerid
+            KeyType: HASH
+          - 
+            AttributeName: userid
+            KeyType: RANGE            
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableNameShares}

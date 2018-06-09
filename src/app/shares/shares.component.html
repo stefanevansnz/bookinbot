@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">      
         <div class="modal-header">
-          <h4 class="modal-title">{{ editMode ? 'Edit' : 'Add' }} Resource</h4>
+          <h4 class="modal-title">{{ editMode ? 'Edit' : 'Add' }} Email</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
@@ -29,19 +29,19 @@
           <!-- Modal footer -->
           <div class="modal-footer">
             <button 
-              id="save-resource"
+              id="save-share"
               class="btn btn-success" 
               type="submit" 
               [disabled]="!f.valid">
               {{ editMode ? 'Update' : 'Add' }}</button>   
             <button 
-              id="delete-resource"             
+              id="delete-share"             
               class="btn btn-danger" 
               type="button"
               (click)="onDelete()" 
               *ngIf="editMode">Delete</button>                                 
             <button 
-              id="cancel-resource" 
+              id="cancel-share" 
               type="button" 
               class="btn btn-secondary" 
               data-dismiss="modal">Close</button>
@@ -53,10 +53,20 @@
 
 
 <div class="row">
-  <div id="resources" class="col-md-12">
-      <h1>Resources</h1>
-      <button id="add-resource" type="button" class="btn btn-primary" 
-        (click)="onAddObject()">Add Resource</button>
+  <div id="shares" class="col-md-12">
+      <h1>People</h1>
+
+        <div *ngIf="loading; else heading">
+          loading ...
+        </div>       
+        <ng-template #heading>
+          <h2>{{resource.title}}</h2>
+          <hr>
+       </ng-template>       
+    
+
+      <button id="add-share" type="button" class="btn btn-primary" 
+        (click)="onAddObject()">Add Person</button>
 
       <div *ngIf="message" class="alert alert-danger" role="alert">
           {{ message }}
@@ -69,26 +79,15 @@
 
       <ul class="list-group">
         <li class="list-group-item"        
-          *ngFor="let resource of resources; let i = index">
+          *ngFor="let share of shares; let i = index">
           <button 
-          class="view-resource btn btn-success float-right edit" 
-          (click)="onViewBookings(i, resource)"         
-          type="submit" >
-          Bookings</button>        
-
-          <button 
-          class="share-resource btn btn-success float-right edit" 
-          (click)="onShareResource(i, resource)"         
-          type="submit" >
-          People</button>        
-
-          <button 
-          class="edit-resource btn btn-success float-right edit" 
-          (click)="onEditObject(i, resource)"         
+          class="edit-share btn btn-success float-right edit" 
+          (click)="onEditObject(i, share)"         
           type="submit" >
           Edit</button>        
-
-          {{ resource.title }} - {{ resource.id }}         
+          <a (click)="onViewBookings(i, share)">
+            {{ share.title }} - {{ share.id }}         
+          </a> 
         </li>
       </ul>
   </div>
