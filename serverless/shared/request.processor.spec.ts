@@ -46,7 +46,8 @@ describe("The request processor ", function() {
 
     let processor = new RequestProcessor( requestExtractor, 
                                           dataAccessObject,
-                                          responseBuilder);                                                                              
+                                          responseBuilder,
+                                          null);                                                                              
     processor.processRequest(inputEvent, callback);
     verify(this.mockedDataAccessObject.execute(responseBuilder, requestExtractor, callback, inputEvent, username)).once();    
     

@@ -4,6 +4,7 @@ import { RequestExtractor } from './shared/request.extractor';
 import { ResponseModel } from './shared/response.model';
 import { DataAccessObject } from './shared/data.access.object';
 import { RequestProcessor } from './shared/request.processor';
+import { UserAdmin } from './shared/user.admin';
 
 
 
@@ -15,8 +16,9 @@ export function execute(event: any, context, callback: any) {
     let db = new DynamoDb(STAGE);
     let dataAccessObject = new DataAccessObject(db);
     let responseBuilder = new ResponseBuilder();
+    let userAdmin = new UserAdmin();
     
-    let processor = new RequestProcessor(requestExtractor, dataAccessObject, responseBuilder);
+    let processor = new RequestProcessor(requestExtractor, dataAccessObject, responseBuilder, userAdmin);
     //console.log('processRequest is ' + JSON.stringify(event))
 
     processor.processRequest(event, callback)

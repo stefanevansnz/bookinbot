@@ -9,6 +9,21 @@
         </div>
         <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
           <div class="modal-body">
+
+            <div class="form-group">
+                <label for="email">Search for email address:</label>
+                <div class="input-group">              
+                  <input (keydown)="keyDownFunction($event)" 
+                  required email type="email" id="email" name="email" ngModel class="form-control">
+<!--                  
+                  <span class="input-group-btn">
+                    <button [disabled]="!f.valid" (click)="onSearch()" class="btn btn-primary search" type="button">Search</button>          
+                  </span>
+                -->                  
+                </div>                          
+            </div>            
+    
+<!--
             <div class="row">
               <div class="col-sm-12 form-group">
                 <label for="name">Title</label>
@@ -16,11 +31,11 @@
                   type="text" id="title" class="form-control" name="title" ngModel required>
               </div>   
             </div>    
-            
-            <div class="row" *ngIf="message">
+   -->        
+            <div class="row" *ngIf="messageModal">
                 <div class="col-sm-12 form-group">
                     <div class="alert alert-danger" role="alert">
-                        {{ message }}
+                        {{ messageModal }}
                     </div>   
                 </div>
             </div>
@@ -56,13 +71,13 @@
   <div id="shares" class="col-md-12">
       <h1>People</h1>
 
-        <div *ngIf="loading; else heading">
+        <div *ngIf="headingLoading; else heading">
           loading ...
         </div>       
         <ng-template #heading>
           <h2>{{resource.title}}</h2>
           <hr>
-       </ng-template>       
+        </ng-template>       
     
 
       <button id="add-share" type="button" class="btn btn-primary" 

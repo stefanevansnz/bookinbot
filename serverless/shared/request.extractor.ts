@@ -22,7 +22,7 @@ export class RequestExtractor {
         }     
         console.log('username is ' + username);   
         return username;
-    }    
+    }
 
     getTableName(path) {
         if (path.includes('resource')) {
@@ -70,39 +70,6 @@ export class RequestExtractor {
         return parameters;
 
     }
-
-/*
-    getPrimaryKey(path, id) {
-        if (path.includes('resource')) {
-            if (id) {
-                return 'id';
-            } else {
-                return 'ownerid';
-            }            
-            //return 'ownerid';
-            //return 'id';
-        }
-        if (path.includes('booking')) {
-            return 'resourceid';
-        }
-        return '';
-    }
-
-    getPrimaryId(path, id, username) {
-        if (path.includes('resource')) {
-            if (id) {
-                return id;
-            } else {
-                return username;
-            }
-        }
-        if (path.includes('booking')) {
-            return id;
-        }
-        return '';
-        
-    }
- */   
 
 
 

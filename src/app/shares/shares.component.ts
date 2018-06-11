@@ -3,6 +3,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
 import { Share } from './shares.model';
 import { Response } from "@angular/http";
+import { Resource } from '../resources/resources.model';
 import { DataStorageService } from '../shared/data-storage.service';
 import { messages } from '../app-messages';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -19,9 +20,11 @@ export class SharesComponent implements OnInit {
 
   @ViewChild('f') slForm: NgForm;
 
-  message;
-  loading;
+  messageModal;
+  loading = true;
+  headingLoading = true;
   editMode = false;
+  resource: Resource;
   shares: Share[] = [];
   editShare: Share;
 
@@ -35,7 +38,6 @@ export class SharesComponent implements OnInit {
 
   ngOnInit() {
     let self = this;
-    this.loading = true;
     this.route.params
       .subscribe(
         (params: Params) => {
@@ -57,13 +59,13 @@ export class SharesComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     const value = form.value;
-    console.log('form submitted title is ' + value.title);
+    console.log('form submitted title is ' + value.email);
     let self = this; 
-    let share = new Share(null, null, null, value.title);
+    let share = new Share(null, null, null, value.email, null);
 
     if (this.editMode) {
       console.log('edit mode');
-      share = new Share( this.editShare.id, null, null, value.title);
+      share = new Share( this.editShare.id, null, null, value.email, null);
 
     }
     this.dataStorageService.setObjectOnServer('shares', 'editShare', share, self);          
@@ -102,9 +104,16 @@ export class SharesComponent implements OnInit {
     var user = this.authenticationService.getUser();
     var userid = user.id;
 
-    let share = new Share(this.editShare.id, userid, '', '');    
+    let share = new Share(this.editShare.id, userid, '', '', '');    
     console.log('share is ' + JSON.stringify(share));
     this.dataStorageService.deleteObjectsOnServer('shares', share, self);              
   }
+
+  keyDownFunction(event) {
+    if(event.keyCode == 13) {      
+      // rest of your code
+    }
+  }
+  
 
 }

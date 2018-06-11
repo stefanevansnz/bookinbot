@@ -11,7 +11,7 @@ export class ResponseBuilder {
         } else {
           console.log('error is ' + JSON.stringify(error));            
           statusCode = 500;
-          message = { 'error' : error.message};
+          message = error;
         }              
         let response = {
           statusCode: statusCode,

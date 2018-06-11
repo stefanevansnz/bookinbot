@@ -50,6 +50,4 @@ Thumbs.db
 # serverless
 serverless/.serverless/*
 serverless/.webpack/*
-serverless/test.sh
-serverless/run.sh
-deploy_serverless.sh
+settings.sh

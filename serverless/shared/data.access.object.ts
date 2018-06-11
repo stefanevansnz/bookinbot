@@ -20,7 +20,7 @@ export class DataAccessObject {
         console.log('Path is ' + path);
         console.log('Id is ' + id);
 
-        let object = requestExtractor.getObject(body, username);
+        let object = requestExtractor.getObject(body, username);        
         let parameters = requestExtractor.getParameters(path, id, username, object, method);
         let tableName = requestExtractor.getTableName(path);
         console.log('Object is ' + JSON.stringify(object));

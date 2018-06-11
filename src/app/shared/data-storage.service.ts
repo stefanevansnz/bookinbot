@@ -30,10 +30,12 @@ export class DataStorageService {
                 name + (id != undefined ? '/' + id : ''), {headers: headers})            
             .subscribe(
               (success: Response) => {   
-                component.loading = false;                     
+                component.loading = false; 
+                component.headingLoading = false;                   
                 let result = success.json();
                 console.log('result is ' + JSON.stringify(result));                
                 component[name] = result;
+                console.log('id is ' + id + ' name is ' + name);
                 if (id != undefined) {
                     // if there is an id get first result
                     component[name] = result[0];
@@ -69,13 +71,13 @@ export class DataStorageService {
                     component[componentObjectList].push(newObject);
                     component[componentObject] = newObject;
                 }
-                component.message = '';
+                component.messageModal = '';
                 component.closeSetModal();                             
               },
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
                 component.loading = false;
-                component.message = error.text();             
+                component.messageModal = error.text();             
               }
             );          
         });

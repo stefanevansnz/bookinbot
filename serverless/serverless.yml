@@ -9,12 +9,12 @@ plugins:
 service: bookinbot-application
 
 custom:
-  cognitoPoolArn: ${env:COGNITOPOOLARN}
+  cognitoPoolArn: ${env:COGNITO_POOL_ARN}
   cognitoAuthorizer:
     arn: ${self:custom.cognitoPoolArn}
 
   customDomain:
-    domainName: api.${env:DOMAINNAME}
+    domainName: api.${env:DOMAIN_NAME}
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true    
@@ -27,8 +27,9 @@ custom:
   tableNameResources: 'bookinbot-resources'    
   tableNameBookings: 'bookinbot-bookings' 
   tableNameShares: 'bookinbot-shares'    
-  accessKey: ${env:ACCESSKEY}
-  secretKey: ${env:SECRETKEY}  
+  accessKey: ${env:AWS_ACCESS_KEY}
+  secretKey: ${env:AWS_SECRET_KEY}  
+  userpoolid: ${env:COGNITO_USER_POOL_ID}  
   dynamodb:
     start:
       migrate: true
@@ -38,7 +39,7 @@ provider:
   name: aws
   runtime: nodejs6.10
   stage: prod
-  url: ${env:DOMAINNAME}    
+  url: ${env:DOMAIN_NAME}    
   region: ap-southeast-2
   iamRoleStatements:
     - Effect: Allow
@@ -58,8 +59,9 @@ provider:
     BOOKINGS_TABLE: ${self:custom.tableNameBookings}    
     SHARES_TABLE: ${self:custom.tableNameShares}    
     STAGE: ${opt:stage}
-#    AWS_ACCESS_KEY: ${self:custom.accessKey}   
-#    AWS_SECRET_KEY: ${self:custom.secretKey}       
+    AWS_ACCESS_KEY: ${self:custom.accessKey}   
+    AWS_SECRET_KEY: ${self:custom.secretKey} 
+    COGNITO_USER_POOL_ID: ${self:custom.userpoolid}       
               
 functions:
   resources:
