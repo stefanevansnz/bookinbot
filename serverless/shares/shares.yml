@@ -2,6 +2,11 @@ events:
     - http: 
         authorizer: ${self:custom.cognitoAuthorizer}
         method: get
+        path: "sharessearch/{id}"
+        cors: true  
+    - http: 
+        authorizer: ${self:custom.cognitoAuthorizer}
+        method: get
         path: "shares/{id}"
         cors: true  
     - http: 

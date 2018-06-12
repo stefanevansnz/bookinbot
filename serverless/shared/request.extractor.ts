@@ -60,10 +60,13 @@ export class RequestExtractor {
         }
         if (path.includes('share')) {
             if (method == 'DELETE') {
-                parameters.push(new Parameter('ownerid', object.resourceid));
-                parameters.push(new Parameter('id', object.id));
+                parameters.push(new Parameter('ownerid', username));
+                parameters.push(new Parameter('resourceid', object.id));
             } else {
-                parameters.push(new Parameter('ownerid', id));
+                parameters.push(new Parameter('ownerid', username));
+                if (id != null) {
+                    parameters.push(new Parameter('resourceid', id));
+                }               
             }
         }
         

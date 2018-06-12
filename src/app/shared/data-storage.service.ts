@@ -22,24 +22,46 @@ export class DataStorageService {
     constructor(private http: Http,
                 private authenticationService: AuthenticationService) { }
 
+    getObjectFromServer(name: string, id: string, component: any) {
+        this.getObjectsFromServer(false, name, id, component);
+    }            
 
-    getObjectsFromServer(name: string, id: string, component: any) {
+    getObjectArrayFromServer(name: string, id: string, component: any) {
+        this.getObjectsFromServer(true, name, id, component);
+    }
+
+    private getObjectsFromServer(listRequired: boolean, name: string, id: string, component: any) {
         let self = this;
+        let loadingName = name + 'Loading';
         this.addAuthorization(function(headers) {
             self.http.get(environment.api + '/' + 
                 name + (id != undefined ? '/' + id : ''), {headers: headers})            
             .subscribe(
               (success: Response) => {   
-                component.loading = false; 
-                component.headingLoading = false;                   
-                let result = success.json();
-                console.log('result is ' + JSON.stringify(result));                
-                component[name] = result;
-                console.log('id is ' + id + ' name is ' + name);
-                if (id != undefined) {
-                    // if there is an id get first result
-                    component[name] = result[0];
-                } 
+                if (component.searchMode) {
+                    console.log('search object on ' + component[name] + ' with ' +id);
+                    component.successMessage = success.json().message;
+                    component.editUser = success.json().user;
+                    component.searching = false;
+                    component.searchMode = false;
+                } else {
+                    console.log('setting ' + loadingName + ' to false');
+                    component[loadingName] = false;                   
+                    let result = success.json();
+                    console.log('result is ' + JSON.stringify(result));                
+                    component[name] = result;
+
+                    console.log('name is ' + name + ' id is ' + id);
+
+                    if (!listRequired && id != undefined && result != undefined && result.length > 0) {
+                        // if there is an id get first result
+                        console.log('not multi so get first');
+                        component[name] = result[0];
+                    } 
+                    
+                    //console.log(' component[name]' +  component[name]); 
+                }
+
               },
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
@@ -51,8 +73,18 @@ export class DataStorageService {
     }
 
     setObjectOnServer(componentObjectList: string, componentObject: string, newObject: any, component: any) {
-        console.log('setObjectOnServer componentObjectList:' + componentObjectList + ' newObject:' + JSON.stringify(newObject) + ' component:' + component);
         let self = this;
+         
+        /*
+        console.log('component.constructor.name :' + component.constructor.name);
+        console.log('setObjectOnServer  component:' + component);
+        console.log('component.editMode' + component.editMode);
+        console.log('component.headingLoading' + component.headingLoading);
+        console.log('component.loading' + component.loading);
+        
+        console.log('component.resource' + component.resource);
+        console.log('component.shares' + component.shares);
+        */
         this.addAuthorization(function(headers) {
             let options = new RequestOptions({
                 headers: headers,
@@ -66,13 +98,20 @@ export class DataStorageService {
                 if (component.editMode) {
                     console.log('set object on ' + component[name] + ' at ' + component.editIndex);
                     component[componentObjectList][component.editIndex] = newObject;
-                    component[componentObject] = newObject;                    
+                    component[componentObject] = newObject;  
+                    component.messageModal = '';
+                    component.closeSetModal();                  
                 } else {
+                    console.log('setObjectOnServer componentObjectList:' + componentObjectList + ' newObject:' + JSON.stringify(newObject) + ' component shares:' + component.shares);
+
+                    console.log('push object on ' + newObject + ' onto ' + component[componentObjectList]);
+
                     component[componentObjectList].push(newObject);
                     component[componentObject] = newObject;
+                    component.messageModal = '';
+                    component.closeSetModal();
                 }
-                component.messageModal = '';
-                component.closeSetModal();                             
+                             
               },
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));

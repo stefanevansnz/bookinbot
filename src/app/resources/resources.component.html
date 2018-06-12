@@ -62,7 +62,7 @@
           {{ message }}
       </div>                    
 
-      <div *ngIf="loading">
+      <div *ngIf="resourcesLoading">
         loading ...
       </div>                    
 
@@ -88,7 +88,7 @@
           type="submit" >
           Edit</button>        
 
-          {{ resource.title }} - {{ resource.id }}         
+          {{ resource.title }} - ID: {{ resource.id }}         
         </li>
       </ul>
   </div>

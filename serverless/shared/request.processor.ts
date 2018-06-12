@@ -10,6 +10,8 @@ export class RequestProcessor {
     dataAccessObject: DataAccessObject;
     responseBuilder: ResponseBuilder;
     errorMessage: string;
+    successMessage: string;
+    user: any;
     userAdmin: UserAdmin;
 
     constructor(requestExtractor: RequestExtractor, 
@@ -28,6 +30,8 @@ export class RequestProcessor {
         console.log('process request');     
         //console.log('processRequest is ' + JSON.stringify(event))
         this.errorMessage = null;
+        this.successMessage = null;
+        this.user = null;
         let self = this;
         let authorizer = event.requestContext.authorizer;
         let username = this.requestExtractor.getUserName(authorizer);
@@ -35,12 +39,19 @@ export class RequestProcessor {
         let body = event.body;
         let method = event.httpMethod;
         let path = event.path.split("/")[1];
+        let id = event.path.split("/")[2];
 
-        let validatedObject = this.userAdmin.validateObject(this, body, method, path, function() {
+        let validatedObject = this.userAdmin.validateObject(this, id, method, path, function() {
             console.log('error message is ' + self.errorMessage);
             if (self.errorMessage != null) {
                 self.responseBuilder.build(self.errorMessage, null, callback);
                 // return error
+            } else if (self.successMessage != null) {
+                let success = '{' + 
+                    '"message": "' + self.successMessage + '", ' + 
+                    '"user": ' + self.user + '' + 
+                '}';
+                self.responseBuilder.build(null, JSON.parse(success), callback);                
             } else {
                 if (username == null) {
                     console.log('username is null');

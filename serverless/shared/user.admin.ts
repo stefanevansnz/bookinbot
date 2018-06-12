@@ -1,3 +1,5 @@
+import { AnyLengthString } from "aws-sdk/clients/comprehend";
+
 const AWS = require('aws-sdk');
 
 const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
@@ -11,43 +13,35 @@ let client = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-19', regi
 export class UserAdmin {
 
 
-    processUsers(searchUsers) {
-        var users = [];       
-        // loop through data, tidy up and return
-        for (let userIndex = 0; userIndex < searchUsers.length; userIndex++) {
-          let id = searchUsers[userIndex].Username;
-          let status = searchUsers[userIndex].UserStatus;
-          //console.log('Username ' + searchUsers[userIndex].Username);
-          //console.log('UserStatus ' + searchUsers[userIndex].UserStatus);   
-          var userAttributes = searchUsers[userIndex].Attributes;
-  
-          var email = '';
-          var firstname = '';
-          var lastname = '';
-          for (let attrIndex = 0; attrIndex < userAttributes.length; attrIndex++) {      
+    processUsers(user: any) {
+        let id = user.Username;
+        let status = user.UserStatus;
+        var userAttributes = user.Attributes;
+
+        var email = '';
+        var firstname = '';
+        var lastname = '';
+        for (let attrIndex = 0; attrIndex < userAttributes.length; attrIndex++) {      
             if(userAttributes[attrIndex].Name == 'email' ) {
-              //console.log('Email ' + userAttributes[attrIndex].Value); 
-              email = userAttributes[attrIndex].Value;             
+            //console.log('Email ' + userAttributes[attrIndex].Value); 
+            email = userAttributes[attrIndex].Value;             
             }             
             if(userAttributes[attrIndex].Name == 'given_name' ) {
-              //console.log('First Name ' + userAttributes[attrIndex].Value);              
-              firstname = userAttributes[attrIndex].Value;
+            //console.log('First Name ' + userAttributes[attrIndex].Value);              
+            firstname = userAttributes[attrIndex].Value;
             }           
             if(userAttributes[attrIndex].Name == 'family_name' ) {
-              //console.log('Last Name ' + userAttributes[attrIndex].Value);              
-              lastname = userAttributes[attrIndex].Value;
+            //console.log('Last Name ' + userAttributes[attrIndex].Value);              
+            lastname = userAttributes[attrIndex].Value;
             } 
-          }
-          let user = {
+        }
+        return {
             id: id,
             email: email,
             firstname: firstname,
             lastname: lastname,
             status: status
-          }
-          users.push(user);
         }
-        return users;
   
     }
 
@@ -57,29 +51,33 @@ export class UserAdmin {
         console.log('listing users for ' + email);
         client.listUsers({ Filter: 'email = "' + email + '"', UserPoolId: COGNITO_USER_POOL_ID}, 
             function(err, data) {
-                if (!err) {
-                    let searchUsers = data.Users;
-                    console.log('successful');
-                    let users = self.processUsers(data.Users);
-                    console.log('successful' + JSON.stringify(users));
-                    caller.errorMessage = 'Email ' + email + ' is a registered user.';
-
+                let user;
+                console.log('err is ' + err + ' data is ' + data.Users.length);
+                if (err == null && data.Users.length > 0) {
+                    console.log('found user');
+                    let user = self.processUsers(data.Users[0]);
+                    console.log('successful' + JSON.stringify(user));
+                    caller.successMessage = 'The email address ' + email +
+                    ' has been found! ' +
+                    'Click Add below to share your resource with this person.';
+                    caller.user = JSON.stringify(user); 
                 } else {
                     // error finding group
-                    console.log('error' + JSON.stringify(err));
-                    caller.errorMessage = 'Email ' + email + ' is not a registered user.';
+                    console.log('error ' + JSON.stringify(err));
+                    caller.successMessage = 'OK, almost there. We cannot find the email address ' + email +
+                    ' but click add below and an invite will be sent.';
                 }
                 callback();
             }
         );
     }
 
-    validateObject(caller, body, method, path, callback) {        
+    validateObject(caller, id, method, path, callback) {        
         console.log('in validateObject');
-        if (path.includes('share') && method == 'POST') {
-            let object = JSON.parse(body);
-            console.log('object is ' + JSON.stringify(object));
-            let email = object.email;
+        if (path == 'sharessearch' && method == 'GET') {
+            //let object = JSON.parse(body);
+            //console.log('object is ' + JSON.stringify(object));
+            let email = id;
             console.log('email is ' + email);
             //caller.errorMessage = 'Email ' + email + ' is not a registered user.';
             this.searchUser(caller, email, callback);

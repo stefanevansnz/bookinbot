@@ -126,14 +126,14 @@ resources:
             AttributeName: ownerid
             AttributeType: S
           - 
-            AttributeName: userid
+            AttributeName: resourceid
             AttributeType: S            
         KeySchema:
           - 
             AttributeName: ownerid
             KeyType: HASH
           - 
-            AttributeName: userid
+            AttributeName: resourceid
             KeyType: RANGE            
         ProvisionedThroughput:
           ReadCapacityUnits: 1

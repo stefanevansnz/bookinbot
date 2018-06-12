@@ -28,7 +28,7 @@ export class BookingsComponent implements OnInit {
   
   message;
   editMode = false;
-  loading;
+  resourceLoading = true;
   resourceName;
   resourceOwner;  
   resource: Resource;
@@ -52,8 +52,6 @@ export class BookingsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.loading = true;
-
     this.route.params
       .subscribe(
         (params: Params) => {
@@ -73,7 +71,7 @@ export class BookingsComponent implements OnInit {
     let self = this;
 
     //this.resource.title = 'Loading...';
-    this.dataStorageService.getObjectsFromServer('resource', this.resourceId, self);          
+    this.dataStorageService.getObjectFromServer('resource', this.resourceId, self);          
     
   }
 

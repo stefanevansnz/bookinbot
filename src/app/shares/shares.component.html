@@ -21,7 +21,12 @@
                   </span>
                 -->                  
                 </div>                          
-            </div>            
+            </div>   
+            
+            <div *ngIf="searching">
+                searching ...
+            </div>       
+      
     
 <!--
             <div class="row">
@@ -40,6 +45,15 @@
                 </div>
             </div>
 
+            <div class="row" *ngIf="successMessage">
+                <div class="col-sm-12 form-group">
+                    <div class="alert alert-success" role="alert">
+                        {{ successMessage }}
+                    </div>   
+                </div>
+            </div>
+
+
           </div>        
           <!-- Modal footer -->
           <div class="modal-footer">
@@ -48,7 +62,7 @@
               class="btn btn-success" 
               type="submit" 
               [disabled]="!f.valid">
-              {{ editMode ? 'Update' : 'Add' }}</button>   
+              {{ searchMode ? 'Search' : 'Add' }}</button>   
             <button 
               id="delete-share"             
               class="btn btn-danger" 
@@ -71,7 +85,7 @@
   <div id="shares" class="col-md-12">
       <h1>People</h1>
 
-        <div *ngIf="headingLoading; else heading">
+        <div *ngIf="resourceLoading; else heading">
           loading ...
         </div>       
         <ng-template #heading>
@@ -87,7 +101,7 @@
           {{ message }}
       </div>                    
 
-      <div *ngIf="loading">
+      <div *ngIf="sharesLoading">
         loading ...
       </div>                    
 
@@ -101,7 +115,7 @@
           type="submit" >
           Edit</button>        
           <a (click)="onViewBookings(i, share)">
-            {{ share.title }} - {{ share.id }}         
+            ID: {{ share.id }} - {{ share.email }} - USERID: {{ share.userid}}        
           </a> 
         </li>
       </ul>

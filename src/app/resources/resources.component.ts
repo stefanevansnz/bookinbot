@@ -20,7 +20,7 @@ export class ResourcesComponent implements OnInit {
   @ViewChild('f') slForm: NgForm;
 
   message;
-  loading;
+  resourcesLoading = true;
   editMode = false;
   resources: Resource[] = [];
   editResource: Resource;
@@ -34,14 +34,13 @@ export class ResourcesComponent implements OnInit {
 
   ngOnInit() {
     let self = this;
-    this.loading = true;
     this.route.params
       .subscribe(
         (params: Params) => {
           // something has changed
           let id = params['id'];
           console.log('id = ' + id);          
-          this.dataStorageService.getObjectsFromServer('resources', id, self);          
+          this.dataStorageService.getObjectArrayFromServer('resources', id, self);          
         }
       );    
   }
