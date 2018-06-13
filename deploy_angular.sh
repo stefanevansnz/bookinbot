@@ -1,5 +1,4 @@
-export DOMAINNAME=bookinbot.com
-
+. ./settings.sh
 ng build --prod --aot
 cd serverless
 serverless client deploy --stage prod

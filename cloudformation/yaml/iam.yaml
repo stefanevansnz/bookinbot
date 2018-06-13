@@ -1,0 +1,28 @@
+cognitouser:
+  Type: AWS::IAM::User
+  Properties:
+    Path: "/"
+    Policies:
+    - PolicyName: giveaccesstocognitio
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - cognito:*
+          Resource:
+          - !GetAtt myqueue.Arn
+    - PolicyName: giveaccesstodynamodb
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:*
+          Resource:
+          - !Ref mytopic
+cognitouseraccesskey:
+  Type: AWS::IAM::AccessKey
+  Properties:
+    UserName:
+      !Ref cognitouser          

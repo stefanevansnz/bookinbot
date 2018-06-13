@@ -41,7 +41,7 @@ export class RequestProcessor {
         let path = event.path.split("/")[1];
         let id = event.path.split("/")[2];
 
-        let validatedObject = this.userAdmin.validateObject(this, id, method, path, function() {
+        let validatedObject = this.userAdmin.validateObject(this, id, body, method, path, function() {
             console.log('error message is ' + self.errorMessage);
             if (self.errorMessage != null) {
                 self.responseBuilder.build(self.errorMessage, null, callback);

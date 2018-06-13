@@ -21,6 +21,7 @@ export class SharesComponent implements OnInit {
 
   @ViewChild('f') slForm: NgForm;
 
+  message;
   messageModal;
   successMessage;
   searching = false;
@@ -70,10 +71,19 @@ export class SharesComponent implements OnInit {
     if (this.searchMode) {
       console.log('search mode');
       self.searching = true;
-//    share = new Share( this.editShare.id, null, null, value.email, null);
       this.dataStorageService.getObjectArrayFromServer('sharessearch', value.email, self);          
     } else {
-      let share = new Share(null, null, self.resourceId ,self.editUser.id, self.editUser.email, self.editUser.status);
+      // add shared user
+      let userid = null;
+      let email = null;
+      if (self.editUser != null) {
+        // user has been found
+        console.log('found editUser ' + JSON.stringify(self.editUser));
+        userid = self.editUser.id;
+        email = self.editUser.email;
+      }
+      console.log('add shared user userid is ' + userid + ' email is ' + email);
+      let share = new Share(null, null, self.resourceId ,userid, email);
       this.dataStorageService.setObjectOnServer('shares', 'editShare', share, self);          
     }
   
@@ -115,7 +125,7 @@ export class SharesComponent implements OnInit {
     var user = this.authenticationService.getUser();
     var userid = user.id;
 
-    let share = new Share(this.editShare.id, userid, '', '', '', '');    
+    let share = new Share(this.editShare.id, userid, '', '', '');    
     console.log('share is ' + JSON.stringify(share));
     this.dataStorageService.deleteObjectsOnServer('shares', share, self);              
   }

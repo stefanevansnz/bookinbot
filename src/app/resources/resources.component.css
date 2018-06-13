@@ -7,11 +7,6 @@ button.edit {
     margin-left: 0.5em;    
 }
 
-ul.list-group li:hover {
-    background-color:#F0F8FF;
-    cursor: pointer;
-}
-
 ul.list-group li a {
     display:block;
     width:100%;

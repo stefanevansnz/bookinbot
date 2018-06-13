@@ -27,8 +27,8 @@ custom:
   tableNameResources: 'bookinbot-resources'    
   tableNameBookings: 'bookinbot-bookings' 
   tableNameShares: 'bookinbot-shares'    
-  accessKey: ${env:AWS_ACCESS_KEY}
-  secretKey: ${env:AWS_SECRET_KEY}  
+  accessKey: ${env:COGNITO_AWS_ACCESS_KEY}
+  secretKey: ${env:COGNITO_AWS_SECRET_KEY}  
   userpoolid: ${env:COGNITO_USER_POOL_ID}  
   dynamodb:
     start:
@@ -59,8 +59,8 @@ provider:
     BOOKINGS_TABLE: ${self:custom.tableNameBookings}    
     SHARES_TABLE: ${self:custom.tableNameShares}    
     STAGE: ${opt:stage}
-    AWS_ACCESS_KEY: ${self:custom.accessKey}   
-    AWS_SECRET_KEY: ${self:custom.secretKey} 
+    COGNITO_AWS_ACCESS_KEY: ${self:custom.accessKey}   
+    COGNITO_AWS_SECRET_KEY: ${self:custom.secretKey} 
     COGNITO_USER_POOL_ID: ${self:custom.userpoolid}       
               
 functions:
@@ -123,17 +123,17 @@ resources:
       Properties:
         AttributeDefinitions:
           - 
-            AttributeName: ownerid
+            AttributeName: resourceid
             AttributeType: S
           - 
-            AttributeName: resourceid
+            AttributeName: id
             AttributeType: S            
         KeySchema:
           - 
-            AttributeName: ownerid
+            AttributeName: resourceid
             KeyType: HASH
           - 
-            AttributeName: resourceid
+            AttributeName: id
             KeyType: RANGE            
         ProvisionedThroughput:
           ReadCapacityUnits: 1

@@ -2,11 +2,11 @@ import { AnyLengthString } from "aws-sdk/clients/comprehend";
 
 const AWS = require('aws-sdk');
 
-const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-const AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+const COGNITO_AWS_ACCESS_KEY = process.env.COGNITO_AWS_ACCESS_KEY;
+const COGNITO_AWS_SECRET_KEY = process.env.COGNITO_AWS_SECRET_KEY;
 const COGNITO_USER_POOL_ID = process.env.COGNITO_USER_POOL_ID;
 
-AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+AWS.config.update({accessKeyId: COGNITO_AWS_ACCESS_KEY, secretAccessKey: COGNITO_AWS_SECRET_KEY});
 var CognitoIdentityServiceProvider = AWS.CognitoIdentityServiceProvider;
 let client = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-19', region: 'ap-southeast-2' });
 
@@ -52,8 +52,8 @@ export class UserAdmin {
         client.listUsers({ Filter: 'email = "' + email + '"', UserPoolId: COGNITO_USER_POOL_ID}, 
             function(err, data) {
                 let user;
-                console.log('err is ' + err + ' data is ' + data.Users.length);
-                if (err == null && data.Users.length > 0) {
+                console.log('err is ' + err + ' data is ' + data);
+                if (err == null && data != null && data.Users.length > 0) {
                     console.log('found user');
                     let user = self.processUsers(data.Users[0]);
                     console.log('successful' + JSON.stringify(user));
@@ -72,19 +72,48 @@ export class UserAdmin {
         );
     }
 
-    validateObject(caller, id, method, path, callback) {        
+    addUser(caller: any, email: string, callback) {
+        let self = this;
+        // Get Users
+        console.log('create user for ' + email);
+
+        client.adminCreateUser({ Username: email, UserPoolId: COGNITO_USER_POOL_ID}, 
+            function(err, data) {
+            if (err == null) {
+                console.log('adminCreateUser successful' + JSON.stringify(data)); 
+                // set new user id
+                let userid = data.User.Username; 
+                console.log('user id returned is ' + userid);   
+            } else {
+                //res.status(err.statusCode).json({ error: String(err) });
+                console.log('adminCreateUser error was ' + err.error);
+                console.log('error ' + JSON.stringify(err));
+                caller.errorMessage = 'Could not create user.';
+            }
+            callback();
+        });            
+
+    }    
+
+
+
+    validateObject(caller, id, body, method, path, callback) {        
         console.log('in validateObject');
         if (path == 'sharessearch' && method == 'GET') {
-            //let object = JSON.parse(body);
-            //console.log('object is ' + JSON.stringify(object));
+            console.log('get to sharessearch');
             let email = id;
-            console.log('email is ' + email);
-            //caller.errorMessage = 'Email ' + email + ' is not a registered user.';
+            console.log('email is ' + email);    
             this.searchUser(caller, email, callback);
-            //console.log('set object is ' + JSON.stringify(caller));
+        } else if (path == 'shares' && method == 'POST') {
+            let object = JSON.parse(body);
+            console.log('post to shared body is ' + JSON.stringify(object));
+            if (object.userid == null) {
+                this.addUser(caller, object.email, callback);
+            } else {
+                callback();
+            }
         } else {
             callback();
-
         }
     }
 }

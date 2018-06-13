@@ -83,13 +83,13 @@
 
 <div class="row">
   <div id="shares" class="col-md-12">
-      <h1>People</h1>
+      
 
         <div *ngIf="resourceLoading; else heading">
           loading ...
         </div>       
         <ng-template #heading>
-          <h2>{{resource.title}}</h2>
+          <span><a routerLink="/">Home</a> > {{resource.title}} > People</span>
           <hr>
         </ng-template>       
     
@@ -115,7 +115,7 @@
           type="submit" >
           Edit</button>        
           <a (click)="onViewBookings(i, share)">
-            ID: {{ share.id }} - {{ share.email }} - USERID: {{ share.userid}}        
+            ID: {{ share.id }} - {{ share.email }} - USERID: {{ share.userid}}       
           </a> 
         </li>
       </ul>

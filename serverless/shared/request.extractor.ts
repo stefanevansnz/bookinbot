@@ -63,10 +63,13 @@ export class RequestExtractor {
                 parameters.push(new Parameter('ownerid', username));
                 parameters.push(new Parameter('resourceid', object.id));
             } else {
+                parameters.push(new Parameter('resourceid', id));
+                /*
                 parameters.push(new Parameter('ownerid', username));
                 if (id != null) {
                     parameters.push(new Parameter('resourceid', id));
-                }               
+                } 
+                */              
             }
         }
         

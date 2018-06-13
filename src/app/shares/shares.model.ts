@@ -4,7 +4,6 @@ export class Share {
         public ownerid: string,
         public resourceid: string,
         public userid: string, 
-        public email: string,           
-        public status: string
+        public email: string
     ) { }
 }

@@ -70,24 +70,25 @@
       <ul class="list-group">
         <li class="list-group-item"        
           *ngFor="let resource of resources; let i = index">
-          <button 
-          class="view-resource btn btn-success float-right edit" 
-          (click)="onViewBookings(i, resource)"         
-          type="submit" >
-          Bookings</button>        
-
-          <button 
-          class="share-resource btn btn-success float-right edit" 
-          (click)="onShareResource(i, resource)"         
-          type="submit" >
-          People</button>        
 
           <button 
           class="edit-resource btn btn-success float-right edit" 
           (click)="onEditObject(i, resource)"         
           type="submit" >
-          Edit</button>        
+          Edit</button>    
 
+          <button 
+          class="share-resource btn btn-success float-right edit" 
+          (click)="onShareResource(i, resource)"         
+          type="submit" >
+          People</button>            
+
+          <button 
+          class="view-resource btn btn-success float-right edit" 
+          (click)="onViewBookings(i, resource)"         
+          type="submit" >
+          Bookings</button>        
+          
           {{ resource.title }} - ID: {{ resource.id }}         
         </li>
       </ul>
