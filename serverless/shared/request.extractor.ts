@@ -60,8 +60,8 @@ export class RequestExtractor {
         }
         if (path.includes('share')) {
             if (method == 'DELETE') {
-                parameters.push(new Parameter('ownerid', username));
-                parameters.push(new Parameter('resourceid', object.id));
+                parameters.push(new Parameter('resourceid', object.resourceid));
+                parameters.push(new Parameter('id', object.id));
             } else {
                 parameters.push(new Parameter('resourceid', id));
                 /*

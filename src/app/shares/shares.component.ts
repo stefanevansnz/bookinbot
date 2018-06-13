@@ -75,10 +75,10 @@ export class SharesComponent implements OnInit {
     } else {
       // add shared user
       let userid = null;
-      let email = null;
+      let email = value.email;
       if (self.editUser != null) {
         // user has been found
-        console.log('found editUser ' + JSON.stringify(self.editUser));
+        console.log('found editUser from search ' + JSON.stringify(self.editUser));
         userid = self.editUser.id;
         email = self.editUser.email;
       }
@@ -93,6 +93,8 @@ export class SharesComponent implements OnInit {
     this.messageModal = '';
     this.successMessage = '';
     this.searchMode = true;
+    this.editMode = false;
+
     this.slForm.reset();
     jQuery("#editModal").modal("show");
   }  
@@ -113,9 +115,10 @@ export class SharesComponent implements OnInit {
     this.editShare = share;
     console.log('this.editShare.id is ' + this.editShare.id);
     this.editIndex = index;
-    this.searchMode = true;
+    this.editMode = true;    
+    this.searchMode = false;
     this.slForm.setValue({
-      title: share.userid,
+      email: share.email
     });
     jQuery("#editModal").modal("show");
   }  
@@ -125,7 +128,9 @@ export class SharesComponent implements OnInit {
     var user = this.authenticationService.getUser();
     var userid = user.id;
 
-    let share = new Share(this.editShare.id, userid, '', '', '');    
+    console.log('resource id is ' + this.resourceId);    
+
+    let share = new Share(this.editShare.id, userid, this.resourceId, '', '');    
     console.log('share is ' + JSON.stringify(share));
     this.dataStorageService.deleteObjectsOnServer('shares', share, self);              
   }

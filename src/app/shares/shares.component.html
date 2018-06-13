@@ -60,7 +60,8 @@
             <button 
               id="save-share"
               class="btn btn-success" 
-              type="submit" 
+              type="submit"
+              *ngIf="!editMode" 
               [disabled]="!f.valid">
               {{ searchMode ? 'Search' : 'Add' }}</button>   
             <button 
@@ -114,7 +115,7 @@
           (click)="onEditObject(i, share)"         
           type="submit" >
           Edit</button>        
-          <a (click)="onViewBookings(i, share)">
+          <a>
             ID: {{ share.id }} - {{ share.email }} - USERID: {{ share.userid}}       
           </a> 
         </li>
