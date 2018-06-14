@@ -72,12 +72,42 @@ export class UserAdmin {
         );
     }
 
+    resendUserEmail(caller: any, email: string, callback) {
+        let self = this;
+        // Get Users
+        console.log('resend user email for ' + email);
+
+        client.adminCreateUser({ 
+            Username: email, 
+            UserPoolId: COGNITO_USER_POOL_ID,
+            MessageAction: "RESEND"
+        }, 
+            function(err, data) {
+            if (err == null) {
+                console.log('resend sent successful' + JSON.stringify(data)); 
+                // set new user id
+            } else {
+                //res.status(err.statusCode).json({ error: String(err) });
+                console.log('resend error was ' + err.error);
+                console.log('error ' + JSON.stringify(err));
+                caller.errorMessage = 'Could not resend email for user.';
+            }
+            callback();
+        });            
+
+    }    
+
+
+
     addUser(caller: any, email: string, callback) {
         let self = this;
         // Get Users
         console.log('create user for ' + email);
 
-        client.adminCreateUser({ Username: email, UserPoolId: COGNITO_USER_POOL_ID}, 
+        client.adminCreateUser({ 
+            Username: email, 
+            UserPoolId: COGNITO_USER_POOL_ID
+        }, 
             function(err, data) {
             if (err == null) {
                 console.log('adminCreateUser successful' + JSON.stringify(data)); 
@@ -97,17 +127,23 @@ export class UserAdmin {
 
 
 
-    validateObject(caller, id, body, method, path, callback) {        
+    runUserAdmin(caller, id, body, method, path, callback) {        
         console.log('in validateObject');
         if (path == 'sharessearch' && method == 'GET') {
             console.log('get to sharessearch');
             let email = id;
             console.log('email is ' + email);    
             this.searchUser(caller, email, callback);
+        } else if (path == 'sharesresend' && method == 'GET') {
+            console.log('get to sharesresend');
+            let email = id;
+            console.log('email is ' + email);    
+            this.resendUserEmail(caller, email, callback);
         } else if (path == 'shares' && method == 'POST') {
             let object = JSON.parse(body);
             console.log('post to shared body is ' + JSON.stringify(object));
             if (object.userid == null) {
+                // no user so add first.
                 this.addUser(caller, object.email, callback);
             } else {
                 callback();

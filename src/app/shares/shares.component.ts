@@ -123,6 +123,14 @@ export class SharesComponent implements OnInit {
     jQuery("#editModal").modal("show");
   }  
 
+  onReSendObject(index: number, share: Share) {
+    //console.log('onEditObject ' + index);
+    this.editShare = share;
+    console.log('this.editShare.id is ' + this.editShare.id);
+    console.log('this.editShare.email is ' + this.editShare.email);
+    this.dataStorageService.getObjectArrayFromServer('sharesresend', this.editShare.email, self);          
+  }  
+
   onDelete() {
     let self = this;
     var user = this.authenticationService.getUser();

@@ -114,9 +114,17 @@
           class="edit-share btn btn-success float-right edit" 
           (click)="onEditObject(i, share)"         
           type="submit" >
-          Edit</button>        
+          Edit
+          </button>        
+          <button 
+          class="edit-share btn btn-success float-right edit" 
+          (click)="onReSendObject(i, share)"         
+          type="submit" >
+          Resend
+          </button>        
+
           <a>
-            ID: {{ share.id }} - {{ share.email }} - USERID: {{ share.userid}}       
+            {{ share.email }} - USERID: {{ share.userid}}       
           </a> 
         </li>
       </ul>
