@@ -24,6 +24,7 @@ export class SignupComponent implements OnInit {
   loading: boolean = false;
   status: string;
   signUpEmail: string;
+  requiredAttributes: any;
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
@@ -35,16 +36,27 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
 
     console.log('sign up');
+/*
+    this.activatedRoute
+      .queryParams
+      .subscribe(params => {
+        // Defaults to 0 if no query param provided.
+        this.requiredAttributes = params['requiredAttributes']
+        console.log('requiredAttributes is ' + this.requiredAttributes);
+    });
+*/
     this.activatedRoute.params.subscribe((params: Params) => {
       this.status = params['status'];
+      this.signUpEmail = params['id'];      
       console.log('status of sign up is ' + this.status);
+      console.log('signUpEmail of sign up is ' + this.signUpEmail);
+      //let requiredAttributes = params['requiredAttributes'];
       this.messageUpdate = this.notificationService.getMessage()
       .subscribe(
         (message) => {
           this.message = message;
         }
       );
-  
     });    
   }
 
@@ -67,22 +79,27 @@ export class SignupComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     //this.loading = true;
-    const email = form.value.email;
-    const password = form.value.password;
-    const newpassword = form.value.newpassword;      
-    const firstname = form.value.firstname;
-    const lastname = form.value.lastname;
+    let email = form.value.email;
+    let password = form.value.password;
+    let newpassword = form.value.newpassword;      
+    let firstname = form.value.firstname;
+    let lastname = form.value.lastname;
 
     if (this.status == 'newpassword') {
-      this.authenticationService.completeNewPasswordChallenge(email, password, newpassword, firstname, lastname, this);
+      if (email == null) {
+        email = this.signUpEmail;
+      }
+      console.log('new password');
+      this.authenticationService.signinUser(email, password, newpassword, firstname, lastname, this);
     } else {
+      console.log('sign up');
       this.authenticationService.signupUser(email, password, firstname, lastname, this);
     }
   } 
 
-  successfulSignUp() {
-    console.log('successfulSignUp');
-    this.router.navigateByUrl('/signup/confirm');    
+  successfulSignUp(status, email) {
+    console.log('successfulSignUp ' + status);
+    this.router.navigateByUrl('/signup/'+ status+ '/' + email);    
   }
 
   isLoading() {

@@ -19,7 +19,7 @@ const appRoutes: Routes = [
     { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },    
     { path: 'signout', component: SignoutComponent, canActivate: [AuthenticationGuard] },    
     { path: '', component: SplashComponent },        
-    { path: 'signup/:status', component: SignupComponent },
+    { path: 'signup/:status/:id', component: SignupComponent },
     { path: 'signin', component: SigninComponent },    
     { path: '**', component: PageNotFoundComponent}    
 ];

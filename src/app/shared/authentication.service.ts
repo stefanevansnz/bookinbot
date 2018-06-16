@@ -13,6 +13,7 @@ declare let apigClientFactory: any;
 export class AuthenticationService {
 
     loadedUser = new Subject();
+    savedCognitoUser: any;
 
     constructor(private notificationService: NotificationService,
                 private router: Router) {
@@ -48,7 +49,7 @@ export class AuthenticationService {
         
     }
 
-    signinUser(email: string, password: string, callback ) {
+    signinUser(email: string, password: string, newPassword: string, firstname: string, lastname: string, callback ) {
 
         let self = this;
 
@@ -62,6 +63,7 @@ export class AuthenticationService {
             ClientId: environment.clientid
         };
 
+        console.log('email is ' + email);
         let authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
         let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
         let userData = {
@@ -70,7 +72,27 @@ export class AuthenticationService {
         };
         let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
 
-        cognitoUser.authenticateUser(authenticationDetails, {
+        if (newPassword != null) {
+            console.log ("newPasswordRequired email is " + email);
+            callback.loading = false;  
+            var attributesData = {
+                given_name: firstname,
+                family_name: lastname
+            }            
+            this.savedCognitoUser.completeNewPasswordChallenge(newPassword, attributesData,  {
+                onSuccess: function(result) {
+                    //callback.successfulSignUp();
+                    callback.successfulSignUp('completed', email);
+                },
+                onFailure: function(error) {
+                    console.log ("Authenticated Error:" + error.message);    
+                    self.notificationService.setMessage( error.message );
+                    callback.loading = false;                               
+                }
+            });
+        } else {
+
+            cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
               
               let cognitoGetUser = userPool.getCurrentUser();
@@ -110,14 +132,17 @@ export class AuthenticationService {
                 
             },
             newPasswordRequired: function(userAttributes, requiredAttributes) {
-                var email = userAttributes.email;                
-                console.log ("newPasswordRequired email is " + email);
-                callback.loading = false;  
-                callback.newPasswordRequired();
+                    var email = userAttributes.email;                
+                    console.log ("email is " + email);
+                    // save user session for later
+                    self.savedCognitoUser = cognitoUser;
+                    callback.loading = false;  
+                    callback.newPasswordRequired();    
             }        
-          });          
+          }); 
+        }                   
     }
-
+/*
     completeNewPasswordChallenge(email: string, password: string, newpassword: string, firstname: string, lastname: string, callback) {
         let self = this;
 
@@ -188,7 +213,7 @@ export class AuthenticationService {
         
 
     }
-
+*/
     signupUser(email: string, password: string, firstname: string, lastname: string, callback ) {
 
         let self = this;
@@ -237,7 +262,7 @@ export class AuthenticationService {
                 // add user with name etc to table
 
                 // then ask to sign up
-                callback.successfulSignUp(result.userSub, email, firstname, lastname);
+                callback.successfulSignUp('confirm', email);
 
             }        
         }))

@@ -62,13 +62,55 @@
     </div> <!-- end of status new -->    
   
     <div *ngIf="status=='newpassword'" class="form-group">
-      <h1>New Password Required</h1>      
-      <label for="newpassword">New Password</label>
+      <h1>Please fill in your name and password</h1>     
+      <h2>{{ signUpEmail }}</h2>
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm"> 
 
-      <div class="input-group">
-      <input required password type="newpassword" id="newpassword" name="newpassword" ngModel class="form-control">
-      </div>            
+        <div class="form-group">
+          <label for="firstname">First Name</label>
+
+          <div class="input-group">
+          <input required id="firstname" name="firstname" ngModel class="form-control">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="lastname">Last Name</label>
+
+          <div class="input-group">            
+          <input required id="lastname" name="lastname" ngModel class="form-control">
+          </div>            
+        </div>          
+    
+        <label for="newpassword">New Password</label>
+        <div class="input-group">
+          <input required password type="password" id="password" name="password" ngModel class="form-control">
+        </div>            
+
+        <label for="newpassword">Confirm Password</label>
+        <div class="input-group">
+          <input required password type="password" id="newpassword" name="newpassword" ngModel class="form-control">
+        </div>            
+        
+
+        <div *ngIf="message" class="alert alert-danger" role="alert">
+          {{ message }}
+        </div>        
+        <button [disabled]="!f.valid" class="btn btn-primary" type="submit">Sign Up</button>
+
+      </form>        
     </div> <!-- end of status newpassword -->    
+
+    <div *ngIf="status=='completed'" class="form-group">
+      <h1>Your user's registration is now completed</h1>
+      <p>
+        You user registion is now completed.
+      </p>      
+      <p>
+        Please signin with you email and new password.
+      </p>
+
+    </div> <!-- end of status new -->    
 
 
 

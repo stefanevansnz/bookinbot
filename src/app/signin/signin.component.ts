@@ -17,6 +17,7 @@ export class SigninComponent implements OnInit {
   messageUpdate: Subscription;
   message: any;
   loading: boolean = false;
+  signUpEmail: string;  
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
@@ -35,8 +36,9 @@ export class SigninComponent implements OnInit {
   onSignin(form: NgForm) {
     this.loading = true;
     const email = form.value.email;
+    this.signUpEmail = email;
     const password = form.value.password;    
-    this.authenticationService.signinUser(email, password, this);
+    this.authenticationService.signinUser(email, password, null, null, null, this);
   } 
 
   successfulLogin() {
@@ -45,7 +47,10 @@ export class SigninComponent implements OnInit {
   }
 
   newPasswordRequired() {
-    this.router.navigateByUrl('/signup/newpassword');
+    //this.router.navigateByUrl('/signup/newpassword/' + this.signUpEmail);
+    this.router.navigate(['/signup/newpassword/' + this.signUpEmail], {
+      skipLocationChange: true
+    });
   }
 
 
