@@ -23,19 +23,27 @@ export class DataAccessObject {
         let object = requestExtractor.getObject(body, username);        
         let parameters = requestExtractor.getParameters(path, id, username, object, method);
         let tableName = requestExtractor.getTableName(path);
+        let indexName = requestExtractor.getIndex(path, id);
         console.log('Object is ' + JSON.stringify(object));
         console.log('Parameters is ' + JSON.stringify(parameters));
 
         this.db.setTableName('bookinbot-' +tableName);
                         
         console.log('Method is ' + method + ' Table Name is ' + tableName);
+        console.log('Index Name is ' + indexName);
 
         switch(method) {
             case "POST":
                 this.db.putInTable(object, responseBuilder.build, callback);              
                 break;
-            case "GET":                
-                this.db.getFromTable(parameters, responseBuilder.build, callback);
+            case "GET":    
+                if (indexName != null) {
+                    // use index
+                    this.db.getFromGlobalSecondaryIndex(indexName, parameters, responseBuilder.build, callback);                    
+                } else {
+                    // use table
+                    this.db.getFromTable(parameters, responseBuilder.build, callback);
+                }            
                 break;
             case "DELETE":
                 this.db.deleteFromTable(parameters, responseBuilder.build, callback);

@@ -119,3 +119,26 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 https://coryrylan.com/blog/introduction-to-e2e-testing-with-the-angular-cli-and-protractor
 https://www.protractortest.org/#/locators
+
+
+Resources
+HASH      RANGE 
+ownerid   id      title
+123       1       boat
+123       2       house
+
+Share
+HASH        RANGE     
+resourceid  id        ownerid   userid  email
+1 (boat)    1         123       456
+1 (boat)    2         123       789
+
+Booking
+HASH        RANGE     
+resourceid  id        userid    start end
+1 (boat)    1         456
+1 (boat)    2         789
+
+
+
+

@@ -24,24 +24,67 @@ export class DynamoDb {
         this.tableName = tableName;
     }
 
-    getFromTable(parameters: Parameter[], responseFunction, callback) {
+    getFromGlobalSecondaryIndex(indexName: string, parameters: Parameter[], responseFunction, callback) {
 
+        let keyConditionExpression = '';
+        let expressionAttributeValues = '';        
+
+        parameters.forEach((param) => {
+            console.log('param name is ' + param.name + ' - ' + param.value );
+            if (param.value != undefined) {
+                keyConditionExpression += param.name + ' = :' + param.name;
+                expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
+                //console.log('param name is ' + param.name + ' - ' + param.value );    
+            } 
+        });
+
+        //let userid = 'a07d48d7-7786-4fc5-96a9-64071e3733ef';
+
+        let params = {
+            TableName: this.tableName,
+            IndexName: indexName,
+            //KeyConditionExpression: 'userid = :userid',
+            //ExpressionAttributeValues: { ':userid': userid },
+            KeyConditionExpression: keyConditionExpression,
+            ExpressionAttributeValues:
+                JSON.parse('{' + expressionAttributeValues + '}'),
+            ProjectionExpression: "ownerid, email, resourceid, id",
+            ScanIndexForward: false 
+        } 
+
+        console.log('running DB query params: ' + JSON.stringify(params));
+
+        this.dynamoDb.query(params, (error, result) => {
+            console.log('result is' + JSON.stringify(result));
+            console.log('error is' + JSON.stringify(error));                
+            if (result.Items) {
+                result = result.Items;
+            }
+            responseFunction(error, result, callback);
+        });
+
+    }
+
+    getFromTable(parameters: Parameter[], responseFunction, callback) {
+        
         let numberOfParameters = parameters.length;
         let keyConditionExpression = '';
         let expressionAttributeNames = '';
         let expressionAttributeValues = '';
         let expressionCount = 1;
         parameters.forEach((param) => {
-            keyConditionExpression += '#' + param.name + ' = :' + param.name;
-            expressionAttributeNames += '"#' + param.name + '" : "' + param.name + '"';
-            expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
-            if (expressionCount < numberOfParameters) {
-                keyConditionExpression += ' AND ';   
-                expressionAttributeNames += ', ';   
-                expressionAttributeValues += ', ';          
+            console.log('param name is ' + param.name + ' - ' + param.value );
+            if (param.value != undefined) {
+                keyConditionExpression += '#' + param.name + ' = :' + param.name;
+                expressionAttributeNames += '"#' + param.name + '" : "' + param.name + '"';
+                expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
+                if (expressionCount < numberOfParameters) {
+                    keyConditionExpression += ' AND ';   
+                    expressionAttributeNames += ', ';   
+                    expressionAttributeValues += ', ';          
+                }
+                expressionCount++;
             }
-            expressionCount++;
-            //console.log('param name is ' + param.name + ' - ' + param.value );
         });
 
         console.log('keyConditionExpression is ' + keyConditionExpression);

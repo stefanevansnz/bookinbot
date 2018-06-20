@@ -66,7 +66,6 @@
         loading ...
       </div>                    
 
-
       <ul class="list-group">
         <li class="list-group-item"        
           *ngFor="let resource of resources; let i = index">
@@ -92,7 +91,21 @@
           {{ resource.title }} - ID: {{ resource.id }}         
         </li>
       </ul>
-  </div>
+
+      <h1>Shares</h1>
+
+      <div *ngIf="sharesLoading">
+        loading ...
+      </div>                    
+
+      <ul class="list-group">
+        <li class="list-group-item"        
+          *ngFor="let share of shares; let i = index">          
+          OWNERID {{ share.ownerid }} - RESOURCEID: {{ share.resourceid }}
+        </li>
+      </ul>
+
+    </div>
 </div>
 
     

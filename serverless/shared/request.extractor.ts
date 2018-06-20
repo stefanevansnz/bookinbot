@@ -37,6 +37,14 @@ export class RequestExtractor {
         return '';
     }
 
+    getIndex(path, id) {
+        if (path.includes('share') && id == null) {
+            return 'shares_user_resources';
+        } else {
+            return null;
+        }
+    }
+
     getParameters(path, id, username, object, method) {
         let parameters: Parameter[] = [];
         if (path.includes('resource')) {
@@ -63,7 +71,12 @@ export class RequestExtractor {
                 parameters.push(new Parameter('resourceid', object.resourceid));
                 parameters.push(new Parameter('id', object.id));
             } else {
+                console.log('share resourceid is ' + id);
                 parameters.push(new Parameter('resourceid', id));
+                if (id == null) {
+                    // no resourceid add username
+                    parameters.push(new Parameter('userid', username));                    
+                }
                 /*
                 parameters.push(new Parameter('ownerid', username));
                 if (id != null) {

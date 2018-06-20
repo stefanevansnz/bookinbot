@@ -123,6 +123,9 @@ resources:
       Properties:
         AttributeDefinitions:
           - 
+            AttributeName: userid
+            AttributeType: S            
+          - 
             AttributeName: resourceid
             AttributeType: S
           - 
@@ -139,3 +142,17 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:custom.tableNameShares}
+        GlobalSecondaryIndexes:
+        - IndexName: shares_user_resources
+          KeySchema:
+          - AttributeName: userid
+            KeyType: HASH
+          - AttributeName: resourceid
+            KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+            - resourceid
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1       
