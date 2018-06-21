@@ -54,7 +54,7 @@
 
 <div class="row">
   <div id="resources" class="col-md-12">
-      <h1>Resources</h1>
+      <h1>Your Resources</h1>
       <button id="add-resource" type="button" class="btn btn-primary" 
         (click)="onAddObject()">Add Resource</button>
 
@@ -92,7 +92,7 @@
         </li>
       </ul>
 
-      <h1>Shares</h1>
+      <h1>Resources shared with you</h1>
 
       <div *ngIf="sharesLoading">
         loading ...
@@ -102,6 +102,11 @@
         <li class="list-group-item"        
           *ngFor="let share of shares; let i = index">          
           OWNERID {{ share.ownerid }} - RESOURCEID: {{ share.resourceid }}
+          <button 
+          class="view-resource btn btn-success float-right edit" 
+          (click)="onViewShareBookings(i, share.ownerid, share.resourceid)"         
+          type="submit" >
+          Bookings</button>             
         </li>
       </ul>
 
