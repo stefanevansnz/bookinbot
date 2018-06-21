@@ -34,7 +34,7 @@ export class DynamoDb {
             if (param.value != undefined) {
                 keyConditionExpression += param.name + ' = :' + param.name;
                 expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
-                //console.log('param name is ' + param.name + ' - ' + param.value );    
+                console.log('param name is ' + param.name + ' - ' + param.value );    
             } 
         });
 
