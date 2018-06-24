@@ -23,7 +23,7 @@ export class HeadingComponent implements OnInit {
 
   private setFullName( user: User ) {
     if (user != null) {
-      this.fullName = user.firstname + ' ' + user.lastname + ' - ' + user.id;
+      this.fullName = user.firstname + ' ' + user.lastname;
     } else {
       this.fullName = '';
     }

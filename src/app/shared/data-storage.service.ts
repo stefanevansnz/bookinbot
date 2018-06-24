@@ -22,15 +22,15 @@ export class DataStorageService {
     constructor(private http: Http,
                 private authenticationService: AuthenticationService) { }
 
-    getObjectFromServer(name: string, id: string, component: any) {
-        this.getObjectsFromServer(false, name, id, component);
+    getObjectFromServer(name: string, id: string, component: any, postCallback) {
+        this.getObjectsFromServer(false, name, id, component, postCallback);
     }            
 
-    getObjectArrayFromServer(name: string, id: string, component: any) {
-        this.getObjectsFromServer(true, name, id, component);
+    getObjectArrayFromServer(name: string, id: string, component: any, postCallback) {
+        this.getObjectsFromServer(true, name, id, component, postCallback);
     }
 
-    private getObjectsFromServer(listRequired: boolean, name: string, id: string, component: any) {
+    private getObjectsFromServer(listRequired: boolean, name: string, id: string, component: any, postCallback) {
         let self = this;
         let loadingName = name + 'Loading';
         this.addAuthorization(function(headers) {
@@ -58,6 +58,10 @@ export class DataStorageService {
                         console.log('not multi so get first');
                         component[name] = result[0];
                     } 
+
+                    if (postCallback != null ) {
+                        postCallback(component);
+                    }
                     
                     //console.log(' component[name]' +  component[name]); 
                 }

@@ -28,7 +28,7 @@ export class RequestProcessor {
 
     processRequest(event, callback) {
         console.log('process request');     
-        console.log('processRequest is ' + JSON.stringify(event))
+        //console.log('processRequest is ' + JSON.stringify(event))
         this.errorMessage = null;
         this.successMessage = null;
         this.user = null;

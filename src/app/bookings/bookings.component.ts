@@ -60,7 +60,7 @@ export class BookingsComponent implements OnInit {
           console.log('resourceId = ' + id);
           this.resourceId = id;
           this.loadResourceDetails();
-          this.loadBookingDetails();
+//          this.loadBookingDetails();
         }
       );
   }
@@ -71,19 +71,15 @@ export class BookingsComponent implements OnInit {
     let self = this;
 
     //this.resource.title = 'Loading...';
-    this.dataStorageService.getObjectFromServer('resource', this.resourceId, self);          
+    this.dataStorageService.getObjectFromServer('resource', this.resourceId, self, this.loadBookingDetails);          
     
   }
 
-  private loadBookingDetails() {
-    var self = this;
+  private loadBookingDetails(self) {
     console.log('loading booking objects...');
 
-    //this.dataStorageService.getObjectsFromServer('bookings', this.resourceId, self);          
-
-//    let headers = this.dataStorageService.addHeaders();
-    this.dataStorageService.addAuthorization(function(headers) {
-      let authHeader = { Authorization: headers.get('Authorization')};
+    self.dataStorageService.addAuthorization(function(headers) {
+    let authHeader = { Authorization: headers.get('Authorization')};
     
 
 //    console.log('headers ' + JSON.stringify(authHeader));

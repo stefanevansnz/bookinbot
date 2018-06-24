@@ -49,14 +49,18 @@ export class SharesComponent implements OnInit {
         (params: Params) => {
           // something has changed
           let id = params['id'];
-          console.log('resourceId = ' + id);
+          console.log('load resource resourceId = ' + id);
           this.resourceId = id;          
-          console.log('id = ' + id); 
-          this.dataStorageService.getObjectFromServer('resource', this.resourceId, self);                   
-          this.dataStorageService.getObjectArrayFromServer('shares', id, self);          
+          this.dataStorageService.getObjectFromServer('resource', this.resourceId, self, this.successfullLoad);                   
         }
       );    
   }
+
+  successfullLoad(self) {
+    console.log('load shares for resource resourceId = ' + self.resourceId);
+    self.dataStorageService.getObjectArrayFromServer('shares', self.resourceId, self, null);          
+  }
+  
 /*
   onViewBookings(index: number, share: Share) {
     console.log('onViewBookings share id ' + share.id);
@@ -71,7 +75,7 @@ export class SharesComponent implements OnInit {
     if (this.searchMode) {
       console.log('search mode');
       self.searching = true;
-      this.dataStorageService.getObjectArrayFromServer('sharessearch', value.email, self);          
+      this.dataStorageService.getObjectArrayFromServer('sharessearch', value.email, self, null);          
     } else {
       // add shared user
       let user = this.authenticationService.getUser();
@@ -132,7 +136,7 @@ export class SharesComponent implements OnInit {
     this.editShare = share;
     console.log('this.editShare.id is ' + this.editShare.id);
     console.log('this.editShare.email is ' + this.editShare.email);
-    this.dataStorageService.getObjectArrayFromServer('sharesresend', this.editShare.email, self);          
+    this.dataStorageService.getObjectArrayFromServer('sharesresend', this.editShare.email, self, null);          
   }  
 
   onDelete() {

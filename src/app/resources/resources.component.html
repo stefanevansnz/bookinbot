@@ -54,18 +54,19 @@
 
 <div class="row">
   <div id="resources" class="col-md-12">
-      <h1>Your Resources</h1>
-      <button id="add-resource" type="button" class="btn btn-primary" 
-        (click)="onAddObject()">Add Resource</button>
 
+      <div *ngIf="resourcesLoading; else resourcesLoaded">
+          loading your resources ...
+      </div>       
+      <ng-template #resourcesLoaded>
+      <span><a routerLink="/">Home</a></span>
+      <hr>
       <div *ngIf="message" class="alert alert-danger" role="alert">
           {{ message }}
-      </div>                    
-
-      <div *ngIf="resourcesLoading">
-        loading ...
-      </div>                    
-
+      </div>       
+      <h1>Your Resources</h1>
+      <button id="add-resource" type="button" class="btn btn-primary" 
+        (click)="onAddObject()">Add Resource</button>    
       <ul class="list-group">
         <li class="list-group-item"        
           *ngFor="let resource of resources; let i = index">
@@ -88,27 +89,29 @@
           type="submit" >
           Bookings</button>        
           
-          {{ resource.title }} - ID: {{ resource.id }}         
+          {{ resource.title }} 
         </li>
       </ul>
+      </ng-template>  
 
-      <h1>Resources shared with you</h1>
-
-      <div *ngIf="sharesLoading">
-        loading ...
-      </div>                    
-
-      <ul class="list-group">
+      <div *ngIf="sharesLoading; else sharesLoaded">
+          loading available resources...
+      </div>       
+      <ng-template #sharesLoaded>
+        <h1>Available Resources</h1>
+        <ul class="list-group">
         <li class="list-group-item"        
           *ngFor="let share of shares; let i = index">          
-          OWNERID {{ share.ownerid }} {{ share.ownername }} - RESOURCE: {{ share.resourceid }} {{ share.resourcetitle }}
+          {{ share.ownername }} is sharing {{ share.resourcetitle }}
           <button 
           class="view-resource btn btn-success float-right edit" 
           (click)="onViewShareBookings(i, share.ownerid, share.resourceid)"         
           type="submit" >
-          Bookings</button>             
+          View Bookings</button>             
         </li>
       </ul>
+      </ng-template>  
+
 
     </div>
 </div>

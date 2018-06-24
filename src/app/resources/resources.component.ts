@@ -40,11 +40,16 @@ export class ResourcesComponent implements OnInit {
           // something has changed
           let id = params['id'];
           console.log('id = ' + id);          
-          this.dataStorageService.getObjectArrayFromServer('resources', id, self);                              
-          this.dataStorageService.getObjectArrayFromServer('shares', id, self);        
+          this.dataStorageService.getObjectArrayFromServer('resources', id, self, self.successfullLoad);
         }
       );    
   }
+
+  successfullLoad(self) {
+    console.log('load shares');
+    self.dataStorageService.getObjectArrayFromServer('shares', null, self, null);          
+  }
+
 
   onViewBookings(index: number, resource: Resource) {
     console.log('onViewBookings resource id ' + resource.id);

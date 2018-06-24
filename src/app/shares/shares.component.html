@@ -83,33 +83,23 @@
 
 
 <div class="row">
-  <div id="shares" class="col-md-12">
-      
-
-        <div *ngIf="resourceLoading; else heading">
-          loading ...
-        </div>       
-        <ng-template #heading>
-          <span><a routerLink="/">Home</a> > {{resource.title}} > People</span>
-          <hr>
-        </ng-template>       
-    
-
-      <button id="add-share" type="button" class="btn btn-primary" 
-        (click)="onAddObject()">Add Person</button>
-
+  <div id="shares" class="col-md-12">            
+      <div *ngIf="sharesLoading; else sharesLoaded">
+          loading shared resources...
+      </div>       
+      <ng-template #sharesLoaded>
+      <span><a routerLink="/">Home</a> > {{resource.title}} > People</span>
+      <hr>      
       <div *ngIf="message" class="alert alert-danger" role="alert">
           {{ message }}
-      </div>                    
-
-      <div *ngIf="sharesLoading">
-        loading ...
-      </div>                    
-
-
+      </div>                        
+      <h1>People that can book in {{resource.title}}</h1>        
+      <button id="add-share" type="button" class="btn btn-primary" 
+        (click)="onAddObject()">Add Person</button>
       <ul class="list-group">
         <li class="list-group-item"        
           *ngFor="let share of shares; let i = index">
+          {{ share.username }} {{ share.email }}
           <button 
           class="edit-share btn btn-success float-right edit" 
           (click)="onEditObject(i, share)"         
@@ -122,12 +112,9 @@
           type="submit" >
           Resend
           </button>        
-
-          <a>
-            USERID: {{ share.userid}} - {{ share.email }} - {{ share.username }} RESOURCE: {{ share.resourceid }} {{ share.resourcetitle }}
-          </a> 
         </li>
       </ul>
+      </ng-template>  
   </div>
 </div>
 
