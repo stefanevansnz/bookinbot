@@ -10,9 +10,9 @@ export class DataAccessObject {
         this.db = db;
     }
 
-    execute(responseBuilder, requestExtractor, callback, event, username) {
+    execute(responseBuilder, requestExtractor, callback, event, userId) {
 
-        console.log('UsernameId is ' + username);        
+        console.log('userId is ' + userId);        
         let body = event.body;
         let method = event.httpMethod;
         let path = event.path.split("/")[1];
@@ -20,8 +20,8 @@ export class DataAccessObject {
         console.log('Path is ' + path);
         console.log('Id is ' + id);
 
-        let object = requestExtractor.getObject(body, username);        
-        let parameters = requestExtractor.getParameters(path, id, username, object, method);
+        let object = requestExtractor.getObject(body, userId);        
+        let parameters = requestExtractor.getParameters(path, id, userId, object, method);
         let indexFields = requestExtractor.getIndexFields(path, id);
         let tableName = requestExtractor.getTableName(path);
         let indexName = requestExtractor.getIndex(path, id);

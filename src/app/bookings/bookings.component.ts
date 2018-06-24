@@ -42,6 +42,7 @@ export class BookingsComponent implements OnInit {
   private editIndex: number;
   private editCalendarEvent: any;
   private resourceId;
+  private ownerId;  
   
   constructor(private authenticationService: AuthenticationService,
               private dataStorageService: DataStorageService, 
@@ -59,6 +60,10 @@ export class BookingsComponent implements OnInit {
           let id = params['id'];
           console.log('resourceId = ' + id);
           this.resourceId = id;
+          let ownerid = params['ownerid'];
+          console.log('ownerid = ' + ownerid);
+          this.ownerId = ownerid;
+
           this.loadResourceDetails();
 //          this.loadBookingDetails();
         }
@@ -71,7 +76,7 @@ export class BookingsComponent implements OnInit {
     let self = this;
 
     //this.resource.title = 'Loading...';
-    this.dataStorageService.getObjectFromServer('resource', this.resourceId, self, this.loadBookingDetails);          
+    this.dataStorageService.getSharedObjectFromServer('resource', this.resourceId, this.ownerId, self, this.loadBookingDetails);          
     
   }
 

@@ -22,20 +22,27 @@ export class DataStorageService {
     constructor(private http: Http,
                 private authenticationService: AuthenticationService) { }
 
+    getSharedObjectFromServer(name: string, id: string, ownerid: string, component: any, postCallback) {
+        this.getObjectsFromServer(false, name, id, ownerid, component, postCallback);
+    }            
+            
     getObjectFromServer(name: string, id: string, component: any, postCallback) {
-        this.getObjectsFromServer(false, name, id, component, postCallback);
+        this.getObjectsFromServer(false, name, id, undefined, component, postCallback);
     }            
 
     getObjectArrayFromServer(name: string, id: string, component: any, postCallback) {
-        this.getObjectsFromServer(true, name, id, component, postCallback);
+        this.getObjectsFromServer(true, name, id, undefined, component, postCallback);
     }
 
-    private getObjectsFromServer(listRequired: boolean, name: string, id: string, component: any, postCallback) {
+    private getObjectsFromServer(listRequired: boolean, name: string, id: string, ownerid: string, component: any, postCallback) {
         let self = this;
         let loadingName = name + 'Loading';
         this.addAuthorization(function(headers) {
             self.http.get(environment.api + '/' + 
-                name + (id != undefined ? '/' + id : ''), {headers: headers})            
+                name + 
+                (id != undefined ? '/' + id : '') +
+                (ownerid != undefined ? '/' + ownerid : ''),
+                {headers: headers})            
             .subscribe(
               (success: Response) => {   
                 if (component.searchMode) {

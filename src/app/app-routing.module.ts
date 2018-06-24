@@ -15,6 +15,7 @@ const appRoutes: Routes = [
 
     { path: 'resources', component: ResourcesComponent, canActivate: [AuthenticationGuard] },
     { path: 'bookings/:id', component: BookingsComponent, canActivate: [AuthenticationGuard] },
+    { path: 'bookings/:id/:ownerid', component: BookingsComponent, canActivate: [AuthenticationGuard] },
     { path: 'shares/:id', component: SharesComponent, canActivate: [AuthenticationGuard] },
     { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },    
     { path: 'signout', component: SignoutComponent, canActivate: [AuthenticationGuard] },    

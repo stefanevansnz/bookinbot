@@ -34,12 +34,13 @@ export class RequestProcessor {
         this.user = null;
         let self = this;
         let authorizer = event.requestContext.authorizer;
-        let username = this.requestExtractor.getUserName(authorizer);
+        let userId = this.requestExtractor.getUserName(authorizer);
 
         let body = event.body;
         let method = event.httpMethod;
         let path = event.path.split("/")[1];
         let id = event.path.split("/")[2];
+        let ownerId = event.path.split("/")[3];
 
         let validatedObject = this.userAdmin.runUserAdmin(this, id, body, method, path, function() {
             console.log('error message is ' + self.errorMessage);
@@ -53,14 +54,19 @@ export class RequestProcessor {
                 '}';
                 self.responseBuilder.build(null, JSON.parse(success), callback);                
             } else {
-                if (username == null) {
-                    console.log('username is null');
+                if (userId == null) {
+                    console.log('userSessionId is null');
                     let error = new Error('User session no longer valid');
                     self.responseBuilder.build(error, null, callback);
                     // return error
                 } else {
                     console.log('execute');
-                    self.dataAccessObject.execute(self.responseBuilder, self.requestExtractor, callback, event, username);
+                    if (ownerId != null) {
+                        // if ownerid included in request target other user
+                        userId = ownerId;
+                    }
+                    // execute command
+                    self.dataAccessObject.execute(self.responseBuilder, self.requestExtractor, callback, event, userId);
                 }
         
             }            
