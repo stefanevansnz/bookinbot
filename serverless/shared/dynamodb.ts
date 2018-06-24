@@ -24,7 +24,7 @@ export class DynamoDb {
         this.tableName = tableName;
     }
 
-    getFromGlobalSecondaryIndex(indexName: string, parameters: Parameter[], responseFunction, callback) {
+    getFromGlobalSecondaryIndex(indexName: string, parameters: Parameter[], projectionExpression, responseFunction, callback) {
 
         let keyConditionExpression = '';
         let expressionAttributeValues = '';        
@@ -48,7 +48,7 @@ export class DynamoDb {
             KeyConditionExpression: keyConditionExpression,
             ExpressionAttributeValues:
                 JSON.parse('{' + expressionAttributeValues + '}'),
-            ProjectionExpression: "ownerid, email, resourceid, id",
+            ProjectionExpression: projectionExpression,
             ScanIndexForward: false 
         } 
 

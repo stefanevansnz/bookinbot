@@ -74,16 +74,20 @@ export class SharesComponent implements OnInit {
       this.dataStorageService.getObjectArrayFromServer('sharessearch', value.email, self);          
     } else {
       // add shared user
+      let user = this.authenticationService.getUser();
+      let ownername = user.firstname + ' ' + user.lastname;
       let userid = null;
+      let username = null;
       let email = value.email;
       if (self.editUser != null) {
         // user has been found
         console.log('found editUser from search ' + JSON.stringify(self.editUser));
         userid = self.editUser.id;
+        username = self.editUser.firstname + ' ' + self.editUser.lastname;
         email = self.editUser.email;
       }
       console.log('add shared user userid is ' + userid + ' email is ' + email);
-      let share = new Share(null, null, self.resourceId ,userid, email);
+      let share = new Share(null, null, ownername, self.resourceId, self.resource.title, userid, username, email);
       this.dataStorageService.setObjectOnServer('shares', 'editShare', share, self);          
     }
   
@@ -138,7 +142,7 @@ export class SharesComponent implements OnInit {
 
     console.log('resource id is ' + this.resourceId);    
 
-    let share = new Share(this.editShare.id, userid, this.resourceId, '', '');    
+    let share = new Share(this.editShare.id, userid, null, this.resourceId, null, null, '', '');    
     console.log('share is ' + JSON.stringify(share));
     this.dataStorageService.deleteObjectsOnServer('shares', share, self);              
   }

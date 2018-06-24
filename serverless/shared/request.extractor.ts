@@ -45,6 +45,15 @@ export class RequestExtractor {
         }
     }
 
+    getIndexFields(path, id) {
+        if (path.includes('share') && id == null) {
+            return 'ownerid, ownername, email, resourceid, resourcetitle, id';
+        } else {
+            return null;
+        }
+
+    }
+
     getParameters(path, id, username, object, method) {
         let parameters: Parameter[] = [];
         if (path.includes('resource')) {

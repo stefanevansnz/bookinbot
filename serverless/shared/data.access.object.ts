@@ -22,6 +22,7 @@ export class DataAccessObject {
 
         let object = requestExtractor.getObject(body, username);        
         let parameters = requestExtractor.getParameters(path, id, username, object, method);
+        let indexFields = requestExtractor.getIndexFields(path, id);
         let tableName = requestExtractor.getTableName(path);
         let indexName = requestExtractor.getIndex(path, id);
         console.log('Object is ' + JSON.stringify(object));
@@ -39,7 +40,7 @@ export class DataAccessObject {
             case "GET":    
                 if (indexName != null) {
                     // use index
-                    this.db.getFromGlobalSecondaryIndex(indexName, parameters, responseBuilder.build, callback);                    
+                    this.db.getFromGlobalSecondaryIndex(indexName, parameters, indexFields ,responseBuilder.build, callback);                    
                 } else {
                     // use table
                     this.db.getFromTable(parameters, responseBuilder.build, callback);

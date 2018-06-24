@@ -101,7 +101,7 @@
       <ul class="list-group">
         <li class="list-group-item"        
           *ngFor="let share of shares; let i = index">          
-          OWNERID {{ share.ownerid }} - RESOURCEID: {{ share.title }}
+          OWNERID {{ share.ownerid }} {{ share.ownername }} - RESOURCE: {{ share.resourceid }} {{ share.resourcetitle }}
           <button 
           class="view-resource btn btn-success float-right edit" 
           (click)="onViewShareBookings(i, share.ownerid, share.resourceid)"         
