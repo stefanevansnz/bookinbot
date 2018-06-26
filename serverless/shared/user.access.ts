@@ -1,5 +1,6 @@
 import { AnyLengthString } from "aws-sdk/clients/comprehend";
 import { EventHolder } from "./event.holder";
+import { ResponseBuilder } from "./response.builder";
 
 const AWS = require('aws-sdk');
 
@@ -46,7 +47,7 @@ export class UserAccess {
   
     }
 
-    searchUser(caller: any, email: string, callback) {
+    searchUser(response: ResponseBuilder, email: string, callback) {
         let self = this;
         // Get Users
         console.log('listing users for ' + email);
@@ -59,24 +60,22 @@ export class UserAccess {
                     console.log('found user');
                     let user = self.processUsers(data.Users[0]);
                     console.log('successful' + JSON.stringify(user));
-                    //caller.successMessage = 'The email address ' + email +
-                    successMessage = 'The email address ' + email +
+                    response.successMessage = 'The email address ' + email +
                     ' has been found! ' +
                     'Click Add below to share your resource with this person.';
-                    //caller.user = JSON.stringify(user); 
-                    //user = JSON.stringify(user); 
+                    response.resultSet = JSON.stringify(user); 
                 } else {
                     // error finding group
                     console.log('error ' + JSON.stringify(err));
-                    successMessage = 'OK, almost there. We cannot find the email address ' + email +
+                    response.successMessage = 'OK, almost there. We cannot find the email address ' + email +
                     ' but click add below and an invite will be sent.';
                 }
-                callback(successMessage);
+                callback();
             }
         );
     }
 
-    resendUserEmail(caller: any, email: string, callback) {
+    resendUserEmail(response: any, email: string, callback) {
         let self = this;
         // Get Users
         console.log('resend user email for ' + email);
@@ -94,7 +93,7 @@ export class UserAccess {
                 //res.status(err.statusCode).json({ error: String(err) });
                 console.log('resend error was ' + err.error);
                 console.log('error ' + JSON.stringify(err));
-                caller.errorMessage = 'Could not resend email for user.';
+                response.errorMessage = 'Could not resend email for user.';
             }
             callback();
         });            
@@ -103,7 +102,7 @@ export class UserAccess {
 
 
 
-    addUser(caller: any, email: string, callback) {
+    addUser(response: any, email: string, callback) {
         let self = this;
         // Get Users
         console.log('create user for ' + email);
@@ -122,53 +121,53 @@ export class UserAccess {
                 //res.status(err.statusCode).json({ error: String(err) });
                 console.log('adminCreateUser error was ' + err.error);
                 console.log('error ' + JSON.stringify(err));
-                caller.errorMessage = 'Could not create user.';
+                response.errorMessage = 'Could not create user.';
             }
             callback();
         });            
 
     }  
     
-    resources(caller, eventHolder: EventHolder, callback) {   
+    resources(response, eventHolder: EventHolder, callback) {   
         console.log('UserAccess resources');
         callback();
     }    
 
-    resource(caller, eventHolder: EventHolder, callback) {   
+    resource(response, eventHolder: EventHolder, callback) {   
         console.log('UserAccess resource');
         callback();
     }    
 
-    bookings(caller, eventHolder: EventHolder, callback) {   
+    bookings(response, eventHolder: EventHolder, callback) {   
         console.log('UserAccess bookings');
         callback();
     }
     
-    sharessearch(caller, eventHolder: EventHolder, callback) {   
+    sharessearch(response, eventHolder: EventHolder, callback) {   
         console.log('UserAccess sharessearch');
         console.log('get to sharessearch');
         let id = eventHolder.id;        
         let email = id;
         console.log('email is ' + email);    
-        this.searchUser(caller, email, callback);
+        this.searchUser(response, email, callback);
 
-        callback();
+        //callback();
     }
 
     
-    sharesresend(caller, eventHolder: EventHolder, callback) {   
+    sharesresend(response, eventHolder: EventHolder, callback) {   
         console.log('UserAccess sharesresend');
         let id = eventHolder.id;        
         console.log('get to sharesresend');
         let email = id;
         console.log('email is ' + email);    
-        this.resendUserEmail(caller, email, callback);
+        this.resendUserEmail(response, email, callback);
 
-        callback();
+        //callback();
     }
 
 
-    shares(caller, eventHolder: EventHolder, callback) {        
+    shares(response, eventHolder: EventHolder, callback) {        
         console.log('UserAccess shares');
         let path = eventHolder.path;
         let id = eventHolder.id;
@@ -176,13 +175,13 @@ export class UserAccess {
         let body = eventHolder.body;
 
         let object = JSON.parse(body);
-        console.log('post to shared body is ' + JSON.stringify(object));
-        if (object.userid == null) {
+        console.log('object to shared body is ' + JSON.stringify(object));
+        if (method == 'POST' && object.userid == null) {
             // no user so add first.
-            this.addUser(caller, object.email, callback);
-        } else {
-            callback();
-        }
+            this.addUser(response, object.email, callback);
+        } 
+        callback();
+
 
 /*
         if (path == 'sharessearch' && method == 'GET') {

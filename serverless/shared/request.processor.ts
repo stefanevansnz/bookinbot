@@ -33,19 +33,19 @@ export class RequestProcessor {
         console.log('process request');     
         let self = this;
         let eventHolder = self.requestExtractor.buildEventHolder(event);
-        let method = eventHolder.path;
 
+        let method = eventHolder.path;
 
         // apply validation checks            
         self.requestValidator[method](function() {                    
         // apply user updates
-        self.userAccess[method](this, eventHolder, function(error, result) {
+        self.userAccess[method](self.responseBuilder, eventHolder, function() {
         // execute data command
-        self.dataAccessObject[method](this, eventHolder, function(error, result) {
-        // build response
-        self.responseBuilder.build(error, result, function(response) {
-        // call callback to return lambda
-        callback(null, response);
+        self.dataAccessObject[method](self.responseBuilder, eventHolder, function() {
+            // build response
+            self.responseBuilder.build(function(response) {
+            // call callback to return lambda
+            callback(null, response);
         })})})});
     }
 }

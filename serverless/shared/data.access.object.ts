@@ -15,11 +15,11 @@ export class DataAccessObject {
         this.prefix = 'bookinbot';
     }
 
-    resource(caller, eventHolder: EventHolder, callback) {   
-        this.resources(caller, eventHolder, callback);
+    resource(response, eventHolder: EventHolder, callback) {   
+        this.resources(response, eventHolder, callback);
     }
 
-    resources(caller, eventHolder: EventHolder, callback) {   
+    resources(response, eventHolder: EventHolder, callback) {   
         //let databaseParameters = new DatabaseParameters();
         console.log('DataAccessObject resources');
 
@@ -37,7 +37,7 @@ export class DataAccessObject {
         let method = eventHolder.method.toLowerCase();
         let object = eventHolder.object;
         // use table
-        this.db[method](tableName, parameters, object, callback);    
+        this.db[method](response, tableName, parameters, object, callback);    
         
         /*
         databaseParameters.parameters = parameters;
@@ -48,7 +48,7 @@ export class DataAccessObject {
         */ 
     }    
 
-    bookings(caller, eventHolder: EventHolder, callback) {   
+    bookings(response, eventHolder: EventHolder, callback) {   
         //let databaseParameters = new DatabaseParameters();
         console.log('DataAccessObject bookings');
         
@@ -64,7 +64,7 @@ export class DataAccessObject {
         let method = eventHolder.method.toLowerCase();
         let object = eventHolder.object;
         // use table
-        this.db[method](tableName, parameters, object, callback);        
+        this.db[method](response, tableName, parameters, object, callback);        
 /*
         databaseParameters.parameters = parameters;
         databaseParameters.object = eventHolder.object;
@@ -74,12 +74,12 @@ export class DataAccessObject {
         //this.applyDataUpdates(caller, eventHolder, databaseParameters, callback);    
     }
 
-    sharessearch(caller, eventHolder: EventHolder, callback) { 
+    sharessearch(response, eventHolder: EventHolder, callback) { 
         console.log('DataAccessObject sharessearch');
         callback();
     }
 
-    shares(caller, eventHolder: EventHolder, callback) { 
+    shares(response, eventHolder: EventHolder, callback) { 
         console.log('DataAccessObject shares');
 
         let parameters: Parameter[] = [];        
@@ -103,10 +103,10 @@ export class DataAccessObject {
             let indexName = 'shares_user_resources';
             let indexFields = 'ownerid, ownername, email, resourceid, resourcetitle, id';            
             // use index
-            this.db.getIndex(tableName, indexName, parameters, indexFields, callback);                    
+            this.db.getIndex(response, tableName, indexName, parameters, indexFields, callback);                    
         } else {
             // use table
-            this.db[method](tableName, parameters, object, callback);
+            this.db[method](response, tableName, parameters, object, callback);
         }
         //this.applyDataUpdates(caller, eventHolder, databaseParameters, callback);
     }

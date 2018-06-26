@@ -1,6 +1,7 @@
 import * as AWS from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
 import { Parameter } from './parameter';
+import { ResponseBuilder } from './response.builder';
 
 export class DynamoDb {
 
@@ -19,7 +20,7 @@ export class DynamoDb {
         }
     }
 
-    getIndex(tableName: string, indexName: string, parameters: Parameter[], projectionExpression, callback) {
+    getIndex(response, tableName: string, indexName: string, parameters: Parameter[], projectionExpression, callback) {
         console.log('DynamoDb GET INDEX');
         let keyConditionExpression = '';
         let expressionAttributeValues = '';        
@@ -55,12 +56,14 @@ export class DynamoDb {
             if (result.Items) {
                 result = result.Items;
             }
-            callback(error, result);
+            response.resultSet = result;
+            callback();
+
         });
 
     }
 
-    get(tableName: string, parameters: Parameter[], object, callback) {
+    get(response: ResponseBuilder, tableName: string, parameters: Parameter[], object, callback) {
         console.log('DynamoDb GET');
         let numberOfParameters = parameters.length;
         let keyConditionExpression = '';
@@ -98,12 +101,13 @@ export class DynamoDb {
         console.log('running DB query params: ' + JSON.stringify(params));
 
         this.dynamoDb.query(params, (error, result) => {
-            console.log('result is ' + JSON.stringify(result));
-            console.log('error is ' + JSON.stringify(error));                
+            console.log('query result is ' + JSON.stringify(result));
+            console.log('query error is ' + JSON.stringify(error));                
             if (result.Items) {
                 result = result.Items;
             }
-            callback(error, result);
+            response.resultSet = result;
+            callback();
         });
     }
 

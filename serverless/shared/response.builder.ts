@@ -28,20 +28,29 @@ export class ResponseBuilder {
       }
 */
 
+    resultSet: any;
 
-    build(error, result, callback) {
+    errorMessage: string;
+
+    successMessage: string;
+
+    build(callback) {
         // response
         console.log('Building Response');
         let statusCode;
         let message;
-        if (error == null) {
-          console.log('result is ' + JSON.stringify(result) );  
-          let statusCode = 200;
-          message = result;
+        if (this.successMessage != null) {   
+            //console.log('successMessage is ' + JSON.stringify(this.successMessage));            
+            statusCode = 200;
+            message = {message: this.successMessage, user: this.resultSet };
+        } else if (this.errorMessage != null) {
+            //console.log('error is ' + JSON.stringify(this.errorMessage));            
+            statusCode = 500;
+            message = this.errorMessage;  
         } else {
-          console.log('error is ' + JSON.stringify(error));            
-          statusCode = 500;
-          message = error;
+            //console.log('result is ' + JSON.stringify(this.resultSet) );  
+            let statusCode = 200;
+            message = this.resultSet;
         }              
         let response = {
           statusCode: statusCode,
@@ -52,7 +61,7 @@ export class ResponseBuilder {
           },
           body: JSON.stringify(message) 
         };         
-        console.log('response is ' + JSON.stringify(response))
+        //console.log('response is ' + JSON.stringify(response))
         callback(response);     
     };           
 
