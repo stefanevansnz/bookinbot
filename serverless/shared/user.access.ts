@@ -1,4 +1,5 @@
 import { AnyLengthString } from "aws-sdk/clients/comprehend";
+import { EventHolder } from "./event.holder";
 
 const AWS = require('aws-sdk');
 
@@ -10,7 +11,7 @@ AWS.config.update({accessKeyId: COGNITO_AWS_ACCESS_KEY, secretAccessKey: COGNITO
 var CognitoIdentityServiceProvider = AWS.CognitoIdentityServiceProvider;
 let client = new CognitoIdentityServiceProvider({ apiVersion: '2016-04-19', region: 'ap-southeast-2' });
 
-export class UserAdmin {
+export class UserAccess {
 
 
     processUsers(user: any) {
@@ -51,23 +52,26 @@ export class UserAdmin {
         console.log('listing users for ' + email);
         client.listUsers({ Filter: 'email = "' + email + '"', UserPoolId: COGNITO_USER_POOL_ID}, 
             function(err, data) {
+                let successMessage;
                 let user;
                 console.log('err is ' + err + ' data is ' + data);
                 if (err == null && data != null && data.Users.length > 0) {
                     console.log('found user');
                     let user = self.processUsers(data.Users[0]);
                     console.log('successful' + JSON.stringify(user));
-                    caller.successMessage = 'The email address ' + email +
+                    //caller.successMessage = 'The email address ' + email +
+                    successMessage = 'The email address ' + email +
                     ' has been found! ' +
                     'Click Add below to share your resource with this person.';
-                    caller.user = JSON.stringify(user); 
+                    //caller.user = JSON.stringify(user); 
+                    //user = JSON.stringify(user); 
                 } else {
                     // error finding group
                     console.log('error ' + JSON.stringify(err));
-                    caller.successMessage = 'OK, almost there. We cannot find the email address ' + email +
+                    successMessage = 'OK, almost there. We cannot find the email address ' + email +
                     ' but click add below and an invite will be sent.';
                 }
-                callback();
+                callback(successMessage);
             }
         );
     }
@@ -123,12 +127,64 @@ export class UserAdmin {
             callback();
         });            
 
+    }  
+    
+    resources(caller, eventHolder: EventHolder, callback) {   
+        console.log('UserAccess resources');
+        callback();
     }    
 
+    resource(caller, eventHolder: EventHolder, callback) {   
+        console.log('UserAccess resource');
+        callback();
+    }    
+
+    bookings(caller, eventHolder: EventHolder, callback) {   
+        console.log('UserAccess bookings');
+        callback();
+    }
+    
+    sharessearch(caller, eventHolder: EventHolder, callback) {   
+        console.log('UserAccess sharessearch');
+        console.log('get to sharessearch');
+        let id = eventHolder.id;        
+        let email = id;
+        console.log('email is ' + email);    
+        this.searchUser(caller, email, callback);
+
+        callback();
+    }
+
+    
+    sharesresend(caller, eventHolder: EventHolder, callback) {   
+        console.log('UserAccess sharesresend');
+        let id = eventHolder.id;        
+        console.log('get to sharesresend');
+        let email = id;
+        console.log('email is ' + email);    
+        this.resendUserEmail(caller, email, callback);
+
+        callback();
+    }
 
 
-    runUserAdmin(caller, id, body, method, path, callback) {        
-        console.log('in validateObject');
+    shares(caller, eventHolder: EventHolder, callback) {        
+        console.log('UserAccess shares');
+        let path = eventHolder.path;
+        let id = eventHolder.id;
+        let method = eventHolder.method;
+        let body = eventHolder.body;
+
+        let object = JSON.parse(body);
+        console.log('post to shared body is ' + JSON.stringify(object));
+        if (object.userid == null) {
+            // no user so add first.
+            this.addUser(caller, object.email, callback);
+        } else {
+            callback();
+        }
+
+/*
         if (path == 'sharessearch' && method == 'GET') {
             console.log('get to sharessearch');
             let email = id;
@@ -151,5 +207,7 @@ export class UserAdmin {
         } else {
             callback();
         }
+*/
     }
+    
 }

@@ -1,7 +1,45 @@
-import { Parameter } from "./parameter";
+import { EventHolder } from "./event.holder";
 
 export class RequestExtractor {
 
+    buildEventHolder(event) {
+
+
+/*        console.log('body is ' + body);
+        if (event.body != null) {
+            let object = JSON.parse(body);
+            object.ownerid = username;
+            return object;    
+        }         
+*/
+        let eventHolder = new EventHolder();
+
+        // set user session id
+        let authorizer = event.requestContext.authorizer;
+        let userSessionId = null;
+        if (authorizer.claims != null) {
+            //console.log('found authorizer.claims');
+            userSessionId = authorizer.claims.sub;
+        }     
+        console.log('userSessionId is ' + userSessionId);          
+        eventHolder.userSessionId = userSessionId;
+
+        // set object for update with ownerid
+        eventHolder.body = event.body;
+        if (eventHolder.body != null) {
+            eventHolder.object = JSON.parse(eventHolder.body); 
+            eventHolder.object.ownerid = eventHolder.userSessionId;
+        }
+        eventHolder.method = event.httpMethod;
+
+        eventHolder.path = event.path.split("/")[1];
+        eventHolder.id = event.path.split("/")[2];
+        eventHolder.ownerId = event.path.split("/")[3];
+
+        return eventHolder;
+    }
+
+/*
     getObject(body, username) {
         console.log('body is ' + body);
         if (body == null) {
@@ -15,14 +53,9 @@ export class RequestExtractor {
 
     getUserName(authorizer) {
         console.log('in getUserName');
-        let username = null;
-        if (authorizer.claims != null) {
-            console.log('found authorizer.claims');
-            username = authorizer.claims.sub;
-        }     
-        console.log('username is ' + username);   
-        return username;
+
     }
+
 
     getTableName(path) {
         if (path.includes('resource')) {
@@ -85,20 +118,14 @@ export class RequestExtractor {
                 if (id == null) {
                     // no resourceid add username
                     parameters.push(new Parameter('userid', username));                    
-                }
-                /*
-                parameters.push(new Parameter('ownerid', username));
-                if (id != null) {
-                    parameters.push(new Parameter('resourceid', id));
-                } 
-                */              
+                }            
             }
         }
         
         return parameters;
 
     }
-
+*/
 
 
 }

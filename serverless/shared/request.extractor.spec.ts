@@ -2,7 +2,7 @@ import { RequestExtractor } from './request.extractor';
 import {mock, instance, when, verify} from 'ts-mockito';
 
 describe("The request extractor ", function() {
-
+/*
     it("gets an object name when in request.", function() {        
         let inputObject = '{"id": "123", "name": "Test Resource"}';  
         let username = 'abc';    
@@ -21,5 +21,5 @@ describe("The request extractor ", function() {
         let username = new RequestExtractor().getUserName(authorizer);
         expect(username).toEqual('abc');
     });
-
+*/
 });

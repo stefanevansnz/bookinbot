@@ -135,9 +135,11 @@ resourceid  id        ownerid   userid  email
 
 Booking
 HASH        RANGE     
-resourceid  id        userid    start end
-1 (boat)    1         456
-1 (boat)    2         789
+resourceid  id        userid    start   end
+1 (boat)    1         456       10am    11am
+1 (boat)    2         789       1pm     3pm
+
+> start and < end
 
 
 

@@ -2,7 +2,8 @@ import { RequestExtractor } from './request.extractor';
 import { ResponseModel } from './response.model';
 import { DataAccessObject } from './data.access.object';
 import { ResponseBuilder } from './response.builder';
-import { UserAdmin } from './user.admin';
+import { UserAccess } from './user.access';
+import { RequestValidator } from './request.validator';
 
 export class RequestProcessor {
 
@@ -12,67 +13,39 @@ export class RequestProcessor {
     errorMessage: string;
     successMessage: string;
     user: any;
-    userAdmin: UserAdmin;
+    userAccess: UserAccess;
+    requestValidator: RequestValidator;
 
     constructor(requestExtractor: RequestExtractor, 
                 dataAccessObject: DataAccessObject,
                 responseBuilder: ResponseBuilder,
-                userAdmin: UserAdmin
+                userAccess: UserAccess,
+                requestValidator: RequestValidator
             ) {
-        console.log('constructor');        
         this.requestExtractor = requestExtractor;
         this.dataAccessObject = dataAccessObject;
         this.responseBuilder = responseBuilder;
-        this.userAdmin = userAdmin;
+        this.userAccess = userAccess;
+        this.requestValidator = requestValidator;
     }  
 
     processRequest(event, callback) {
         console.log('process request');     
-        //console.log('processRequest is ' + JSON.stringify(event))
-        this.errorMessage = null;
-        this.successMessage = null;
-        this.user = null;
         let self = this;
-        let authorizer = event.requestContext.authorizer;
-        let userId = this.requestExtractor.getUserName(authorizer);
-
-        let body = event.body;
-        let method = event.httpMethod;
-        let path = event.path.split("/")[1];
-        let id = event.path.split("/")[2];
-        let ownerId = event.path.split("/")[3];
-
-        let validatedObject = this.userAdmin.runUserAdmin(this, id, body, method, path, function() {
-            console.log('error message is ' + self.errorMessage);
-            if (self.errorMessage != null) {
-                self.responseBuilder.build(self.errorMessage, null, callback);
-                // return error
-            } else if (self.successMessage != null) {
-                let success = '{' + 
-                    '"message": "' + self.successMessage + '", ' + 
-                    '"user": ' + self.user + '' + 
-                '}';
-                self.responseBuilder.build(null, JSON.parse(success), callback);                
-            } else {
-                if (userId == null) {
-                    console.log('userSessionId is null');
-                    let error = new Error('User session no longer valid');
-                    self.responseBuilder.build(error, null, callback);
-                    // return error
-                } else {
-                    console.log('execute');
-                    if (ownerId != null) {
-                        // if ownerid included in request target other user
-                        userId = ownerId;
-                    }
-                    // execute command
-                    self.dataAccessObject.execute(self.responseBuilder, self.requestExtractor, callback, event, userId);
-                }
-        
-            }            
-        });
+        let eventHolder = self.requestExtractor.buildEventHolder(event);
+        let method = eventHolder.path;
 
 
-
+        // apply validation checks            
+        self.requestValidator[method](function() {                    
+        // apply user updates
+        self.userAccess[method](this, eventHolder, function(error, result) {
+        // execute data command
+        self.dataAccessObject[method](this, eventHolder, function(error, result) {
+        // build response
+        self.responseBuilder.build(error, result, function(response) {
+        // call callback to return lambda
+        callback(null, response);
+        })})})});
     }
 }

@@ -5,7 +5,7 @@ import { ResponseBuilder } from './response.builder';
 import { RequestProcessor } from './request.processor';
 
 describe("The request processor ", function() {
-
+/*
   let mockedRequestExtractor:RequestExtractor;
   let mockedDataAccessObject:DataAccessObject;
   let mockedResponseBuilder:ResponseBuilder;
@@ -52,4 +52,5 @@ describe("The request processor ", function() {
     verify(this.mockedDataAccessObject.execute(responseBuilder, requestExtractor, callback, inputEvent, username)).once();    
     
   });
+  */
 });
