@@ -22,7 +22,7 @@ export class SharesComponent implements OnInit {
   @ViewChild('f') slForm: NgForm;
 
   message;
-  messageModal;
+  errorMessage;
   successMessage;
   searching = false;
   resourceLoading = true;
@@ -100,7 +100,7 @@ export class SharesComponent implements OnInit {
   }
 
   onAddObject() {
-    this.messageModal = '';
+    this.errorMessage = '';
     this.successMessage = '';
     this.searchMode = true;
     this.editMode = false;
@@ -120,7 +120,7 @@ export class SharesComponent implements OnInit {
 
   onEditObject(index: number, share: Share) {
     //console.log('onEditObject ' + index);
-    this.messageModal = '';
+    this.errorMessage = '';
     this.successMessage = '';
     this.editShare = share;
     console.log('this.editShare.id is ' + this.editShare.id);

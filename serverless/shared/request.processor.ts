@@ -38,17 +38,30 @@ export class RequestProcessor {
 
         // apply validation checks    
         console.log('1. Validate');        
-        self.requestValidator[method](function() {                    
+        self.requestValidator[method](self.responseBuilder, eventHolder, function() {
+        if (self.responseBuilder.errorMessage != null) {
+            self.buildResponse(self.responseBuilder, callback);
+            return;
+        }
         // apply user updates
         console.log('2. User Admin Access');        
         self.userAccess[method](self.responseBuilder, eventHolder, function() {
         // execute data command
         console.log('3. Database Access');        
         self.dataAccessObject[method](self.responseBuilder, eventHolder, function() {
-            // build response
-            self.responseBuilder.build(function(response) {
-            // call callback to return lambda
-            callback(null, response);
-        })})})});
+        // build response
+        console.log('4. Response Builder');
+        self.buildResponse(self.responseBuilder, callback);
+        })})});
     }
+
+    buildResponse(responseBuilder: ResponseBuilder, callback) {
+        responseBuilder.build(function(response) {
+            // validation fails                    
+            callback(null, response);
+        });
+    }
+
+
+
 }

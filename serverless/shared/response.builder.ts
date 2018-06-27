@@ -46,7 +46,7 @@ export class ResponseBuilder {
         } else if (this.errorMessage != null) {
             console.log('error is ' + JSON.stringify(this.errorMessage));            
             statusCode = 500;
-            message = this.errorMessage;  
+            message = {message: this.errorMessage};  
         } else if (this.resultSet == undefined) {
             console.log('result is undefined' );  
             let statusCode = 200;

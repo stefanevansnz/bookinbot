@@ -77,7 +77,8 @@ export class DataStorageService {
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
                 component.loading = false;
-                component.message = error.text();             
+                component.errorMessage = error.json().message;
+                component.searching = false;            
               }
             );          
         });
@@ -112,7 +113,7 @@ export class DataStorageService {
                     console.log('set object on ' + component[name] + ' at ' + component.editIndex);
                     component[componentObjectList][component.editIndex] = newObject;
                     component[componentObject] = newObject;  
-                    component.messageModal = '';
+                    component.errorMessage = '';
                     component.closeSetModal();                  
                 } else {
                     console.log('setObjectOnServer componentObjectList:' + componentObjectList + ' newObject:' + JSON.stringify(newObject) + ' component shares:' + component.shares);
@@ -121,7 +122,7 @@ export class DataStorageService {
 
                     component[componentObjectList].push(newObject);
                     component[componentObject] = newObject;
-                    component.messageModal = '';
+                    component.errorMessage = '';
                     component.closeSetModal();
                 }
                              
@@ -129,7 +130,7 @@ export class DataStorageService {
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
                 component.loading = false;
-                component.messageModal = error.text();             
+                component.errorMessage = error.text();             
               }
             );          
         });
