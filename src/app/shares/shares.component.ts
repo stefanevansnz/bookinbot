@@ -77,7 +77,7 @@ export class SharesComponent implements OnInit {
       self.searching = true;
       this.dataStorageService.getObjectArrayFromServer('sharessearch', value.email, self, null);          
     } else {
-      // add shared user
+      // add shared user     
       let user = this.authenticationService.getUser();
       let ownername = user.firstname + ' ' + user.lastname;
       let userid = null;
@@ -85,13 +85,15 @@ export class SharesComponent implements OnInit {
       let email = value.email;
       if (self.editUser != null) {
         // user has been found
-        console.log('found editUser from search ' + JSON.stringify(self.editUser));
+        console.log('found editUser from search ' + self.editUser);
         userid = self.editUser.id;
         username = self.editUser.firstname + ' ' + self.editUser.lastname;
         email = self.editUser.email;
+        console.log('add shared user userid is ' + userid + ' email is ' + email);
+      } else {
+        console.log('cannot find editUser from search');
       }
-      console.log('add shared user userid is ' + userid + ' email is ' + email);
-      let share = new Share(null, null, ownername, self.resourceId, self.resource.title, userid, username, email);
+      let share = new Share(null, null, ownername, self.resourceId, self.resource.title, userid, username, email);      
       this.dataStorageService.setObjectOnServer('shares', 'editShare', share, self);          
     }
   

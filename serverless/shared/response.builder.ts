@@ -40,15 +40,19 @@ export class ResponseBuilder {
         let statusCode;
         let message;
         if (this.successMessage != null) {   
-            //console.log('successMessage is ' + JSON.stringify(this.successMessage));            
+            console.log('successMessage is ' + JSON.stringify(this.successMessage));            
             statusCode = 200;
-            message = {message: this.successMessage, user: this.resultSet };
+            message = {message: this.successMessage, user: JSON.parse(this.resultSet) };
         } else if (this.errorMessage != null) {
-            //console.log('error is ' + JSON.stringify(this.errorMessage));            
+            console.log('error is ' + JSON.stringify(this.errorMessage));            
             statusCode = 500;
             message = this.errorMessage;  
+        } else if (this.resultSet == undefined) {
+            console.log('result is undefined' );  
+            let statusCode = 200;
+            message = {};
         } else {
-            //console.log('result is ' + JSON.stringify(this.resultSet) );  
+            console.log('result is ' + JSON.stringify(this.resultSet) );  
             let statusCode = 200;
             message = this.resultSet;
         }              
@@ -61,7 +65,7 @@ export class ResponseBuilder {
           },
           body: JSON.stringify(message) 
         };         
-        //console.log('response is ' + JSON.stringify(response))
+        console.log('response is ' + JSON.stringify(response))
         callback(response);     
     };           
 

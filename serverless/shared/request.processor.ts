@@ -36,11 +36,14 @@ export class RequestProcessor {
 
         let method = eventHolder.path;
 
-        // apply validation checks            
+        // apply validation checks    
+        console.log('1. Validate');        
         self.requestValidator[method](function() {                    
         // apply user updates
+        console.log('2. User Admin Access');        
         self.userAccess[method](self.responseBuilder, eventHolder, function() {
         // execute data command
+        console.log('3. Database Access');        
         self.dataAccessObject[method](self.responseBuilder, eventHolder, function() {
             // build response
             self.responseBuilder.build(function(response) {

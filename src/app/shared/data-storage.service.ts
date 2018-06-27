@@ -96,6 +96,8 @@ export class DataStorageService {
         console.log('component.resource' + component.resource);
         console.log('component.shares' + component.shares);
         */
+        console.log('new object is ' + JSON.stringify(newObject));
+
         this.addAuthorization(function(headers) {
             let options = new RequestOptions({
                 headers: headers,

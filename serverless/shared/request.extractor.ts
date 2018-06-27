@@ -30,6 +30,7 @@ export class RequestExtractor {
             eventHolder.object = JSON.parse(eventHolder.body); 
             eventHolder.object.ownerid = eventHolder.userSessionId;
         }
+        console.log('eventHolder.body is ' +  eventHolder.body);          
         eventHolder.method = event.httpMethod;
 
         eventHolder.path = event.path.split("/")[1];

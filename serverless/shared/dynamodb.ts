@@ -111,7 +111,7 @@ export class DynamoDb {
         });
     }
 
-    post(tableName: string, parameters: Parameter[], object, callback) {
+    post(response: ResponseBuilder, tableName: string, parameters: Parameter[], object, callback) {
         console.log('DynamoDb POST');
 
         // create in db
@@ -125,13 +125,13 @@ export class DynamoDb {
         }    
         console.log('putInTable is ' + JSON.stringify(params));         
         this.dynamoDb.put(params, (error, result) => {
-            //console.log('putInTable result is ' + JSON.stringify(result));                     
+            console.log('putInTable result is ' + JSON.stringify(result));                     
             result.id = object.id;
-            callback(error, result);
+            callback();
         });      
     }
     
-    delete(tableName: string, parameters: Parameter[], object, callback) {
+    delete(response: ResponseBuilder, tableName: string, parameters: Parameter[], object, callback) {
         console.log('DynamoDb DELETE');
 
         let keyNameValues = '';
@@ -155,7 +155,7 @@ export class DynamoDb {
         
         console.log('deleteFromTable is ' + JSON.stringify(params));         
         this.dynamoDb.delete(params, (error, result) => {
-            callback(error, result);
+            callback();
         });      
     }
 

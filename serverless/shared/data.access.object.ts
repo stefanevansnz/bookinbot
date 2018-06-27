@@ -99,7 +99,10 @@ export class DataAccessObject {
         let method = eventHolder.method.toLowerCase();
         let object = eventHolder.object;
 
-        if (eventHolder.id == null) {
+//        console.log('object is ' + JSON.stringify(object));
+//        console.log('tableName is ' + tableName);
+        
+        if (eventHolder.id == null && eventHolder.method == 'GET') {
             let indexName = 'shares_user_resources';
             let indexFields = 'ownerid, ownername, email, resourceid, resourcetitle, id';            
             // use index
