@@ -5,5 +5,7 @@ export class EventHolder {
     path: string;    
     id: string;
     ownerId: string;
+    email: string;
+    resourceId: string;    
     userSessionId: string;
 }

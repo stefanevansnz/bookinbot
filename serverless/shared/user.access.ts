@@ -69,7 +69,11 @@ export class UserAccess {
                     console.log('error ' + JSON.stringify(err));
                     response.successMessage = 'OK, almost there. We cannot find the email address ' + email +
                     ' but click add below and an invite will be sent.';
+                    let user = {email: email, firstname: '', lastname: ''};
+                    //response.resultSet = '[]'; 
+                    response.resultSet = JSON.stringify(user); 
                 }
+
                 callback();
             }
         );
@@ -146,8 +150,7 @@ export class UserAccess {
     sharessearch(response, eventHolder: EventHolder, callback) {   
         console.log('UserAccess sharessearch');
         console.log('get to sharessearch');
-        let id = eventHolder.id;        
-        let email = id;
+        let email = eventHolder.email;        
         console.log('email is ' + email);    
         this.searchUser(response, email, callback);
 

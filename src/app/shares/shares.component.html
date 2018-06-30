@@ -14,30 +14,15 @@
                 <label for="email">Search for email address:</label>
                 <div class="input-group">              
                   <input (keydown)="keyDownFunction($event)" 
-                  required email type="email" id="email" name="email" ngModel class="form-control">
-<!--                  
-                  <span class="input-group-btn">
-                    <button [disabled]="!f.valid" (click)="onSearch()" class="btn btn-primary search" type="button">Search</button>          
-                  </span>
-                -->                  
+                  required email type="email" id="email" name="email" ngModel class="form-control">              
                 </div>                          
             </div>   
             
             <div *ngIf="searching">
                 searching ...
             </div>       
-      
-    
-<!--
-            <div class="row">
-              <div class="col-sm-12 form-group">
-                <label for="name">Title</label>
-                <input 
-                  type="text" id="title" class="form-control" name="title" ngModel required>
-              </div>   
-            </div>    
-   -->        
-            <div class="row" *ngIf="errorMessage">
+         
+            <div class="row" *ngIf="errorMessage!='' && successMessage==''">
                 <div class="col-sm-12 form-group">
                     <div class="alert alert-danger" role="alert">
                         {{ errorMessage }}
@@ -45,7 +30,7 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="successMessage">
+            <div class="row" *ngIf="successMessage!='' && errorMessage==''">
                 <div class="col-sm-12 form-group">
                     <div class="alert alert-success" role="alert">
                         {{ successMessage }}

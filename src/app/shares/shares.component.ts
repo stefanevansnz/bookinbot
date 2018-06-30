@@ -75,7 +75,7 @@ export class SharesComponent implements OnInit {
     if (this.searchMode) {
       console.log('search mode');
       self.searching = true;
-      this.dataStorageService.getObjectArrayFromServer('sharessearch', value.email, self, null);          
+      this.dataStorageService.getSearchObjectArrayFromServer('sharessearch', this.resourceId, value.email, self, null);          
     } else {
       // add shared user     
       let user = this.authenticationService.getUser();

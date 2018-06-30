@@ -28,39 +28,46 @@ export class DataStorageService {
             
     getObjectFromServer(name: string, id: string, component: any, postCallback) {
         this.getObjectsFromServer(false, name, id, undefined, component, postCallback);
+    }
+    
+    getSearchObjectArrayFromServer(name: string, resourcid: string, email: string, component: any, postCallback) {
+        this.getObjectsFromServer(false, name, resourcid, email, component, postCallback);
     }            
 
     getObjectArrayFromServer(name: string, id: string, component: any, postCallback) {
         this.getObjectsFromServer(true, name, id, undefined, component, postCallback);
     }
 
-    private getObjectsFromServer(listRequired: boolean, name: string, id: string, ownerid: string, component: any, postCallback) {
+    private getObjectsFromServer(listRequired: boolean, name: string, param1: string, param2: string, component: any, postCallback) {
         let self = this;
         let loadingName = name + 'Loading';
         this.addAuthorization(function(headers) {
             self.http.get(environment.api + '/' + 
                 name + 
-                (id != undefined ? '/' + id : '') +
-                (ownerid != undefined ? '/' + ownerid : ''),
+                (param1 != undefined ? '/' + param1 : '') +
+                (param2 != undefined ? '/' + param2 : ''),
                 {headers: headers})            
             .subscribe(
               (success: Response) => {   
                 if (component.searchMode) {
-                    console.log('search object on ' + component[name] + ' with ' +id);
+                    console.log('successful search mode result on ' + param1 + ' and ' + param2);
                     component.successMessage = success.json().message;
+                    component.errorMessage = '';
+
                     component.editUser = success.json().user;
                     component.searching = false;
                     component.searchMode = false;
                 } else {
-                    console.log('setting ' + loadingName + ' to false');
+                    console.log('successful result');
                     component[loadingName] = false;                   
                     let result = success.json();
                     console.log('result is ' + JSON.stringify(result));                
                     component[name] = result;
+                    component.errorMessage = '';
 
-                    console.log('name is ' + name + ' id is ' + id);
+                    console.log('name is ' + name + ' id is ' + param1);
 
-                    if (!listRequired && id != undefined && result != undefined && result.length > 0) {
+                    if (!listRequired && param1 != undefined && result != undefined && result.length > 0) {
                         // if there is an id get first result
                         console.log('not multi so get first');
                         component[name] = result[0];
@@ -78,6 +85,7 @@ export class DataStorageService {
                 console.log('error' + JSON.stringify(error));
                 component.loading = false;
                 component.errorMessage = error.json().message;
+                component.successMessage = '';
                 component.searching = false;            
               }
             );          
@@ -130,7 +138,8 @@ export class DataStorageService {
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
                 component.loading = false;
-                component.errorMessage = error.text();             
+                //component.errorMessage = error.text();  
+                component.errorMessage = error.json().message;           
               }
             );          
         });
@@ -156,7 +165,8 @@ export class DataStorageService {
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
                 component.loading = false;
-                component.message = error.text();             
+                //component.message = error.text();             
+                component.errorMessage = error.json().message;
               }
             );          
         });

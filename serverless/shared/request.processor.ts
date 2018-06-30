@@ -38,7 +38,7 @@ export class RequestProcessor {
 
         // apply validation checks    
         console.log('1. Validate');        
-        self.requestValidator[method](self.responseBuilder, eventHolder, function() {
+        self.requestValidator[method](self.responseBuilder, self.dataAccessObject, eventHolder, function() {
         if (self.responseBuilder.errorMessage != null) {
             self.buildResponse(self.responseBuilder, callback);
             return;

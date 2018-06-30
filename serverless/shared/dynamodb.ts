@@ -26,15 +26,16 @@ export class DynamoDb {
         let expressionAttributeValues = '';        
 
         parameters.forEach((param) => {
-            console.log('param name is ' + param.name + ' - ' + param.value );
+            //console.log('param name is ' + param.name + ' - ' + param.value );
             if (param.value != undefined) {
                 keyConditionExpression += param.name + ' = :' + param.name;
                 expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
                 console.log('param name is ' + param.name + ' - ' + param.value );    
             } 
         });
-
-        //let userid = 'a07d48d7-7786-4fc5-96a9-64071e3733ef';
+        
+        console.log('keyConditionExpression ' + keyConditionExpression);
+        console.log('expressionAttributeValues ' + expressionAttributeValues);
 
         let params = {
             TableName: tableName,

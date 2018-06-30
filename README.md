@@ -121,23 +121,33 @@ https://coryrylan.com/blog/introduction-to-e2e-testing-with-the-angular-cli-and-
 https://www.protractortest.org/#/locators
 
 
-Resources
+Resources (resources a use has)
 HASH      RANGE 
 ownerid   id      title
 123       1       boat
 123       2       house
 
-Share
+Share (all shares for a resource)
 HASH        RANGE     
 resourceid  id        ownerid   userid  email
 1 (boat)    1         123       456
 1 (boat)    2         123       789
+GSI
+Share (resources that a user has access to) used on first page
+RANGE                           HASH    
+resourceid  id        ownerid   userid  email
+1 (boat)    1         123       456
+1 (boat)    1         123       789
+2 (house)   1         123       456
 
-Booking
+Booking (all bookings for a resource)
 HASH        RANGE     
 resourceid  id        userid    start   end
 1 (boat)    1         456       10am    11am
 1 (boat)    2         789       1pm     3pm
+
+
+
 
 > start and < end
 

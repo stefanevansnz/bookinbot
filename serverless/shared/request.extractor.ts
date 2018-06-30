@@ -34,99 +34,20 @@ export class RequestExtractor {
         eventHolder.method = event.httpMethod;
 
         eventHolder.path = event.path.split("/")[1];
-        eventHolder.id = event.path.split("/")[2];
-        eventHolder.ownerId = event.path.split("/")[3];
+        console.log('eventHolder.path is ' +  eventHolder.path);          
+        if (eventHolder.path == 'sharessearch') {
+            eventHolder.id = event.path.split("/")[2];
+            eventHolder.email = event.path.split("/")[3];   
+            console.log('eventHolder.id is ' +  eventHolder.id);          
+            console.log('eventHolder.email is ' +  eventHolder.email);          
+        } else {
+            eventHolder.id = event.path.split("/")[2];
+            eventHolder.ownerId = event.path.split("/")[3];    
+            console.log('eventHolder.id is ' +  eventHolder.id);          
+            console.log('eventHolder.ownerId is ' +  eventHolder.ownerId);          
+        }
 
         return eventHolder;
     }
-
-/*
-    getObject(body, username) {
-        console.log('body is ' + body);
-        if (body == null) {
-            return null;
-        } else {
-            let object = JSON.parse(body);
-            object.ownerid = username;
-            return object;    
-        }
-    }
-
-    getUserName(authorizer) {
-        console.log('in getUserName');
-
-    }
-
-
-    getTableName(path) {
-        if (path.includes('resource')) {
-            return 'resources';
-        }
-        if (path.includes('booking')) {
-            return 'bookings';
-        }
-        if (path.includes('share')) {
-            return 'shares';
-        }
-        return '';
-    }
-
-    getIndex(path, id) {
-        if (path.includes('share') && id == null) {
-            return 'shares_user_resources';
-        } else {
-            return null;
-        }
-    }
-
-    getIndexFields(path, id) {
-        if (path.includes('share') && id == null) {
-            return 'ownerid, ownername, email, resourceid, resourcetitle, id';
-        } else {
-            return null;
-        }
-
-    }
-
-    getParameters(path, id, username, object, method) {
-        let parameters: Parameter[] = [];
-        if (path.includes('resource')) {
-            if (method == 'DELETE') {
-                parameters.push(new Parameter('ownerid', username));
-                parameters.push(new Parameter('id', object.id));
-            } else {
-                parameters.push(new Parameter('ownerid', username));
-                if (id != null) {
-                    parameters.push(new Parameter('id', id));
-                }
-            }            
-        }
-        if (path.includes('booking')) {
-            if (method == 'DELETE') {
-                parameters.push(new Parameter('resourceid', object.resourceid));
-                parameters.push(new Parameter('id', object.id));
-            } else {
-                parameters.push(new Parameter('resourceid', id));
-            }
-        }
-        if (path.includes('share')) {
-            if (method == 'DELETE') {
-                parameters.push(new Parameter('resourceid', object.resourceid));
-                parameters.push(new Parameter('id', object.id));
-            } else {
-                console.log('share resourceid is ' + id);
-                parameters.push(new Parameter('resourceid', id));
-                if (id == null) {
-                    // no resourceid add username
-                    parameters.push(new Parameter('userid', username));                    
-                }            
-            }
-        }
-        
-        return parameters;
-
-    }
-*/
-
 
 }

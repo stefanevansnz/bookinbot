@@ -64,15 +64,17 @@ export class DataAccessObject {
     shares(response, eventHolder: EventHolder, callback) { 
         console.log('DataAccessObject shares');
 
-        let parameters: Parameter[] = [];        
+        let parameters: Parameter[] = [];   
+        let resourceId = eventHolder.id;
+
         if (eventHolder.method == 'DELETE') {
             parameters.push(new Parameter('resourceid', eventHolder.object.resourceid));
             parameters.push(new Parameter('id', eventHolder.object.id));
         } else {
-            console.log('share resourceid is ' + eventHolder.id);
-            parameters.push(new Parameter('resourceid', eventHolder.id));
-            if (eventHolder.id == null) {
-                // no resourceid add username
+            console.log('resource id is ' + eventHolder.id);
+            parameters.push(new Parameter('resourceid', resourceId));
+            if (resourceId == null) {
+                // no resourceId included so add username
                 parameters.push(new Parameter('userid', eventHolder.userSessionId));                    
             }            
         } 
@@ -80,11 +82,14 @@ export class DataAccessObject {
         let tableName = this.prefix + '-shares'; 
         let method = eventHolder.method.toLowerCase();
         let object = eventHolder.object;
-        
-        if (eventHolder.id == null && eventHolder.method == 'GET') {
+        console.log('DataAccessObject parameters length ' + parameters.length);
+
+        // only use index on front page when no resource is included
+        if (resourceId == null && eventHolder.method == 'GET') {
+            // only use index for searching all resources a user has access.
+            // hash is userid and range is resources      
             let indexName = 'shares_user_resources';
             let indexFields = 'ownerid, ownername, email, resourceid, resourcetitle, id';            
-            // use index
             this.db.getIndex(response, tableName, indexName, parameters, indexFields, callback);                    
         } else {
             // use table
