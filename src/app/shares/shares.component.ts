@@ -83,17 +83,19 @@ export class SharesComponent implements OnInit {
       let userid = null;
       let username = null;
       let email = value.email;
+      let status = null;
       if (self.editUser != null) {
         // user has been found
         console.log('found editUser from search ' + self.editUser);
         userid = self.editUser.id;
         username = self.editUser.firstname + ' ' + self.editUser.lastname;
         email = self.editUser.email;
+        status = self.editUser.status;
         console.log('add shared user userid is ' + userid + ' email is ' + email);
       } else {
         console.log('cannot find editUser from search');
       }
-      let share = new Share(null, null, ownername, self.resourceId, self.resource.title, userid, username, email);      
+      let share = new Share(null, null, ownername, self.resourceId, self.resource.title, userid, username, email, status);      
       this.dataStorageService.setObjectOnServer('shares', 'editShare', share, self);          
     }
   
@@ -148,7 +150,7 @@ export class SharesComponent implements OnInit {
 
     console.log('resource id is ' + this.resourceId);    
 
-    let share = new Share(this.editShare.id, userid, null, this.resourceId, null, null, '', '');    
+    let share = new Share(this.editShare.id, userid, null, this.resourceId, null, null, '', '', '');    
     console.log('share is ' + JSON.stringify(share));
     this.dataStorageService.deleteObjectsOnServer('shares', share, self);              
   }

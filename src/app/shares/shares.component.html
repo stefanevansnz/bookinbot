@@ -84,19 +84,26 @@
       <ul class="list-group">
         <li class="list-group-item"        
           *ngFor="let share of shares; let i = index">
-          {{ share.username }} {{ share.email }}
+
           <button 
           class="edit-share btn btn-success float-right edit" 
           (click)="onEditObject(i, share)"         
           type="submit" >
           Edit
           </button>        
-          <button 
+          
+          
+          <button *ngIf="share.status == 'INVITE SENT' " 
           class="edit-share btn btn-success float-right edit" 
           (click)="onReSendObject(i, share)"         
           type="submit" >
           Resend
-          </button>        
+          </button>  
+
+          {{ share.username }} {{ share.email }}
+          <span *ngIf="share.status == 'INVITE SENT' " class="badge badge-warning">{{ share.status }}</span>
+          <span *ngIf="share.status == 'SIGN UP COMPLETED' " class="badge badge-success">{{ share.status }}</span>
+        
         </li>
       </ul>
       </ng-template>  

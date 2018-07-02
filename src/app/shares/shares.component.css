@@ -3,6 +3,16 @@ h1 {
     font-size: 1.5em;
 }
 
+button.edit {
+    margin-left: 0.5em;    
+}
+
+ul.list-group li a {
+    display:block;
+    width:100%;
+}
+
+
 .ng-valid[required], .ng-valid.required  {
     border-left: 5px solid #42A948; /* green */
   }

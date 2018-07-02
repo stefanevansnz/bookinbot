@@ -37,6 +37,13 @@ export class UserAccess {
             lastname = userAttributes[attrIndex].Value;
             } 
         }
+
+        if (status == 'CONFIRMED') {
+            status = 'SIGN UP COMPLETED';
+        } else if (status == 'FORCE_CHANGE_PASSWORD') {
+            status = 'INVITE SENT';
+        }
+
         return {
             id: id,
             email: email,
@@ -61,7 +68,7 @@ export class UserAccess {
                     let user = self.processUsers(data.Users[0]);
                     console.log('successful' + JSON.stringify(user));
                     response.successMessage = 'The email address ' + email +
-                    ' has been found and the status is ' + user.status +
+                    ' has been found and ' + user.status +
                     '. Click Add below to share your resource with this person.';
                     response.resultSet = JSON.stringify(user); 
                 } else {
