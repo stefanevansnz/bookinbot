@@ -27,6 +27,7 @@ export class BookingsComponent implements OnInit {
   @ViewChild('f') slForm: NgForm;
   
   message;
+  errorMessage;
   editMode = false;
   resourceLoading = true;
   resourceName;
@@ -240,6 +241,8 @@ export class BookingsComponent implements OnInit {
 
   onAddObject(booking: Booking) {
     console.log('onAddObject');
+    
+    this.errorMessage = '';
     this.editMode = false;
     //this.slForm.reset();
     this.editBooking = booking;
@@ -266,6 +269,7 @@ export class BookingsComponent implements OnInit {
     console.log('booking end ' + booking.end);
     console.log('booking id ' + booking.id);    
 
+    this.errorMessage = '';
     this.editCalendarEvent = calEvent;
     this.editBooking = booking;
     this.editIndex = calEvent.id;

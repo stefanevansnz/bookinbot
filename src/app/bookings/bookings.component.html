@@ -10,6 +10,14 @@
         <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
           <div class="modal-body">
 
+              <div class="row" *ngIf="errorMessage!=''">
+                  <div class="col-sm-12 form-group">
+                      <div class="alert alert-danger" role="alert">
+                          {{ errorMessage }}
+                      </div>   
+                  </div>
+              </div>
+  
             <div class="row">
               <div class="col-sm-12 form-group">                                
                 <label for="start">From:</label>
@@ -42,13 +50,7 @@
                 </div>   
               </div>            
             
-            <div class="row" *ngIf="message">
-                <div class="col-sm-12 form-group">
-                    <div class="alert alert-danger" role="alert">
-                        {{ message }}
-                    </div>   
-                </div>
-            </div>
+
 
           </div>        
           <!-- Modal footer -->
