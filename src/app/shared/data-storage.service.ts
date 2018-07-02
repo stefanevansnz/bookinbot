@@ -128,7 +128,8 @@ export class DataStorageService {
 
                     console.log('push object on ' + newObject + ' onto ' + component[componentObjectList]);
 
-                    component[componentObjectList].push(newObject);
+                    //component[componentObjectList].push(newObject);
+                    component[componentObjectList].unshift(newObject);
                     component[componentObject] = newObject;
                     component.errorMessage = '';
                     component.closeSetModal();

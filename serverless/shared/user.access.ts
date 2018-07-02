@@ -61,8 +61,8 @@ export class UserAccess {
                     let user = self.processUsers(data.Users[0]);
                     console.log('successful' + JSON.stringify(user));
                     response.successMessage = 'The email address ' + email +
-                    ' has been found! ' +
-                    'Click Add below to share your resource with this person.';
+                    ' has been found and the status is ' + user.status +
+                    '. Click Add below to share your resource with this person.';
                     response.resultSet = JSON.stringify(user); 
                 } else {
                     // error finding group
