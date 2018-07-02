@@ -43,8 +43,8 @@ export class RequestValidator {
                                 ' end ' + booking.end +
                                 ' user ' + booking.username);
                     // check if already booked
-                    if (object.start >= booking.start &&
-                        object.end <= booking.end) {
+                    if ((object.start >= booking.start && object.start <= booking.start) ||
+                        (object.end >= booking.start && object.end <= booking.end)) {
                         console.log('bookings exist!');
                         bookingsExists = true;
                         lastBookingUserName = booking.username;
