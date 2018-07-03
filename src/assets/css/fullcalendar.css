@@ -802,7 +802,12 @@ NOTE: use percentage font sizes or else old IE chokes
   margin-top: 1em; }
 
 .fc-toolbar .fc-left {
-  float: left; }
+  float: left; 
+  width: 265px}
+
+.fc-toolbar .fc-next-button {
+  float: right !important;
+}
 
 .fc-toolbar .fc-right {
   float: right; }
@@ -814,7 +819,7 @@ NOTE: use percentage font sizes or else old IE chokes
 .fc .fc-toolbar > * > * {
   /* extra precedence to override button border margins */
   float: left;
-  margin-left: .75em; }
+ }  
 
 /* the first thing within each left/center/right section */
 .fc .fc-toolbar > * > :first-child {
@@ -823,7 +828,9 @@ NOTE: use percentage font sizes or else old IE chokes
 
 /* title text */
 .fc-toolbar h2 {
-  margin: 0; }
+  font-size: 1.5em; 
+  text-align: center;
+  width: 200px}
 
 /* button layering (for border precedence) */
 .fc-toolbar button {

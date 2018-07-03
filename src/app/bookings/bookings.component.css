@@ -11,11 +11,15 @@
 }
 
 h1 {
-    padding-top: .5em;
+    padding-top: 0.5em;
     font-size: 1.5em;
 }
 
 div.input-group-append {
     cursor: pointer;
+}
+
+button.edit {
+    margin-left: 0.5em;    
 }
 

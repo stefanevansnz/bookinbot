@@ -119,6 +119,11 @@ export class SharesComponent implements OnInit {
     jQuery("#editModal").modal("hide");
   }
 
+  onViewBookings(index: number, resource: Resource) {
+    console.log('onViewBookings resource id ' + resource.id);
+    this.router.navigate(['/bookings/' + resource.id]);
+  }
+
 
   onEditObject(index: number, share: Share) {
     //console.log('onEditObject ' + index);

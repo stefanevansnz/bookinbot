@@ -59,8 +59,10 @@
           loading your resources ...
       </div>       
       <ng-template #resourcesLoaded>
+<!--        
       <span><a routerLink="/">Home</a></span>
       <hr>
+-->
       <div *ngIf="message" class="alert alert-danger" role="alert">
           {{ message }}
       </div>       
@@ -77,11 +79,13 @@
           type="submit" >
           Edit</button>    
 
+          <!--
           <button 
           class="share-resource btn btn-success float-right edit" 
           (click)="onShareResource(i, resource)"         
           type="submit" >
           People</button>            
+-->
 
           <button 
           class="view-resource btn btn-success float-right edit" 

@@ -93,9 +93,10 @@ export class BookingsComponent implements OnInit {
       jQuery("#calendar").fullCalendar({           
         themeSystem: 'bootstrap4',
         header: {
-          left: 'prev title next today',
+          left: 'prev title next',
           center: '',
-          right: 'month,agendaWeek,agendaDay '
+          //right: 'month,agendaWeek,agendaDay '
+          right: 'today'
         },
         nowIndicator: true,
         height: 540,
@@ -212,6 +213,11 @@ export class BookingsComponent implements OnInit {
     
     this.dataStorageService.setObjectOnServer('bookings', 'editBooking', booking, this);          
     
+  }
+
+  onShareResource(index: number, resource: Resource) {
+    console.log('onShareResource resource id ' + resource.id);
+    this.router.navigate(['/shares/' + resource.id]);
   }
   
   closeSetModal() { 

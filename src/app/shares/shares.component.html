@@ -73,12 +73,16 @@
           loading shared resources...
       </div>       
       <ng-template #sharesLoaded>
-      <span><a routerLink="/">Home</a> > {{resource.title}} > People</span>
-      <hr>      
+<!--      <span><a routerLink="/">Home</a> > {{resource.title}} > People</span>-->
+      <h1>{{resource.title}} 
+          <button type="button" class="btn btn-primary float-right"
+          (click)="onViewBookings(i, resource)">Bookings</button>
+          </h1>        
+          <hr>      
       <div *ngIf="message" class="alert alert-danger" role="alert">
           {{ message }}
       </div>                        
-      <h1>People that can book in {{resource.title}}</h1>        
+      <h2>People sharing {{resource.title}}</h2>        
       <button id="add-share" type="button" class="btn btn-primary" 
         (click)="onAddObject()">Add Person</button>
       <ul class="list-group">

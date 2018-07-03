@@ -61,12 +61,6 @@ export class ResourcesComponent implements OnInit {
     this.router.navigate(['/bookings/' + resourceid + '/' + ownerid]);
   }
 
-
-  onShareResource(index: number, resource: Resource) {
-    console.log('onShareResource resource id ' + resource.id);
-    this.router.navigate(['/shares/' + resource.id]);
-  }
-
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log('form submitted title is ' + value.title);

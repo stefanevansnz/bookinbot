@@ -90,8 +90,15 @@
       loading ...
     </div>       
     <ng-template #heading>
+      <h1>{{resource.title}} 
+      <button type="button" class="btn btn-primary float-right"
+      (click)="onShareResource(i, resource)" >People</button>
+      </h1>        
+      <hr>
+      <!--
       <span><a routerLink="/">Home</a> > {{resource.title}} > Bookings</span>
       <hr>
+      -->
     </ng-template>       
 
     <div id='calendar'></div>      
