@@ -8,20 +8,16 @@
       </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul *ngIf="isLoggedIn();else other_content" class="navbar-nav mr-auto">          
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{fullName}}</a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a routerLink="/settings" href="#" class="dropdown-item">Settings</a>
-              <div class="dropdown-divider"></div>
-              <a routerLink="/signout" href="#" class="dropdown-item">Logout</a>
-          </div>          
+
+        <li class="nav-item">
+            {{fullName}} (<a routerLink="/signout" href="#">logout</a>)
         </li>           
+
       </ul>
 
       <ng-template #other_content>
       <ul class="navbar-nav">  
-          <li><a routerLink="/signin" href="#">Sign In</a></li> |
-          <li><a routerLink="/signup/new" href="#">Register</a></li>
+          <li><a routerLink="/signin" href="#">Sign In</a> | <a routerLink="/signup/new" href="#">Register</a></li>
         </ul>
       </ng-template>
     </div>
