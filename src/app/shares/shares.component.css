@@ -13,6 +13,9 @@ hr {
     margin-bottom: 0.5em;
 }
 
+.list-group-item p {
+    margin-bottom: 0em;
+}
 
 
 button.edit {

@@ -10,14 +10,17 @@
         <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
           <div class="modal-body">
 
-            <div class="form-group">
+            <div class="form-group" *ngIf="!editMode">
                 <label for="email">Search for email address:</label>
                 <div class="input-group">              
                   <input (keydown)="keyDownFunction($event)" 
                   required email type="email" id="email" name="email" ngModel class="form-control">              
                 </div>                          
             </div>   
-            
+            <div class="form-group" *ngIf="editMode">
+              <p>Edit email address</p>
+            </div>  
+
             <div *ngIf="searching">
                 searching ...
             </div>       
@@ -48,7 +51,15 @@
               type="submit"
               *ngIf="!editMode" 
               [disabled]="!f.valid">
-              {{ searchMode ? 'Search' : 'Add' }}</button>   
+              {{ searchMode ? 'Search' : 'Add' }}</button>
+
+            <button *ngIf="editMode"
+              class="edit-share btn btn-success float-right edit" 
+              (click)="onReSendObject()"         
+              type="submit" >
+              Resend
+              </button>  
+    
             <button 
               id="delete-share"             
               class="btn btn-danger" 
@@ -96,16 +107,10 @@
           Edit
           </button>   
           
-          <button *ngIf="share.status == 'INVITE SENT' " 
-          class="edit-share btn btn-success float-right edit" 
-          (click)="onReSendObject(i, share)"         
-          type="submit" >
-          Resend
-          </button>  
-
-          {{ share.username }} {{ share.email }}
-          <span *ngIf="share.status == 'INVITE SENT' " class="badge badge-warning">{{ share.status }}</span>
-          <span *ngIf="share.status == 'SIGN UP COMPLETED' " class="badge badge-success">{{ share.status }}</span>
+          <p *ngIf="share.username">{{ share.username }}</p>
+          <p *ngIf="share.email">{{ share.email }}</p>
+          <p *ngIf="share.status == 'INVITE SENT' " class="badge badge-warning">{{ share.status }}</p>
+          <p *ngIf="share.status == 'SIGN UP COMPLETED' " class="badge badge-success">{{ share.status }}</p>
         
         </li>
       </ul>
