@@ -4,65 +4,79 @@ import { DataAccessObject } from "./data.access.object";
 
 export class RequestValidator {
 
-    resources(response: ResponseBuilder, dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) { 
-        console.log('RequestValidator resources');
-        callback();
-    }
-
-    resource(response: ResponseBuilder, dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) { 
-        console.log('RequestValidator resource');
-        callback();
-    }
-
-
-    bookings(response: ResponseBuilder, dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) { 
-        console.log('RequestValidator bookings path ' + eventHolder.path );
-
-        if (eventHolder.method == 'POST') {
-            console.log('Validating Booking Post');
-            let validationResponse = new ResponseBuilder();
-            // do a check before posting
-            console.log('eventHolder ' + JSON.stringify(eventHolder));
-            let object = eventHolder.object;        
-      
-            console.log('start is ' + object.start);  
-            console.log('end is ' + object.end);                
-            // get all shares for that resource
-            eventHolder.method = 'GET';
-            eventHolder.id = eventHolder.object.resourceid;
-            dataAccessObject.bookings(validationResponse, eventHolder, function() { 
-        
+    checkIfAccessAllowedToResource(dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) {
+        // is this user allowed access to this resource?
+        console.log('Check ResourceAccessAllowed');
+        //console.log('Resource Path is ' + eventHolder.path);
+        let resourceId = eventHolder.id;
+        let validationResponse = new ResponseBuilder();
+        let resourceAccessAllowed = false;
+        //eventHolder.id = null;
+  
+        // get all shares for this user
+        console.log('Get resource for this user');
+        dataAccessObject.resources(validationResponse, eventHolder, function() { 
+            if (validationResponse.resultSet.length > 0) {                    
+                console.log('Resource is owned by this user');
+                callback(true);
+                return;
+            }   
+            console.log('Get all shares for this user');
+            dataAccessObject.shares(validationResponse, eventHolder, function() { 
                 // build response
-                console.log('validating if booking already exists for this start ' + object.start + ' and end ' + object.end);
-                let bookingsForResource = validationResponse.resultSet;
-                let bookingsExists = false;
-                let lastBookingUserName = '';
-                bookingsForResource.forEach(booking => {
-                    console.log('booking id ' + booking.id + 
-                                ' start ' + booking.start + 
-                                ' end ' + booking.end +
-                                ' user ' + booking.username);
-                    // check if already booked
-                    if ((object.start >= booking.start && object.start <= booking.start) ||
-                        (object.end >= booking.start && object.end <= booking.end)) {
-                        console.log('bookings exist!');
-                        bookingsExists = true;
-                        lastBookingUserName = booking.username;
+                //console.log('validating if resource id ' + resourceId + ' is shared with current user ' + eventHolder.userSessionId);
+                let sharesForResource = validationResponse.resultSet;
+                //console.log('shareSearch is ' + JSON.stringify( validationResponse) );
+                sharesForResource.forEach(share => {
+                    console.log('User ' + share.ownerid + ' is sharing ' + share.resourceid +  ' with current user ' +  eventHolder.userSessionId);
+                    if (share.resourceid == resourceId) {
+                        resourceAccessAllowed = true;                    
                     }
                 });
-                if (bookingsExists) {
-                    response.errorMessage = 
-                    'This resource is already booked between ' + 
-                    object.start + ' and ' + object.end +
-                    ' by ' + lastBookingUserName;  
-                }
-    
-                eventHolder.method = 'POST';
-                callback();
+                console.log('ResourceAccessAllowed is ' + resourceAccessAllowed);
+                callback(resourceAccessAllowed);
             })    
-        } else {                
-            callback();
-        }
+
+        });
+
+    }
+
+
+    checkIfBookingExists(dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) { 
+        console.log('RequestValidator bookings path ' + eventHolder.path );
+        let bookingsExists = false;
+        console.log('Validating Booking Post');
+        let validationResponse = new ResponseBuilder();
+        // do a check before posting
+        console.log('eventHolder ' + JSON.stringify(eventHolder));
+        let object = eventHolder.object;        
+    
+        console.log('start is ' + object.start);  
+        console.log('end is ' + object.end);                
+        // get all shares for that resource
+        eventHolder.id = eventHolder.object.resourceid;
+        eventHolder.method = 'GET';
+        dataAccessObject.bookings(validationResponse, eventHolder, function() {         
+            // build response
+            console.log('validating if booking already exists for this start ' + object.start + ' and end ' + object.end);
+            let bookingsForResource = validationResponse.resultSet;
+            let lastBookingUserName = '';
+            bookingsForResource.forEach(booking => {
+                console.log('booking id ' + booking.id + 
+                            ' start ' + booking.start + 
+                            ' end ' + booking.end +
+                            ' user ' + booking.username);
+                // check if already booked
+                if ((object.start >= booking.start && object.start <= booking.start) ||
+                    (object.end >= booking.start && object.end <= booking.end)) {
+                    console.log('bookings exist!');
+                    bookingsExists = true;
+                    lastBookingUserName = booking.username;
+                }
+            });
+
+            callback(bookingsExists);
+        });    
         
     }
 

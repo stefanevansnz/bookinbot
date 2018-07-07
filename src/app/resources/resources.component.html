@@ -102,14 +102,14 @@
           loading available resources...
       </div>       
       <ng-template #sharesLoaded>
-        <h1>Available Resources</h1>
+        <h1>Resources shared with you</h1>
         <ul class="list-group">
         <li class="list-group-item"        
           *ngFor="let share of shares; let i = index">          
           {{ share.ownername }} is sharing {{ share.resourcetitle }}
           <button 
           class="view-resource btn btn-success float-right edit" 
-          (click)="onViewShareBookings(i, share.ownerid, share.resourceid)"         
+          (click)="onViewShareBookings(i, share.resourceid)"         
           type="submit" >
           View Bookings</button>             
         </li>

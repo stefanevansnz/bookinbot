@@ -52,7 +52,7 @@ export class ResponseBuilder {
             let statusCode = 200;
             message = {};
         } else {
-            console.log('result is ' + JSON.stringify(this.resultSet) );  
+            //console.log('result is ' + JSON.stringify(this.resultSet) );  
             let statusCode = 200;
             message = this.resultSet;
         }              
@@ -65,7 +65,7 @@ export class ResponseBuilder {
           },
           body: JSON.stringify(message) 
         };         
-        console.log('response is ' + JSON.stringify(response))
+        //console.log('response is ' + JSON.stringify(response))
         callback(response);     
     };           
 

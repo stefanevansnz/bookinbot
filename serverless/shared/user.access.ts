@@ -192,31 +192,6 @@ export class UserAccess {
         } 
         callback();
 
-
-/*
-        if (path == 'sharessearch' && method == 'GET') {
-            console.log('get to sharessearch');
-            let email = id;
-            console.log('email is ' + email);    
-            this.searchUser(caller, email, callback);
-        } else if (path == 'sharesresend' && method == 'GET') {
-            console.log('get to sharesresend');
-            let email = id;
-            console.log('email is ' + email);    
-            this.resendUserEmail(caller, email, callback);
-        } else if (path == 'shares' && method == 'POST') {
-            let object = JSON.parse(body);
-            console.log('post to shared body is ' + JSON.stringify(object));
-            if (object.userid == null) {
-                // no user so add first.
-                this.addUser(caller, object.email, callback);
-            } else {
-                callback();
-            }
-        } else {
-            callback();
-        }
-*/
     }
     
 }

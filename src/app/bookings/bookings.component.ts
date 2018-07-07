@@ -132,6 +132,10 @@ export class BookingsComponent implements OnInit {
               end: end.unix(),
 
             },
+            error: function(doc) {
+              console.log('error ' + JSON.stringify(doc)); 
+              return;             
+            },
             success: function(doc) {
               var events = [];
               console.log('Loading events...');

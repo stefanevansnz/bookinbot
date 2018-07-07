@@ -12,13 +12,8 @@ export class DataAccessObject {
         this.prefix = 'bookinbot';
     }
 
-    resource(response, eventHolder: EventHolder, callback) {   
-        this.resources(response, eventHolder, callback);
-    }
 
     resources(response, eventHolder: EventHolder, callback) {   
-        //let databaseParameters = new DatabaseParameters();
-        console.log('DataAccessObject resources');
 
         let parameters: Parameter[] = [];        
         if (eventHolder.method == 'DELETE') {
@@ -39,7 +34,7 @@ export class DataAccessObject {
 
     bookings(response, eventHolder: EventHolder, callback) {   
         //let databaseParameters = new DatabaseParameters();
-        console.log('DataAccessObject bookings');
+        console.log('DataAccessObject bookings eventHolder.id is ' + eventHolder.id);
         
         let parameters: Parameter[] = [];        
         if (eventHolder.method == 'DELETE') {
@@ -62,7 +57,7 @@ export class DataAccessObject {
     }
 
     shares(response, eventHolder: EventHolder, callback) { 
-        console.log('DataAccessObject shares');
+        console.log('DataAccessObject shares id is ' + eventHolder.id);
 
         let parameters: Parameter[] = [];   
         let resourceId = eventHolder.id;

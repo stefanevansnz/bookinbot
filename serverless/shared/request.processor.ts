@@ -4,6 +4,10 @@ import { DataAccessObject } from './data.access.object';
 import { ResponseBuilder } from './response.builder';
 import { UserAccess } from './user.access';
 import { RequestValidator } from './request.validator';
+import { ResourceCommand } from '../resources/resource.command';
+import { ResourcesCommand } from '../resources/resources.command';
+import { BookingsCommand } from '../bookings/bookings.command';
+import { SharesCommand } from '../shares/shares.command';
 
 export class RequestProcessor {
 
@@ -29,30 +33,34 @@ export class RequestProcessor {
         this.requestValidator = requestValidator;
     }  
 
+    chooseClass(path) {
+        switch (path) {
+            case 'resource':
+                return new ResourceCommand(this.requestValidator, this.dataAccessObject);
+            case 'resources':
+                return new ResourcesCommand(this.requestValidator, this.dataAccessObject);
+            case 'bookings':
+                return new BookingsCommand(this.requestValidator, this.dataAccessObject);
+            case 'shares':
+                return new SharesCommand(this.requestValidator, this.dataAccessObject, this.userAccess);
+            case 'sharessearch':
+                return new SharesCommand(this.requestValidator, this.dataAccessObject, this.userAccess);
+
+            default:
+                throw new Error('path not found for ' + path); 
+        }
+    }
+
     processRequest(event, callback) {
         console.log('process request');     
         let self = this;
         let eventHolder = self.requestExtractor.buildEventHolder(event);
 
-        let method = eventHolder.path;
-
-        // apply validation checks    
-        console.log('1. Validate');        
-        self.requestValidator[method](self.responseBuilder, self.dataAccessObject, eventHolder, function() {
-        if (self.responseBuilder.errorMessage != null) {
+        let command = this.chooseClass(eventHolder.path);
+        command.execute(self.responseBuilder, eventHolder, function() {
             self.buildResponse(self.responseBuilder, callback);
-            return;
-        }
-        // apply user updates
-        console.log('2. User Admin Access');        
-        self.userAccess[method](self.responseBuilder, eventHolder, function() {
-        // execute data command
-        console.log('3. Database Access');        
-        self.dataAccessObject[method](self.responseBuilder, eventHolder, function() {
-        // build response
-        console.log('4. Response Builder');
-        self.buildResponse(self.responseBuilder, callback);
-        })})});
+        });
+
     }
 
     buildResponse(responseBuilder: ResponseBuilder, callback) {

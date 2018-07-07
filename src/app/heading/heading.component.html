@@ -10,7 +10,7 @@
       <ul *ngIf="isLoggedIn();else other_content" class="navbar-nav mr-auto">          
 
         <li class="nav-item">
-            {{fullName}} (<a routerLink="/signout" href="#">logout</a>)
+            {{fullName}} (<a routerLink="/signout" href="#">logout</a>) ({{userId}})
         </li>           
 
       </ul>

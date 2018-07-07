@@ -30,12 +30,12 @@ export class DynamoDb {
             if (param.value != undefined) {
                 keyConditionExpression += param.name + ' = :' + param.name;
                 expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
-                console.log('param name is ' + param.name + ' - ' + param.value );    
+                //console.log('param name is ' + param.name + ' - ' + param.value );    
             } 
         });
         
-        console.log('keyConditionExpression ' + keyConditionExpression);
-        console.log('expressionAttributeValues ' + expressionAttributeValues);
+        //console.log('keyConditionExpression ' + keyConditionExpression);
+        //console.log('expressionAttributeValues ' + expressionAttributeValues);
 
         let params = {
             TableName: tableName,
@@ -49,11 +49,11 @@ export class DynamoDb {
             ScanIndexForward: false 
         } 
 
-        console.log('running DB query params: ' + JSON.stringify(params));
+        console.log('Running DB query params: ' + JSON.stringify(params));
 
         this.dynamoDb.query(params, (error, result) => {
-            console.log('result is ' + JSON.stringify(result));
-            console.log('error is ' + JSON.stringify(error));                
+            console.log('Result is ' + JSON.stringify(result));
+            console.log('Error is ' + JSON.stringify(error));                
             if (result.Items) {
                 result = result.Items;
             }
@@ -72,7 +72,7 @@ export class DynamoDb {
         let expressionAttributeValues = '';
         let expressionCount = 1;
         parameters.forEach((param) => {
-            console.log('param name is ' + param.name + ' - ' + param.value );
+            //console.log('param name is ' + param.name + ' - ' + param.value );
             if (param.value != undefined) {
                 keyConditionExpression += '#' + param.name + ' = :' + param.name;
                 expressionAttributeNames += '"#' + param.name + '" : "' + param.name + '"';
@@ -99,11 +99,11 @@ export class DynamoDb {
                 JSON.parse('{' + expressionAttributeValues + '}')                
         } 
 
-        console.log('running DB query params: ' + JSON.stringify(params));
+        console.log('Running DB query params: ' + JSON.stringify(params));
 
         this.dynamoDb.query(params, (error, result) => {
-            console.log('query result is ' + JSON.stringify(result));
-            console.log('query error is ' + JSON.stringify(error));                
+            console.log('Result is ' + JSON.stringify(result));
+            console.log('Error is ' + JSON.stringify(error));                
             if (result.Items) {
                 result = result.Items;
             }

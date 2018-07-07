@@ -15,18 +15,21 @@ export class HeadingComponent implements OnInit {
   
   fullName: string;
 
+  userId: string;
+
   constructor(              
     private router: Router,
     private route: ActivatedRoute,
     private authenticationService: AuthenticationService ) {
   }
 
-  private setFullName( user: User ) {
+  private setUser( user: User ) {
     if (user != null) {
       this.fullName = user.firstname + ' ' + user.lastname;
     } else {
       this.fullName = '';
     }
+    this.userId = user.id;
   }
 
   isLoggedIn() {
@@ -42,12 +45,12 @@ export class HeadingComponent implements OnInit {
     this.userUpdate = this.authenticationService.getloadedUser()
     .subscribe(
         (user: User) => {
-          self.setFullName(user);
+          self.setUser(user);
         }
     );   
 
     var user = this.authenticationService.getUser();
-    self.setFullName(user);
+    self.setUser(user);
 
   }
 

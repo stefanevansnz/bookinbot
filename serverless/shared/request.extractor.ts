@@ -5,13 +5,6 @@ export class RequestExtractor {
     buildEventHolder(event) {
 
 
-/*        console.log('body is ' + body);
-        if (event.body != null) {
-            let object = JSON.parse(body);
-            object.ownerid = username;
-            return object;    
-        }         
-*/
         let eventHolder = new EventHolder();
 
         // set user session id
@@ -21,7 +14,7 @@ export class RequestExtractor {
             //console.log('found authorizer.claims');
             userSessionId = authorizer.claims.sub;
         }     
-        console.log('userSessionId is ' + userSessionId);          
+       // console.log('userSessionId is ' + userSessionId);          
         eventHolder.userSessionId = userSessionId;
 
         // set object for update with ownerid
@@ -34,18 +27,19 @@ export class RequestExtractor {
         eventHolder.method = event.httpMethod;
 
         eventHolder.path = event.path.split("/")[1];
-        console.log('eventHolder.path is ' +  eventHolder.path);          
+       // console.log('eventHolder.path is ' +  eventHolder.path);          
         if (eventHolder.path == 'sharessearch') {
             eventHolder.id = event.path.split("/")[2];
             eventHolder.email = event.path.split("/")[3];   
-            console.log('eventHolder.id is ' +  eventHolder.id);          
-            console.log('eventHolder.email is ' +  eventHolder.email);          
+            //console.log('eventHolder.id is ' +  eventHolder.id);          
+            //console.log('eventHolder.email is ' +  eventHolder.email);          
         } else {
             eventHolder.id = event.path.split("/")[2];
             eventHolder.ownerId = event.path.split("/")[3];    
-            console.log('eventHolder.id is ' +  eventHolder.id);          
-            console.log('eventHolder.ownerId is ' +  eventHolder.ownerId);          
+            //console.log('eventHolder.id is ' +  eventHolder.id);          
+            //console.log('eventHolder.ownerId is ' +  eventHolder.ownerId);          
         }
+        console.log('eventHolder.id is ' +  eventHolder.id);          
 
         return eventHolder;
     }

@@ -55,10 +55,10 @@ export class ResourcesComponent implements OnInit {
     console.log('onViewBookings resource id ' + resource.id);
     this.router.navigate(['/bookings/' + resource.id]);
   }
-  
-  onViewShareBookings(index: number, ownerid: string, resourceid: string) {
-    console.log('onViewBookings ownerid ' + ownerid + 'resource id ' + resourceid);
-    this.router.navigate(['/bookings/' + resourceid + '/' + ownerid]);
+
+  onViewShareBookings(index: number, resourceid: string) {
+    console.log('onViewBookings resource id ' + resourceid);
+    this.router.navigate(['/bookings/' + resourceid]);
   }
 
   onSubmit(form: NgForm) {
