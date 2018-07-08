@@ -8,4 +8,5 @@ export class EventHolder {
     email: string;
     resourceId: string;    
     userSessionId: string;
+    queryStringParameters: any;
 }

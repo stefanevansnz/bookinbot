@@ -85,11 +85,6 @@ export class DynamoDb {
                 expressionCount++;
             }
         });
-/*
-        console.log('keyConditionExpression is ' + keyConditionExpression);
-        console.log('expressionAttributeNames is ' + expressionAttributeNames);
-        console.log('expressionAttributeValues is ' + expressionAttributeValues);
-*/
         let params = {
             TableName: tableName,
             KeyConditionExpression: keyConditionExpression,

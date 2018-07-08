@@ -9,13 +9,18 @@ export class RequestExtractor {
 
         // set user session id
         let authorizer = event.requestContext.authorizer;
+
+
         let userSessionId = null;
         if (authorizer.claims != null) {
             //console.log('found authorizer.claims');
             userSessionId = authorizer.claims.sub;
         }     
-       // console.log('userSessionId is ' + userSessionId);          
+        // console.log('userSessionId is ' + userSessionId);          
         eventHolder.userSessionId = userSessionId;
+
+        // get query parameters
+        eventHolder.queryStringParameters = event.queryStringParameters;
 
         // set object for update with ownerid
         eventHolder.body = event.body;
