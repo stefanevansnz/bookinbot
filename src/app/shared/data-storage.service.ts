@@ -117,6 +117,7 @@ export class DataStorageService {
               (success: Response) => {   
                 component.loading = false;                     
                 newObject.id = success.json().id;  
+                console.log('newObject.id is ' + newObject.id);
                 if (component.editMode) {
                     console.log('set object on ' + component[name] + ' at ' + component.editIndex);
                     component[componentObjectList][component.editIndex] = newObject;

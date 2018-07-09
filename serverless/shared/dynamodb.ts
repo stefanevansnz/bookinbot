@@ -121,8 +121,8 @@ export class DynamoDb {
         }    
         console.log('putInTable is ' + JSON.stringify(params));         
         this.dynamoDb.put(params, (error, result) => {
-            console.log('putInTable result is ' + JSON.stringify(result));                     
-            result.id = object.id;
+            response.resultSet  = { 'id' : object.id };
+            console.log('putInTable result is ' + JSON.stringify(response));                     
             callback();
         });      
     }
