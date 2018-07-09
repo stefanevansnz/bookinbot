@@ -26,10 +26,12 @@ export class HeadingComponent implements OnInit {
   private setUser( user: User ) {
     if (user != null) {
       this.fullName = user.firstname + ' ' + user.lastname;
+      this.userId = user.id;
     } else {
       this.fullName = '';
+      this.userId = null;
     }
-    this.userId = user.id;
+
   }
 
   isLoggedIn() {

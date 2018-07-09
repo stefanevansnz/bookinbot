@@ -21,6 +21,7 @@ export class ResourcesComponent implements OnInit {
 
   message;
   resourcesLoading = true;
+  sharesLoading = true;
   editMode = false;
   resources: Resource[] = [];
   editResource: Resource;

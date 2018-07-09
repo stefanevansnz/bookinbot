@@ -102,12 +102,12 @@ export class AuthenticationService {
                   if (result) {
                     console.log("Authenticated to Cognito User Pools! result is " + result);
                     let token = result.getAccessToken().getJwtToken(); 
-                    console.log('access token is ' + token);                    
+                    //console.log('access token is ' + token);                    
                     //let idToken = result.idToken.jwtToken;
                     let idToken = result.getIdToken().getJwtToken();
-                    console.log('idToken is ' + idToken);
+                    //console.log('idToken is ' + idToken);
                     let refreshToken = result.getRefreshToken().getToken()
-                    console.log('refreshToken is ' + refreshToken);
+                    //console.log('refreshToken is ' + refreshToken);
 
                     cognitoGetUser.getUserAttributes(function (err, result) {
                         if (err) {

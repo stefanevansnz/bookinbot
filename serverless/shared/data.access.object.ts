@@ -84,7 +84,7 @@ export class DataAccessObject {
             // only use index for searching all resources a user has access.
             // hash is userid and range is resources      
             let indexName = 'shares_user_resources';
-            let indexFields = 'ownerid, ownername, email, resourceid, resourcetitle, id';            
+            let indexFields = 'ownername, resourceid, resourcetitle';            
             this.db.getIndex(response, tableName, indexName, parameters, indexFields, callback);                    
         } else {
             // use table
