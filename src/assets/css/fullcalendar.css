@@ -803,7 +803,7 @@ NOTE: use percentage font sizes or else old IE chokes
 
 .fc-toolbar .fc-left {
   float: left; 
-  width: 265px}
+}
 
 .fc-toolbar .fc-next-button {
   float: right !important;
@@ -819,6 +819,8 @@ NOTE: use percentage font sizes or else old IE chokes
 .fc .fc-toolbar > * > * {
   /* extra precedence to override button border margins */
   float: left;
+  margin-left: 3px;
+  margin-right: 3px;  
  }  
 
 /* the first thing within each left/center/right section */
@@ -829,8 +831,7 @@ NOTE: use percentage font sizes or else old IE chokes
 /* title text */
 .fc-toolbar h2 {
   font-size: 1.5em; 
-  text-align: center;
-  width: 200px}
+  text-align: center;}
 
 /* button layering (for border precedence) */
 .fc-toolbar button {

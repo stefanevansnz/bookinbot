@@ -21,6 +21,7 @@ const appRoutes: Routes = [
     { path: 'signout', component: SignoutComponent, canActivate: [AuthenticationGuard] },    
     { path: '', component: SplashComponent },        
     { path: 'signup/:status/:id', component: SignupComponent },
+    { path: 'signup/:status', component: SignupComponent },
     { path: 'signin', component: SigninComponent },    
     { path: '**', component: PageNotFoundComponent}    
 ];

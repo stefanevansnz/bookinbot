@@ -11,6 +11,7 @@ Resources:
       SubjectAlternativeNames: 
       - !Sub 'www.${DomainName}'
       - !Sub 'api.${DomainName}'
+      - !Sub 'register.${DomainName}'
       DomainValidationOptions:
       - DomainName: !Sub '${DomainName}'
         ValidationDomain: !Sub '${DomainName}'

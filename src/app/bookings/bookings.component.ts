@@ -93,10 +93,10 @@ export class BookingsComponent implements OnInit {
       jQuery("#calendar").fullCalendar({           
         themeSystem: 'bootstrap4',
         header: {
-          left: 'prev title next',
+          left: 'title',
           center: '',
           //right: 'month,agendaWeek,agendaDay '
-          right: 'today'
+          right: 'prev today next'
         },
         nowIndicator: true,
         height: 540,
