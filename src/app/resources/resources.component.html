@@ -56,7 +56,7 @@
   <div id="resources" class="col-md-12">
 
       <div *ngIf="resourcesLoading; else resourcesLoaded">
-          loading your resources ...
+      Loading...
       </div>       
       <ng-template #resourcesLoaded>
 <!--        
@@ -79,14 +79,6 @@
           type="submit" >
           Edit</button>    
 
-          <!--
-          <button 
-          class="share-resource btn btn-success float-right edit" 
-          (click)="onShareResource(i, resource)"         
-          type="submit" >
-          People</button>            
--->
-
           <button 
           class="view-resource btn btn-success float-right edit" 
           (click)="onViewBookings(i, resource)"         
@@ -99,7 +91,7 @@
       </ng-template>  
 
       <div *ngIf="sharesLoading; else sharesLoaded">
-          loading available resources...
+      Loading...
       </div>       
       <ng-template #sharesLoaded>
         <h1>Resources shared with you</h1>

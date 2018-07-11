@@ -87,7 +87,7 @@
   <div class="col-md-12">
 
     <div *ngIf="resourceLoading; else heading">
-      loading ...
+    Loading...
     </div>       
     <ng-template #heading>
       <h1>{{resource.title}} 
@@ -95,26 +95,10 @@
       (click)="onShareResource(i, resource)" >People</button>
       </h1>        
       <hr>
-      <!--
-      <span><a routerLink="/">Home</a> > {{resource.title}} > Bookings</span>
-      <hr>
-      -->
     </ng-template>       
 
     <div id='calendar'></div>      
 
-    <!--
-      <ul class="list-group">
-        <li id="resource-list" class="list-group-item" 
-          style="cursor: pointer"
-          *ngFor="let booking of bookings; let i = index">
-            <a 
-            (click)="onViewBookings(i, booking)"
-            >{{ booking.username }} - {{ booking.start }} - {{ booking.end }}
-            </a>            
-        </li>
-      </ul>
-     -->
   </div>
 
 

@@ -64,15 +64,19 @@ provider:
     COGNITO_USER_POOL_ID: ${self:custom.userpoolid}       
               
 functions:
-  resources:
+  process:
       handler: handler.execute
-      events: ${file(resources/resources.yml):events} 
-  bookings:
-      handler: handler.execute
-      events: ${file(bookings/bookings.yml):events} 
-  shares:
-      handler: handler.execute
-      events: ${file(shares/shares.yml):events} 
+      events: ${file(events.yml):events} 
+ 
+ # resources:
+ #     handler: handler.execute
+ #     events: ${file(resources/resources.yml):events} 
+ # bookings:
+ #     handler: handler.execute
+ #     events: ${file(bookings/bookings.yml):events} 
+ # shares:
+ #     handler: handler.execute
+ #     events: ${file(shares/shares.yml):events} 
 
 resources:
   Resources:

@@ -85,7 +85,7 @@ export class BookingsComponent implements OnInit {
     console.log('loading booking objects...');
 
     self.dataStorageService.addAuthorization(function(headers) {
-    let authHeader = { Authorization: headers.get('Authorization')};
+      let authHeader = { Authorization: headers.get('Authorization')};
     
 
 //    console.log('headers ' + JSON.stringify(authHeader));
@@ -121,53 +121,58 @@ export class BookingsComponent implements OnInit {
           
         },           
         events: function(start, end, timezone, callback) {            
+          self.dataStorageService.addAuthorization(function(headers) {
+            let authHeader = { Authorization: headers.get('Authorization')};
 
-          jQuery.ajax({
-            url: environment.api + '/bookings/' + self.resourceId,
-            headers: authHeader,
-            dataType: 'json',
-            data: {
-              // our hypothetical feed requires UNIX timestamps
-              start: start.unix(),
-              end: end.unix(),
+            jQuery.ajax({
+              url: environment.api + '/bookings/' + self.resourceId,
+              headers: authHeader,
+              dataType: 'json',
+              data: {
+                // our hypothetical feed requires UNIX timestamps
+                start: start.unix(),
+                end: end.unix(),
 
-            },
-            error: function(doc) {
-              console.log('error ' + JSON.stringify(doc)); 
-              return;             
-            },
-            success: function(doc) {
-              var events = [];
-              console.log('Loading events...');
-              var index = 0;  
-              doc.forEach( function (item) {
+              },
+              error: function(doc) {
+                console.log('error ' + JSON.stringify(doc)); 
+                return;             
+              },
+              success: function(doc) {
+                var events = [];
+                console.log('Loading events...');
+                var index = 0;  
+                doc.forEach( function (item) {
 
-                var startItem = moment(item.start, self.timeFormat);
-                var endItem = moment(item.end, self.timeFormat);
+                  var startItem = moment(item.start, self.timeFormat);
+                  var endItem = moment(item.end, self.timeFormat);
 
-                // need to load into an object when component created                        
-                var colour = self.bookingsColourPickerService.pickBookingColour(item.username);
-                  
-                console.log('PUSH startItem ' + startItem + ', item.username ' + item.username);
-                // calendar events
-                events.push({
-                  index: index,
-                  id: item.id,
-                  title: item.username,
-                  start: startItem,
-                  end: endItem, 
-                  color: colour                                          
+                  // need to load into an object when component created                        
+                  var colour = self.bookingsColourPickerService.pickBookingColour(item.username);
+                    
+                  console.log('PUSH startItem ' + startItem + ', item.username ' + item.username);
+                  // calendar events
+                  events.push({
+                    index: index,
+                    id: item.id,
+                    title: item.username,
+                    start: startItem,
+                    end: endItem, 
+                    color: colour                                          
+                  });
+                  //console.log('push bookings');
+                  //self.bookings.push(new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
+                  index++;
                 });
-                //console.log('push bookings');
-                //self.bookings.push(new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
-                index++;
-              });
-              console.log('Loaded ' + index + ' event onto calendar');
-              // call back with all events
-              callback(events);                                          
-            }
+                console.log('Loaded ' + index + ' event onto calendar');
+                // call back with all events
+                callback(events);                                          
+              }
+            });
+
           });
         }
+        
       });
     });    
                     

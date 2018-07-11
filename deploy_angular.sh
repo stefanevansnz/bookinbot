@@ -1,5 +1,5 @@
 . ./settings.sh
-ng build --prod --aot
+ng build --prod --aot --output-hashing all 
 cd serverless
 serverless client deploy --stage prod
 cd ..
