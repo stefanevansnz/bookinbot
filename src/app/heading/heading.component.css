@@ -1,3 +1,7 @@
 .mr-auto {
     cursor: pointer;
 }
+
+nav.navbar a {
+    color: white;  
+}

@@ -1,4 +1,4 @@
-<nav class="navbar sticky-top  navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-dark bg-dark-gray sticky-top navbar-expand-lg navbar-secondary bg-secondary">
     <a class="navbar-brand" routerLink="/">
         <img src="/assets/icon/robot-design.png" width="30" height="30" class="d-inline-block align-top" alt="">
         BookInBot.com
@@ -9,8 +9,8 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul *ngIf="isLoggedIn();else other_content" class="navbar-nav mr-auto">          
 
-        <li class="nav-item">
-            {{fullName}} (<a routerLink="/signout" href="#">logout</a>) ({{userId}})
+        <li class="nav-item" style="color:rgba(255, 255, 255, 0.664)">
+            {{fullName}} (<a routerLink="/signout" href="#">logout</a>)
         </li>           
 
       </ul>
