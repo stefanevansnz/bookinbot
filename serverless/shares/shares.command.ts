@@ -23,6 +23,10 @@ export class SharesCommand {
         switch (path) {
             case 'shares':
                 //eventHolder.id = null;
+
+
+                // USER ACCESS shares
+
                 self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
                     callback();
                 });
