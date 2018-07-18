@@ -123,10 +123,11 @@ export class UserAccess {
             UserPoolId: COGNITO_USER_POOL_ID
         }, 
             function(err, data) {
+            let userid = null;
             if (err == null) {
                 console.log('adminCreateUser successful' + JSON.stringify(data)); 
                 // set new user id
-                let userid = data.User.Username; 
+                userid = data.User.Username; 
                 console.log('user id returned is ' + userid);   
             } else {
                 //res.status(err.statusCode).json({ error: String(err) });
@@ -134,7 +135,7 @@ export class UserAccess {
                 console.log('error ' + JSON.stringify(err));
                 response.errorMessage = 'Could not create user.';
             }
-            callback();
+            callback(userid);
         });            
 
     }  
@@ -185,12 +186,24 @@ export class UserAccess {
         let body = eventHolder.body;
 
         let object = JSON.parse(body);
-        console.log('object to shared body is ' + JSON.stringify(object));
-        if (method == 'POST' && object.userid == null) {
-            // no user so add first.
-            this.addUser(response, object.email, callback);
-        } 
-        callback();
+        console.log('object received in request is ' + JSON.stringify(object));
+        if (method == 'POST') {
+            let existingUserId = object.userid;
+            console.log('existingUserId is ' + existingUserId );
+            if (existingUserId == undefined || existingUserId == null ) {
+                console.log('no userid passed in from request');
+                // no user so add first.
+                this.addUser(response, object.email, function(userid) {
+                    console.log('Result from addUser is ' + userid);                
+                    callback(userid);
+                });
+            } else {
+                console.log('userid passed in from request is ' + existingUserId);
+                callback(existingUserId);
+            }                
+        } else {
+            callback();
+        }
 
     }
     

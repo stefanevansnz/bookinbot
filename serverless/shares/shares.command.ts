@@ -23,13 +23,18 @@ export class SharesCommand {
         switch (path) {
             case 'shares':
                 //eventHolder.id = null;
-
-
-                // USER ACCESS shares
-
-                self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
-                    callback();
-                });
+                // call user access first
+                self.userAccess.shares(responseBuilder, eventHolder, function(userid) {
+                    console.log('User created is with user id of ' + userid);
+                    if (eventHolder.method == 'POST') {
+                        // if adding share need the correct userid
+                        eventHolder.object.userid = userid;
+                    }
+                    // call data after that
+                    self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
+                        callback();
+                    });    
+                });                
                 break;
             case 'sharessearch':
                 eventHolder.id = eventHolder.resourceId;

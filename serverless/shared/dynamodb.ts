@@ -72,7 +72,7 @@ export class DynamoDb {
         let expressionAttributeValues = '';
         let expressionCount = 1;
         parameters.forEach((param) => {
-            //console.log('param name is ' + param.name + ' - ' + param.value );
+            console.log('Param name is ' + param.name + ' - ' + param.value );
             if (param.value != undefined) {
                 keyConditionExpression += '#' + param.name + ' = :' + param.name;
                 expressionAttributeNames += '"#' + param.name + '" : "' + param.name + '"';
@@ -109,7 +109,7 @@ export class DynamoDb {
 
     post(response: ResponseBuilder, tableName: string, parameters: Parameter[], object, callback) {
         console.log('DynamoDb POST');
-
+        
         // create in db
         if (object.id == null) {
             object.id = uuid();

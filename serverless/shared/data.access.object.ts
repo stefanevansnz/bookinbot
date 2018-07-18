@@ -71,6 +71,7 @@ export class DataAccessObject {
             if (resourceId == null) {
                 // no resourceId included so add username
                 parameters.push(new Parameter('userid', eventHolder.userSessionId));                    
+                console.log('userid parameter userid is now ' + eventHolder.userSessionId);
             }            
         } 
 
