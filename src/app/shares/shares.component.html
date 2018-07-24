@@ -84,7 +84,6 @@
           Loading...
       </div>       
       <ng-template #sharesLoaded>
-<!--      <span><a routerLink="/">Home</a> > {{resource.title}} > People</span>-->
       <h1>{{resource.title}} 
           <button type="button" class="btn btn-primary float-right"
           (click)="onViewBookings(i, resource)">Bookings</button>
@@ -105,13 +104,16 @@
           (click)="onEditObject(i, share)"         
           type="submit" >
           Edit
-          </button>   
+          </button> 
           
           <p *ngIf="share.username">{{ share.username }}</p>
           <p *ngIf="share.email">{{ share.email }}</p>
+          <p *ngIf="share.status">{{ share.status }}</p>          
+
+<!--
           <p *ngIf="share.status == 'INVITE SENT' " class="badge badge-warning">{{ share.status }}</p>
           <p *ngIf="share.status == 'SIGN UP COMPLETED' " class="badge badge-success">{{ share.status }}</p>
-        
+-->        
         </li>
       </ul>
       </ng-template>  

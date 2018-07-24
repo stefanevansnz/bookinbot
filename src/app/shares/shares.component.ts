@@ -51,22 +51,40 @@ export class SharesComponent implements OnInit {
           let id = params['id'];
           console.log('load resource resourceId = ' + id);
           this.resourceId = id;          
-          this.dataStorageService.getObjectFromServer('resource', this.resourceId, self, this.successfullLoad);                   
+          this.dataStorageService.getObjectFromServer('resource', this.resourceId, self, this.resourceLoaded);                   
         }
       );    
   }
 
-  successfullLoad(self) {
+  resourceLoaded(self) {
     console.log('load shares for resource resourceId = ' + self.resourceId);
-    self.dataStorageService.getObjectArrayFromServer('shares', self.resourceId, self, null);          
+    self.dataStorageService.getObjectArrayFromServer('shares', self.resourceId, self, self.sharesLoaded);
   }
-  
-/*
+
+  sharesLoaded(self) {
+    console.log('shares loaded');
+    self.shares.forEach(function(share) {
+      let subComponent = self;
+      subComponent.searchMode = true; 
+      self.dataStorageService.getSearchObjectArrayFromServer('sharessearch', 
+          self.resourceId, share.email, subComponent, function(resultComponent) {
+            let userStatus = resultComponent.editUser.status;            
+            if (userStatus == undefined) {
+              userStatus = 'USER STATUS IS UNKNOWN';
+            }
+            console.log('user ' + share.email + ' status is ' + userStatus);
+            share.status = userStatus;
+          });                   
+      });
+
+  }
+
+
   onViewBookings(index: number, share: Share) {
     console.log('onViewBookings share id ' + share.id);
     this.router.navigate(['/bookings/' + share.id]);
-  }
-*/
+  }  
+
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log('form submitted title is ' + value.email);
@@ -119,12 +137,10 @@ export class SharesComponent implements OnInit {
     jQuery("#editModal").modal("hide");
   }
 
-  onViewBookings(index: number, resource: Resource) {
-    console.log('onViewBookings resource id ' + resource.id);
-    this.router.navigate(['/bookings/' + resource.id]);
-  }
 
 
+
+  
   onEditObject(index: number, share: Share) {
     //console.log('onEditObject ' + index);
     this.errorMessage = '';

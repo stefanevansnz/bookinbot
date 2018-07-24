@@ -22,19 +22,24 @@ export class SharesCommand {
         console.log('SharesCommand ' + path);
         switch (path) {
             case 'shares':
-                //eventHolder.id = null;
-                // call user access first
-                self.userAccess.shares(responseBuilder, eventHolder, function(userid) {
-                    console.log('User created is with user id of ' + userid);
-                    if (eventHolder.method == 'POST') {
-                        // if adding share need the correct userid
+                if (eventHolder.method == 'POST') {
+                    // create user in cognito first
+                    self.userAccess.shares(responseBuilder, eventHolder, function(userid) {
+                        console.log('User created is with user id of ' + userid);
                         eventHolder.object.userid = userid;
-                    }
-                    // call data after that
+                        // load data into share table after that
+                        self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
+                            callback();
+                        });    
+                    });                
+                }                
+                if (eventHolder.method == 'GET' || eventHolder.method == 'DELETE') {
+                    // get shares from database first
                     self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
                         callback();
                     });    
-                });                
+                }                
+
                 break;
             case 'sharessearch':
                 eventHolder.id = eventHolder.resourceId;

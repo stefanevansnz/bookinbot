@@ -30,17 +30,26 @@ export class DataStorageService {
         this.getObjectsFromServer(false, name, id, undefined, component, postCallback);
     }
     
-    getSearchObjectArrayFromServer(name: string, resourcid: string, email: string, component: any, postCallback) {
-        this.getObjectsFromServer(false, name, resourcid, email, component, postCallback);
+    getSearchObjectArrayFromServer(name: string, resourceid: string, email: string, component: any, postCallback) {
+        this.getObjectsFromServer(false, name, resourceid, email, component, postCallback);
     }            
 
     getObjectArrayFromServer(name: string, id: string, component: any, postCallback) {
         this.getObjectsFromServer(true, name, id, undefined, component, postCallback);
     }
 
+
+
     private getObjectsFromServer(listRequired: boolean, name: string, param1: string, param2: string, component: any, postCallback) {
         let self = this;
         let loadingName = name + 'Loading';
+        let searchMode = component.searchMode;
+        console.log('searchMode is ' + searchMode);
+        console.log('calling ' + environment.api + '/' + 
+        name + 
+        (param1 != undefined ? '/' + param1 : '') +
+        (param2 != undefined ? '/' + param2 : ''));
+
         this.addAuthorization(function(headers) {
             self.http.get(environment.api + '/' + 
                 name + 
@@ -49,7 +58,7 @@ export class DataStorageService {
                 {headers: headers})            
             .subscribe(
               (success: Response) => {   
-                if (component.searchMode) {
+                if (searchMode) {
                     console.log('successful search mode result on ' + param1 + ' and ' + param2);
                     component.successMessage = success.json().message;
                     component.errorMessage = '';
@@ -57,8 +66,14 @@ export class DataStorageService {
                     component.editUser = success.json().user;
                     component.searching = false;
                     component.searchMode = false;
+
+                    if (postCallback != null ) {
+
+                        postCallback(component);
+                    }
+
                 } else {
-                    console.log('successful result');
+                    console.log('successful result on ' + param1 + ' and ' + param2);
                     component[loadingName] = false;                   
                     let result = success.json();
                     console.log('result is ' + JSON.stringify(result));                
