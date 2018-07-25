@@ -70,11 +70,13 @@ export class SharesComponent implements OnInit {
           self.resourceId, share.email, subComponent, function(resultComponent) {
             let userStatus = resultComponent.editUser.status;            
             if (userStatus == undefined) {
-              userStatus = 'USER STATUS IS UNKNOWN';
+              userStatus = 'UNKNOWN';
             }
             console.log('user ' + share.email + ' status is ' + userStatus);
             share.status = userStatus;
           });                   
+
+
       });
 
   }
@@ -113,8 +115,8 @@ export class SharesComponent implements OnInit {
       } else {
         console.log('cannot find editUser from search');
       }
-      let share = new Share(null, null, ownername, self.resourceId, self.resource.title, userid, username, email, status);      
-      this.dataStorageService.setObjectOnServer('shares', 'editShare', share, self);          
+      let share = new Share(null, null, ownername, self.resourceId, self.resource.title, userid, username, email);      
+      this.dataStorageService.setObjectOnServer('shares', 'editShare', share, self, this.sharesLoaded);          
     }
   
   }
@@ -161,7 +163,7 @@ export class SharesComponent implements OnInit {
     this.editShare = share;
     console.log('this.editShare.id is ' + this.editShare.id);
     console.log('this.editShare.email is ' + this.editShare.email);
-    this.dataStorageService.getObjectArrayFromServer('sharesresend', this.editShare.email, self, null);          
+    this.dataStorageService.getObjectArrayFromServer('sharesresend', this.editShare.email, self, null);       
   }  
 
   onDelete() {
@@ -171,7 +173,7 @@ export class SharesComponent implements OnInit {
 
     console.log('resource id is ' + this.resourceId);    
 
-    let share = new Share(this.editShare.id, userid, null, this.resourceId, null, null, '', '', '');    
+    let share = new Share(this.editShare.id, userid, null, this.resourceId, null, null, '', '');    
     console.log('share is ' + JSON.stringify(share));
     this.dataStorageService.deleteObjectsOnServer('shares', share, self);              
   }

@@ -108,7 +108,8 @@
           
           <p *ngIf="share.username">{{ share.username }}</p>
           <p *ngIf="share.email">{{ share.email }}</p>
-          <p *ngIf="share.status">{{ share.status }}</p>          
+          <p *ngIf="share.status;else loading">{{ share.status }}</p>
+          <ng-template #loading>...</ng-template>          
 
 <!--
           <p *ngIf="share.status == 'INVITE SENT' " class="badge badge-warning">{{ share.status }}</p>

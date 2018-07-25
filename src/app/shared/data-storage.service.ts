@@ -67,11 +67,6 @@ export class DataStorageService {
                     component.searching = false;
                     component.searchMode = false;
 
-                    if (postCallback != null ) {
-
-                        postCallback(component);
-                    }
-
                 } else {
                     console.log('successful result on ' + param1 + ' and ' + param2);
                     component[loadingName] = false;                   
@@ -88,12 +83,12 @@ export class DataStorageService {
                         component[name] = result[0];
                     } 
 
-                    if (postCallback != null ) {
-                        postCallback(component);
-                    }
-                    
                     //console.log(' component[name]' +  component[name]); 
                 }
+
+                if (postCallback != null ) {
+                    postCallback(component);
+                }                
 
               },
               (error: Response) => {
@@ -107,19 +102,9 @@ export class DataStorageService {
         });
     }
 
-    setObjectOnServer(componentObjectList: string, componentObject: string, newObject: any, component: any) {
+    setObjectOnServer(componentObjectList: string, componentObject: string, newObject: any, component: any, postCallback) {
         let self = this;
          
-        /*
-        console.log('component.constructor.name :' + component.constructor.name);
-        console.log('setObjectOnServer  component:' + component);
-        console.log('component.editMode' + component.editMode);
-        console.log('component.headingLoading' + component.headingLoading);
-        console.log('component.loading' + component.loading);
-        
-        console.log('component.resource' + component.resource);
-        console.log('component.shares' + component.shares);
-        */
         console.log('new object is ' + JSON.stringify(newObject));
 
         this.addAuthorization(function(headers) {
@@ -149,6 +134,10 @@ export class DataStorageService {
                     component[componentObject] = newObject;
                     component.errorMessage = '';
                     component.closeSetModal();
+                }
+
+                if (postCallback != null ) {
+                    postCallback(component);
                 }
                              
               },

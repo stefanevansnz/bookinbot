@@ -7,7 +7,6 @@ export class Share {
         public resourcetitle: string,        
         public userid: string, 
         public username: string,         
-        public email: string,
-        public status: string
+        public email: string
     ) { }
 }
