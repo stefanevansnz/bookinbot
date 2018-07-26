@@ -4,19 +4,19 @@
         <form (ngSubmit)="onSignin(f)" #f="ngForm" autocomplete="on">
             <div class="form-group">
               <label for="email">Email</label>
-              <input type="email" id="email" name="email" ngModel class="form-control">
+              <input required email type="email" id="email" name="email" ngModel class="form-control">
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" ngModel class="form-control">
+                <input required password type="password" id="password" name="password" ngModel class="form-control">
             </div> 
                 
             <div *ngIf="message" class="alert alert-danger" role="alert">
                 {{ message }}
             </div>        
             
-            <button id="signin" [disabled]="isLoading()" class="btn btn-primary" type="submit">Sign In</button>
+            <button id="signin" [disabled]="!f.valid" class="btn btn-primary" type="submit">Sign In</button>
             
             <div>
                 <a routerLink="/signup/new">No login? Sign Up here!</a>

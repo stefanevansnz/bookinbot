@@ -4,7 +4,7 @@
     <div *ngIf="status=='new'" class="form-group">
       <h1>Sign Up</h1>
       
-      <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm"  autocomplete="on">
         <div class="form-group">
           <label for="email">Email</label>
 
@@ -41,8 +41,6 @@
             {{ message }}
         </div>        
            
-        <button (click)="onSetDefault()" class="btn btn-primary" type="button">Default</button> 
-
         <button [disabled]="!f.valid" class="btn btn-primary" type="submit">Sign Up</button>
       </form>   
       <div>
@@ -62,52 +60,44 @@
     </div> <!-- end of status new -->    
   
     <div *ngIf="status=='newpassword'" class="form-group">
-      <h1>Please fill in your name and password</h1>     
-      <h2>{{ signUpEmail }}</h2>
-      <form (ngSubmit)="onSubmit(f)" #f="ngForm"> 
+      <h1>Update Details</h1>
+      <p>Please enter the following details for {{ signUpEmail }}</p>
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm"  autocomplete="on"> 
 
         <div class="form-group">
           <label for="firstname">First Name</label>
-
-          <div class="input-group">
           <input required id="firstname" name="firstname" ngModel class="form-control">
-          </div>
         </div>
         
         <div class="form-group">
-          <label for="lastname">Last Name</label>
-
-          <div class="input-group">            
+          <label for="lastname">Last Name</label>         
           <input required id="lastname" name="lastname" ngModel class="form-control">
-          </div>            
         </div>          
     
-        <label for="newpassword">New Password</label>
-        <div class="input-group">
+        <div class="form-group">
+          <label for="newpassword">New Password</label>
           <input required password type="password" id="password" name="password" ngModel class="form-control">
         </div>            
 
-        <label for="newpassword">Confirm Password</label>
-        <div class="input-group">
+        <div class="form-group">        
+          <label for="newpassword">Confirm Password</label>
           <input required password type="password" id="newpassword" name="newpassword" ngModel class="form-control">
         </div>            
         
-
         <div *ngIf="message" class="alert alert-danger" role="alert">
           {{ message }}
-        </div>        
+        </div>      
+          
         <button [disabled]="!f.valid" class="btn btn-primary" type="submit">Sign Up</button>
 
       </form>        
     </div> <!-- end of status newpassword -->    
 
     <div *ngIf="status=='completed'" class="form-group">
-      <h1>Your user's registration is now completed</h1>
+      <h1>Sign Up Completed</h1>
       <p>
-        You user registion is now completed.
-      </p>      
-      <p>
-        Please signin with you email and new password.
+        You user registion is now completed.<br>
+        Please <a routerLink="/signin/{{ signUpEmail }}" href="#">sign in</a> with your email and new password.
       </p>
 
     </div> <!-- end of status new -->    

@@ -13,11 +13,15 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
+
   @ViewChild('f') slForm: NgForm;
   messageUpdate: Subscription;
   message: any;
   loading: boolean = false;
   signUpEmail: string;  
+
+  email: string;
+  code: string
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
@@ -37,23 +41,39 @@ export class SigninComponent implements OnInit {
       .subscribe(
         (params: Params) => {
           // something has changed
-          let email = params['email'];
-          this.slForm.setValue({
-            email: email
-          });      
-          console.log('load email = ' + email);
+          this.email = params['email'];
+          console.log('load email = ' + this.email);
           //form.value.email = email;
-          let code = params['code'];
-          this.slForm.setValue({
-            password: code
-          });      
-
-          console.log('load code = ' + code);
+          if (params['code'] == undefined) {
+            this.code = '';
+          } else {
+            this.code = params['code'];
+          }
+          console.log('load code = ' + this.code);
 
         }
       );    
 
   }
+
+  ngAfterViewInit() {
+    console.log('on after view init');
+    setTimeout(_=> this.updateForm());
+  } 
+
+  updateForm() {
+    if (this.email != undefined) {
+      /*
+      this.slForm.setValue({
+        email: this.email,
+        password: this.code,
+      });
+      */  
+     this.slForm.controls['email'].setValue(this.email);
+
+    }
+  }
+
 
   onSignin(form: NgForm) {
     this.loading = true;

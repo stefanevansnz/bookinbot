@@ -37,15 +37,7 @@ export class UserAccess {
             lastname = userAttributes[attrIndex].Value;
             } 
         }
-/*
-        if (status == 'CONFIRMED') {
-            status = 'SIGN UP COMPLETED';
-        } else if (status == 'FORCE_CHANGE_PASSWORD') {
-            status = 'INVITE SENT';
-        } else {
-            status = status.toUpperCase(); 
-        }
-*/
+
         return {
             id: id,
             email: email,

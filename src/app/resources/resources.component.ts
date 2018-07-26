@@ -73,7 +73,7 @@ export class ResourcesComponent implements OnInit {
       resource = new Resource( this.editResource.id, null, null, value.title);
 
     }
-    this.dataStorageService.setObjectOnServer('resources', 'editResource', resource, self);          
+    this.dataStorageService.setObjectOnServer('resources', 'editResource', resource, self, null);          
   
   }
 

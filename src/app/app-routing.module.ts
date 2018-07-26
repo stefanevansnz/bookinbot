@@ -22,6 +22,7 @@ const appRoutes: Routes = [
     { path: 'signup/:status', component: SignupComponent },
     { path: 'signin', component: SigninComponent },    
     { path: 'signin/:email/:code', component: SigninComponent },    
+    { path: 'signin/:email', component: SigninComponent },    
     { path: '**', component: PageNotFoundComponent}    
 ];
 

@@ -65,7 +65,7 @@ export class SignupComponent implements OnInit {
     if (this.status == 'new') {
       this.suForm.reset();
     }
-} 
+  } 
 
   onSetDefault() {
     this.suForm.setValue({

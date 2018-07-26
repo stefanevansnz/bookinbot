@@ -115,6 +115,9 @@
             <span *ngIf="share.status == 'UNKNOWN' " 
             class="badge badge-danger">USER STATUS UNKNOWN
             </span>
+            <span *ngIf="share.status == 'CONFIRMED' " 
+            class="badge badge-success">USER CONFIRMED
+            </span>            
           </p>
           <ng-template #loading>...</ng-template>          
 

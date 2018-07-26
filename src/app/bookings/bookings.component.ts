@@ -220,7 +220,7 @@ export class BookingsComponent implements OnInit {
         value.end);      
     }
     
-    this.dataStorageService.setObjectOnServer('bookings', 'editBooking', booking, this);          
+    this.dataStorageService.setObjectOnServer('bookings', 'editBooking', booking, this, null);          
     
   }
 
