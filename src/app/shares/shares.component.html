@@ -108,7 +108,14 @@
           
           <p *ngIf="share.username">{{ share.username }}</p>
           <p *ngIf="share.email">{{ share.email }}</p>
-          <p *ngIf="share.status;else loading">{{ share.status }}</p>
+          <p *ngIf="share.status;else loading">
+            <span *ngIf="share.status == 'FORCE_CHANGE_PASSWORD' " 
+            class="badge badge-secondary">INVITE SENT WAITING FOR SIGN UP
+            </span>
+            <span *ngIf="share.status == 'UNKNOWN' " 
+            class="badge badge-danger">USER STATUS UNKNOWN
+            </span>
+          </p>
           <ng-template #loading>...</ng-template>          
 
 <!--

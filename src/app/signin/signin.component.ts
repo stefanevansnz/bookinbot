@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthenticationService } from '../shared/authentication.service';
 import { Subject } from 'rxjs/Subject';
 import { NotificationService } from '../shared/notification.service';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 
 @Component({
@@ -21,7 +21,8 @@ export class SigninComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
-              private router: Router) { }
+              private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {    
     this.messageUpdate = this.notificationService.getMessage()
@@ -30,6 +31,27 @@ export class SigninComponent implements OnInit {
         this.message = message;
       }
     );
+
+    let self = this;
+    this.route.params
+      .subscribe(
+        (params: Params) => {
+          // something has changed
+          let email = params['email'];
+          this.slForm.setValue({
+            email: email
+          });      
+          console.log('load email = ' + email);
+          //form.value.email = email;
+          let code = params['code'];
+          this.slForm.setValue({
+            password: code
+          });      
+
+          console.log('load code = ' + code);
+
+        }
+      );    
 
   }
 

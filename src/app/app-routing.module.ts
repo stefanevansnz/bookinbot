@@ -9,7 +9,6 @@ import { SigninComponent } from "./signin/signin.component";
 import { SignoutComponent } from "./signout/signout.component";
 import { PageNotFoundComponent } from "./pagenotfound/pagenotfound.component";
 import { AuthenticationGuardService as AuthenticationGuard } from "./shared/authentication-guard.service";
-import { SettingsComponent } from "./settings/settings.component";
 
 const appRoutes: Routes = [
 
@@ -17,12 +16,12 @@ const appRoutes: Routes = [
     { path: 'bookings/:id', component: BookingsComponent, canActivate: [AuthenticationGuard] },
     { path: 'bookings/:id/:ownerid', component: BookingsComponent, canActivate: [AuthenticationGuard] },
     { path: 'shares/:id', component: SharesComponent, canActivate: [AuthenticationGuard] },
-    { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },    
     { path: 'signout', component: SignoutComponent, canActivate: [AuthenticationGuard] },    
     { path: '', component: SplashComponent },        
     { path: 'signup/:status/:id', component: SignupComponent },
     { path: 'signup/:status', component: SignupComponent },
     { path: 'signin', component: SigninComponent },    
+    { path: 'signin/:email/:code', component: SigninComponent },    
     { path: '**', component: PageNotFoundComponent}    
 ];
 
