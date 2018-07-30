@@ -44,7 +44,7 @@ export class BookingsCommand {
             break;
             case 'POST': 
             this.requestValidator.checkIfBookingExists(this.dataAccessObject, eventHolder, 
-                function(bookingsExists) {
+                function(bookingsExists, lastBookingUserName) {
                     if (!bookingsExists) {
                         eventHolder.method = 'POST';
                         self.dataAccessObject.bookings(responseBuilder, eventHolder, function() {
@@ -52,7 +52,7 @@ export class BookingsCommand {
                         });
                     } else {
                         responseBuilder.errorMessage = 
-                        'This resource is already booked at that time';
+                        'This resource is already booked at that time by ' + lastBookingUserName;
                         callback();
                     }
                 });

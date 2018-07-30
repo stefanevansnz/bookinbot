@@ -75,7 +75,7 @@ export class RequestValidator {
                 }
             });
 
-            callback(bookingsExists);
+            callback(bookingsExists, lastBookingUserName);
         });    
         
     }
