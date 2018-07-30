@@ -15,9 +15,31 @@ export class ResourceCommand {
     execute(responseBuilder, eventHolder, callback) {
         console.log('ResourceCommand');
         let self = this;
-        self.dataAccessObject.resources(responseBuilder, eventHolder, function() {
-            callback();
-        });
+        let method = eventHolder.method;
+        switch (method) {
+            case 'GET': 
+            this.requestValidator.checkIfAccessAllowedToResource(this.dataAccessObject, eventHolder, 
+                function(resourceAccessAllowed, resourceOwnerId) {
+                    if (resourceAccessAllowed) {
+                        // if different resource owner id then use this
+                        if (resourceOwnerId != undefined) {
+                            eventHolder.userSessionId = resourceOwnerId;
+                        }
+                        self.dataAccessObject.resources(responseBuilder, eventHolder, function() {
+                            callback();
+                        });
+                    } else {
+                        responseBuilder.errorMessage = 
+                        'Access not allowed';
+                        callback();
+                    }
+                });
+            break;
+            default:
+            self.dataAccessObject.resources(responseBuilder, eventHolder, function() {
+                callback();
+            });
+        }
 
     }
 

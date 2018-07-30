@@ -11,6 +11,7 @@ export class RequestValidator {
         let resourceId = eventHolder.id;
         let validationResponse = new ResponseBuilder();
         let resourceAccessAllowed = false;
+        let resourceOwnerId = null;
         //eventHolder.id = null;
   
         // get all shares for this user
@@ -30,11 +31,14 @@ export class RequestValidator {
                 sharesForResource.forEach(share => {
                     console.log('User ' + share.ownerid + ' is sharing ' + share.resourceid +  ' with current user ' +  eventHolder.userSessionId);
                     if (share.resourceid == resourceId) {
-                        resourceAccessAllowed = true;                    
+                        resourceAccessAllowed = true; 
+                        resourceOwnerId = share.ownerid;
                     }
                 });
                 console.log('ResourceAccessAllowed is ' + resourceAccessAllowed);
-                callback(resourceAccessAllowed);
+                console.log('resourceOwnerId is ' + resourceOwnerId);
+
+                callback(resourceAccessAllowed, resourceOwnerId);
             })    
 
         });
