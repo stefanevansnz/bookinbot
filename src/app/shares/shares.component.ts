@@ -68,12 +68,14 @@ export class SharesComponent implements OnInit {
       subComponent.searchMode = true; 
       self.dataStorageService.getSearchObjectArrayFromServer('sharessearch', 
           self.resourceId, share.email, subComponent, function(resultComponent) {
-            let userStatus = resultComponent.editUser.status;            
-            if (userStatus == undefined) {
-              userStatus = 'UNKNOWN';
+            let user = resultComponent.editUser;            
+            if (user.status == undefined) {
+              user.status = 'UNKNOWN';
             }
-            console.log('user ' + share.email + ' status is ' + userStatus);
-            share.status = userStatus;
+            console.log('user ' + share.email + ' status is ' + user.status + 
+              ' user name is ' + user.firstname + ' ' + user.lastname);
+            share.status = user.status;
+            share.username = user.firstname + ' ' + user.lastname;
           });                   
 
 

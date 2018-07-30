@@ -25,6 +25,7 @@ export class SignupComponent implements OnInit {
   status: string;
   signUpEmail: string;
   requiredAttributes: any;
+  searchMode: boolean = true;
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
@@ -36,15 +37,7 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
 
     console.log('sign up');
-/*
-    this.activatedRoute
-      .queryParams
-      .subscribe(params => {
-        // Defaults to 0 if no query param provided.
-        this.requiredAttributes = params['requiredAttributes']
-        console.log('requiredAttributes is ' + this.requiredAttributes);
-    });
-*/
+
     this.activatedRoute.params.subscribe((params: Params) => {
       this.status = params['status'];
       this.signUpEmail = params['id'];      
@@ -67,14 +60,6 @@ export class SignupComponent implements OnInit {
     }
   } 
 
-  onSetDefault() {
-    this.suForm.setValue({
-      email: 'test@test.com',
-      password: 'password',
-      firstname: 'Test',
-      lastname: 'Test'   
-    });
-  }
 
 
   onSubmit(form: NgForm) {

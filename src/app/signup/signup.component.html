@@ -9,7 +9,7 @@
           <label for="email">Email</label>
 
           <div class="input-group">                
-          <input required email id="email" name="email" ngModel class="form-control">
+          <input required email id="email" name="email" autocomplete='email' ngModel class="form-control">
           </div> 
         </div>
 
@@ -17,7 +17,7 @@
           <label for="password">Password</label>
 
           <div class="input-group">
-          <input required password type="password" id="password" name="password" ngModel class="form-control">
+          <input required password type="password" id="password" name="password" autocomplete='current-password' ngModel class="form-control">
           </div>            
         </div> 
 
@@ -25,7 +25,7 @@
           <label for="firstname">First Name</label>
 
           <div class="input-group">
-          <input required id="firstname" name="firstname" ngModel class="form-control">
+          <input required id="firstname" name="firstname" autocomplete='given-name' ngModel class="form-control">
           </div>
         </div>
         
@@ -33,19 +33,22 @@
           <label for="lastname">Last Name</label>
 
           <div class="input-group">            
-          <input required id="lastname" name="lastname" ngModel class="form-control">
+          <input required id="lastname" name="lastname" autocomplete='family-name' ngModel class="form-control">
           </div>            
-        </div>          
+        </div>
 
         <div *ngIf="message" class="alert alert-danger" role="alert">
             {{ message }}
-        </div>        
-           
+        </div> 
+                   
         <button [disabled]="!f.valid" class="btn btn-primary" type="submit">Sign Up</button>
       </form>   
       <div>
             <a routerLink="/signin">Got a login? Sign In here!</a>
-      </div>                            
+      </div>  
+      
+      <button (click)="searchEmails()" class="btn btn-primary" type="button">Search Emails</button>
+
     </div> <!-- end of status new -->         
 
     <div *ngIf="status=='confirm'" class="form-group">
