@@ -95,7 +95,7 @@ export class BookingsComponent implements OnInit {
         header: {
           left: 'title',
           center: '',
-          //right: 'month,agendaWeek,agendaDay '
+          //right: 'month,agendaWeek  '
           right: 'prev today next'
         },
         nowIndicator: true,
