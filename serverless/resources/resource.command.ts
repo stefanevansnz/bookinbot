@@ -39,6 +39,7 @@ export class ResourceCommand {
             self.dataAccessObject.resources(responseBuilder, eventHolder, function() {
                 callback();
             });
+            break;            
         }
 
     }

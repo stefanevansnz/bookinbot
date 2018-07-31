@@ -19,28 +19,41 @@ export class SharesCommand {
     execute(responseBuilder, eventHolder, callback) {
         let self = this;
         let path = eventHolder.path;
+        let method = eventHolder.method;   
+        let resourceId = eventHolder.id;     
         console.log('SharesCommand ' + path);
         switch (path) {
             case 'shares':
-                if (eventHolder.method == 'POST') {
-                    // create user in cognito first
-                    self.userAccess.shares(responseBuilder, eventHolder, function(userid) {
-                        console.log('User created is with user id of ' + userid);
-                        eventHolder.object.userid = userid;
-                        // load data into share table after that
-                        self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
-                            callback();
-                        });    
-                    });                
-                }                
-                if (eventHolder.method == 'GET' || eventHolder.method == 'DELETE') {
-                    // get shares from database first
-                    self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
-                        callback();
-                    });    
-                }                
-
-                break;
+                switch (method) {
+                    case 'POST': 
+                        // create user in cognito first
+                        self.userAccess.shares(responseBuilder, eventHolder, function(userid) {
+                            console.log('User created is with user id of ' + userid);
+                            eventHolder.object.userid = userid;
+                            // load data into share table after that
+                            self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
+                                callback();
+                            });    
+                        }); 
+                    break;                         
+                    default:
+                    this.requestValidator.checkIfOwnerOfResource(this.dataAccessObject, eventHolder, 
+                        function(resourceOwner) {
+                            console.log('resourceOwner is ' + resourceOwner + ' resourceId is ' + resourceId);
+                            if (resourceOwner || resourceId == undefined) {
+                                // if resource owner or there no resource id show shares
+                                eventHolder.id = resourceId;
+                                self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
+                                    callback();
+                                });                                 
+                            } else {
+                                responseBuilder.errorMessage = 
+                                'Access not allowed';
+                                callback();
+                            }
+                        });
+                    break;
+                }
             case 'sharessearch':
                 eventHolder.id = eventHolder.resourceId;
                 self.userAccess.sharessearch(responseBuilder, eventHolder, function() {

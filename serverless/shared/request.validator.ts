@@ -4,6 +4,34 @@ import { DataAccessObject } from "./data.access.object";
 
 export class RequestValidator {
 
+    checkIfOwnerOfResource(dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) {
+        // is this user allowed access to this resource?
+        console.log('Check checkIfOwnerOfResource');
+        //console.log('Resource Path is ' + eventHolder.path);
+        let resourceId = eventHolder.id;
+        let validationResponse = new ResponseBuilder();
+        //eventHolder.id = null;
+  
+        // get all shares for this user
+        console.log('Get resource for this user');
+        dataAccessObject.resources(validationResponse, eventHolder, function() { 
+            console.log('Got response for resource');
+            if (validationResponse.resultSet.length > 0) {                    
+                console.log('Resource is owned by this user');
+                callback(true);
+                return;
+            } else {
+                console.log('Resource is not owned by this user');
+                callback(false);
+                return;
+            }
+
+        });
+
+    }
+
+
+
     checkIfAccessAllowedToResource(dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) {
         // is this user allowed access to this resource?
         console.log('Check ResourceAccessAllowed');
@@ -17,11 +45,12 @@ export class RequestValidator {
         // get all shares for this user
         console.log('Get resource for this user');
         dataAccessObject.resources(validationResponse, eventHolder, function() { 
+            console.log('Got response for resource');
             if (validationResponse.resultSet.length > 0) {                    
                 console.log('Resource is owned by this user');
                 callback(true);
                 return;
-            }   
+            } 
             console.log('Get all shares for this user');
             dataAccessObject.shares(validationResponse, eventHolder, function() { 
                 // build response

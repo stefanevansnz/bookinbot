@@ -93,7 +93,7 @@ export class DataStorageService {
               },
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
-                component.loading = false;
+                component[loadingName] = false; 
                 component.errorMessage = error.json().message;
                 component.successMessage = '';
                 component.searching = false;            
