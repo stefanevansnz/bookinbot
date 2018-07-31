@@ -91,8 +91,9 @@
     </div>       
     <ng-template #heading>
       <h1>{{resource.title}} 
-      <button type="button" class="btn btn-primary float-right"
-      (click)="onShareResource(i, resource)" >People</button>
+
+      <button *ngIf="ownerOfResource" type="button" class="btn btn-primary float-right"
+      (click)="onShareResource(i, resource)">People</button>
       </h1>        
       <hr>
     </ng-template>       

@@ -69,7 +69,8 @@ export class DataStorageService {
 
                 } else {
                     console.log('successful result on ' + param1 + ' and ' + param2);
-                    component[loadingName] = false;                   
+                    component[loadingName] = false;  
+                    console.log(loadingName + ' is now false');                 
                     let result = success.json();
                     console.log('result is ' + JSON.stringify(result));                
                     component[name] = result;
@@ -94,6 +95,8 @@ export class DataStorageService {
               (error: Response) => {
                 console.log('error' + JSON.stringify(error));
                 component[loadingName] = false; 
+                console.log(loadingName + ' is now false');                 
+
                 component.errorMessage = error.json().message;
                 component.successMessage = '';
                 component.searching = false;            

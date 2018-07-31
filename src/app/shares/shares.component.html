@@ -84,49 +84,55 @@
           Loading...
       </div>       
       <ng-template #sharesLoaded>
-      <h1>{{resource.title}} 
-          <button type="button" class="btn btn-primary float-right"
-          (click)="onViewBookings(i, resource)">Bookings</button>
-          </h1>        
-          <hr>      
-      <div *ngIf="message" class="alert alert-danger" role="alert">
-          {{ message }}
-      </div>                        
-      <h2>People sharing {{resource.title}}</h2>        
-      <button id="add-share" type="button" class="btn btn-primary" 
-        (click)="onAddObject()">Add Person</button>
-      <ul class="list-group">
-        <li class="list-group-item"        
-          *ngFor="let share of shares; let i = index">
+        <div class="row" *ngIf="errorMessage!=''; else displayShares">
+            <div class="col-sm-12 form-group">
+                <div class="alert alert-danger" role="alert">
+                    {{ errorMessage }}
+                </div>   
+            </div>
+        </div>
+        <ng-template #displayShares>
+          <h1>{{resource.title}} 
+              <button type="button" class="btn btn-primary float-right"
+              (click)="onViewBookings(i, resource)">Bookings</button>
+              </h1>        
+              <hr>      
+          <h2>People sharing {{resource.title}}</h2>        
+          <button id="add-share" type="button" class="btn btn-primary" 
+            (click)="onAddObject()">Add Person</button>
+          <ul class="list-group">
+            <li class="list-group-item"        
+              *ngFor="let share of shares; let i = index">
 
-          <button 
-          class="edit-share btn btn-success float-right edit" 
-          (click)="onEditObject(i, share)"         
-          type="submit" >
-          Edit
-          </button> 
-          
-          <p *ngIf="share.username">{{ share.username }}</p>
-          <p *ngIf="share.email">{{ share.email }}</p>
-          <p *ngIf="share.status;else loading">
-            <span *ngIf="share.status == 'FORCE_CHANGE_PASSWORD' " 
-            class="badge badge-secondary">INVITE SENT WAITING FOR SIGN UP
-            </span>
-            <span *ngIf="share.status == 'UNKNOWN' " 
-            class="badge badge-danger">USER STATUS UNKNOWN
-            </span>
-            <span *ngIf="share.status == 'CONFIRMED' " 
-            class="badge badge-success">USER CONFIRMED
-            </span>            
-          </p>
-          <ng-template #loading>...</ng-template>          
+              <button 
+              class="edit-share btn btn-success float-right edit" 
+              (click)="onEditObject(i, share)"         
+              type="submit" >
+              Edit
+              </button> 
+              
+              <p *ngIf="share.username">{{ share.username }}</p>
+              <p *ngIf="share.email">{{ share.email }}</p>
+              <p *ngIf="share.status;else loading">
+                <span *ngIf="share.status == 'FORCE_CHANGE_PASSWORD' " 
+                class="badge badge-secondary">INVITE SENT WAITING FOR SIGN UP
+                </span>
+                <span *ngIf="share.status == 'UNKNOWN' " 
+                class="badge badge-danger">USER STATUS UNKNOWN
+                </span>
+                <span *ngIf="share.status == 'CONFIRMED' " 
+                class="badge badge-success">USER CONFIRMED
+                </span>            
+              </p>
+              <ng-template #loading>...</ng-template>          
 
-<!--
-          <p *ngIf="share.status == 'INVITE SENT' " class="badge badge-warning">{{ share.status }}</p>
-          <p *ngIf="share.status == 'SIGN UP COMPLETED' " class="badge badge-success">{{ share.status }}</p>
--->        
-        </li>
-      </ul>
+    <!--
+              <p *ngIf="share.status == 'INVITE SENT' " class="badge badge-warning">{{ share.status }}</p>
+              <p *ngIf="share.status == 'SIGN UP COMPLETED' " class="badge badge-success">{{ share.status }}</p>
+    -->        
+            </li>
+          </ul>
+        </ng-template>  
       </ng-template>  
   </div>
 </div>

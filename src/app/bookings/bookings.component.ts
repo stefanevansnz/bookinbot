@@ -35,6 +35,7 @@ export class BookingsComponent implements OnInit {
   resource: Resource;
   bookings: Booking[] = [];
   editBooking: Booking;
+  ownerOfResource = false;
   
   private readonly dateFormat = 'DD/MM/YYYY';
   private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
@@ -61,10 +62,11 @@ export class BookingsComponent implements OnInit {
           let id = params['id'];
           console.log('resourceId = ' + id);
           this.resourceId = id;
+          /*
           let ownerid = params['ownerid'];
           console.log('ownerid = ' + ownerid);
           this.ownerId = ownerid;
-
+          */
           this.loadResourceDetails();
 //          this.loadBookingDetails();
         }
@@ -83,6 +85,14 @@ export class BookingsComponent implements OnInit {
 
   private loadBookingDetails(self) {
     console.log('loading booking objects...');
+    let resource = self.resource;
+    let user = self.authenticationService.getUser();
+
+    console.log('resource ownerid is ' + resource.ownerid + ' user id is ' + user.id );
+    if (resource.ownerid == user.id) {
+      // this is the owner of the resource
+      self.ownerOfResource = true;
+    }
 
     self.dataStorageService.addAuthorization(function(headers) {
       let authHeader = { Authorization: headers.get('Authorization')};
