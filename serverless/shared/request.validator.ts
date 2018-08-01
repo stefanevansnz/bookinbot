@@ -85,7 +85,8 @@ export class RequestValidator {
         let object = eventHolder.object;        
     
         console.log('start is ' + object.start);  
-        console.log('end is ' + object.end);                
+        console.log('end is ' + object.end);
+
         // get all shares for that resource
         eventHolder.id = eventHolder.object.resourceid;
         eventHolder.method = 'GET';
@@ -101,7 +102,7 @@ export class RequestValidator {
                             ' user ' + booking.username);
                 // check if already booked
                 if ((object.start >= booking.start && object.start <= booking.start) ||
-                    (object.end >= booking.start && object.end <= booking.end)) {
+                    (object.end >= booking.end && object.end <= booking.end)) {
                     console.log('bookings exist!');
                     bookingsExists = true;
                     lastBookingUserName = booking.username;
