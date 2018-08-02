@@ -62,7 +62,7 @@ export class BookingsCommand {
             case 'DELETE': 
             this.requestValidator.checkIfOwnerOfBooking(this.dataAccessObject, eventHolder, 
                 function(ownerOfBooking) {
-                    if (!ownerOfBooking) {
+                    if (ownerOfBooking) {
                         eventHolder.method = 'DELETE';
                         self.dataAccessObject.bookings(responseBuilder, eventHolder, function() {
                             callback();
