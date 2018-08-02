@@ -4,6 +4,43 @@ import { DataAccessObject } from "./data.access.object";
 
 export class RequestValidator {
 
+    checkIfOwnerOfBooking(dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) {
+        // is this user the owner of the booking
+        console.log('Check checkIfOwnerOfBooking');
+        //console.log('Resource Path is ' + eventHolder.path);
+        let validationResponse = new ResponseBuilder();
+        //eventHolder.id = null;
+        console.log('eventHolder ' + JSON.stringify(eventHolder));
+        let userSessionId = eventHolder.userSessionId;   
+        let bookingOwnedByUser = false;   
+        let bookingId = eventHolder.object.id;
+  
+        console.log('Get booking for this user');
+        eventHolder.method = 'GET'; 
+        eventHolder.id = eventHolder.object.resourceid;
+       
+        dataAccessObject.bookings(validationResponse, eventHolder, function() { 
+            console.log('validating if booking is owned by user id ' + userSessionId );
+            let bookingsForResource = validationResponse.resultSet;
+            bookingsForResource.forEach(booking => {
+                if (bookingId == booking.id) {
+                    console.log('booking id ' + booking.id + 
+                    ' booking userid is ' + booking.userid);
+                    // check if already booked
+                    if (userSessionId == booking.userid) {
+                        console.log('booking owner found!');
+                        bookingOwnedByUser = true;
+                    }
+
+                }
+            });
+
+            callback(bookingOwnedByUser);
+        });
+
+    }
+
+
     checkIfOwnerOfResource(dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) {
         // is this user allowed access to this resource?
         console.log('Check checkIfOwnerOfResource');
@@ -75,43 +112,50 @@ export class RequestValidator {
     }
 
 
-    checkIfBookingExists(dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) { 
+    checkIfBookingExists(validationResponse: ResponseBuilder, dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) { 
+        let self = this;
         console.log('RequestValidator bookings path ' + eventHolder.path );
-        let bookingsExists = false;
         console.log('Validating Booking Post');
-        let validationResponse = new ResponseBuilder();
         // do a check before posting
         console.log('eventHolder ' + JSON.stringify(eventHolder));
-        let object = eventHolder.object;        
+        let targetBooking = eventHolder.object;        
     
-        console.log('start is ' + object.start);  
-        console.log('end is ' + object.end);
+        console.log('target start is ' + targetBooking.start);  
+        console.log('target end is ' + targetBooking.end);
+        console.log('target userid is ' + targetBooking.userid); 
 
         // get all shares for that resource
         eventHolder.id = eventHolder.object.resourceid;
         eventHolder.method = 'GET';
         dataAccessObject.bookings(validationResponse, eventHolder, function() {         
             // build response
-            console.log('validating if booking already exists for this start ' + object.start + ' and end ' + object.end);
             let bookingsForResource = validationResponse.resultSet;
-            let lastBookingUserName = '';
-            bookingsForResource.forEach(booking => {
-                console.log('booking id ' + booking.id + 
-                            ' start ' + booking.start + 
-                            ' end ' + booking.end +
-                            ' user ' + booking.username);
-                // check if already booked
-                if ((object.start >= booking.start && object.start <= booking.start) ||
-                    (object.end >= booking.end && object.end <= booking.end)) {
-                    console.log('bookings exist!');
-                    bookingsExists = true;
-                    lastBookingUserName = booking.username;
-                }
-            });
-
-            callback(bookingsExists, lastBookingUserName);
+            let bookingsExists = self.searchBookingInList(bookingsForResource, targetBooking);
+            callback(bookingsExists, '');
         });    
         
+    }
+
+    searchBookingInList(bookingsForResource, targetBooking) {
+        let bookingsExists = false;
+        //let lastBookingUserName = '';
+        console.log('validating if target booking already exists for this start ' + targetBooking.start + ' and end ' + targetBooking.end);
+        bookingsForResource.forEach(booking => {
+            console.log('booking id ' + booking.id + 
+                        ' start ' + booking.start + 
+                        ' end ' + booking.end +
+                        ' username ' + booking.username + 
+                        ' userid ' + booking.userid );
+            // check if already booked
+            if ((targetBooking.start >= booking.start && targetBooking.start < booking.end) ||
+                (targetBooking.end > booking.start && targetBooking.end <= booking.end) &&
+                (targetBooking.userid != booking.userid)) {
+                console.log('booking is taken!');
+                bookingsExists = true;
+                //lastBookingUserName = booking.username;
+            }
+        });
+        return bookingsExists;
     }
 
     shares(response: ResponseBuilder, dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) { 

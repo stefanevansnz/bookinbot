@@ -1,5 +1,6 @@
 import { DataAccessObject } from "../shared/data.access.object";
 import { RequestValidator } from "../shared/request.validator";
+import { ResponseBuilder } from "../shared/response.builder";
 
 export class BookingsCommand {
 
@@ -43,7 +44,8 @@ export class BookingsCommand {
                 });
             break;
             case 'POST': 
-            this.requestValidator.checkIfBookingExists(this.dataAccessObject, eventHolder, 
+            let validationResponse = new ResponseBuilder();
+            this.requestValidator.checkIfBookingExists(validationResponse, this.dataAccessObject, eventHolder, 
                 function(bookingsExists, lastBookingUserName) {
                     if (!bookingsExists) {
                         eventHolder.method = 'POST';
@@ -57,10 +59,21 @@ export class BookingsCommand {
                     }
                 });
             break; 
-            default:
-            self.dataAccessObject.bookings(responseBuilder, eventHolder, function() {
-                callback();
-            });                       
+            case 'DELETE': 
+            this.requestValidator.checkIfOwnerOfBooking(this.dataAccessObject, eventHolder, 
+                function(ownerOfBooking) {
+                    if (!ownerOfBooking) {
+                        eventHolder.method = 'DELETE';
+                        self.dataAccessObject.bookings(responseBuilder, eventHolder, function() {
+                            callback();
+                        });
+                    } else {
+                        responseBuilder.errorMessage = 
+                        'This booking is not owned';
+                        callback();
+                    }
+                });
+            break;         
         }
 
     }
