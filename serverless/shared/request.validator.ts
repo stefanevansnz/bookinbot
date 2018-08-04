@@ -118,7 +118,7 @@ export class RequestValidator {
         console.log('Validating Booking Post');
         // do a check before posting
         console.log('eventHolder ' + JSON.stringify(eventHolder));
-        let targetBooking = eventHolder.object;        
+        let targetBooking = eventHolder.object;       
     
         console.log('target start is ' + targetBooking.start);  
         console.log('target end is ' + targetBooking.end);
@@ -127,18 +127,20 @@ export class RequestValidator {
         // get all shares for that resource
         eventHolder.id = eventHolder.object.resourceid;
         eventHolder.method = 'GET';
+        
         dataAccessObject.bookings(validationResponse, eventHolder, function() {         
             // build response
             let bookingsForResource = validationResponse.resultSet;
-            let bookingsExists = self.searchBookingInList(bookingsForResource, targetBooking);
-            callback(bookingsExists, '');
+            let {bookingsExists, lastBookingUserName} = self.searchBookingInList(bookingsForResource, targetBooking);
+            console.log('lastBookingUserName is ' + lastBookingUserName);
+            callback(bookingsExists, lastBookingUserName);
         });    
         
     }
 
     searchBookingInList(bookingsForResource, targetBooking) {
         let bookingsExists = false;
-        //let lastBookingUserName = '';
+        let lastBookingUserName = '';
         console.log('validating if target booking already exists for this start ' + targetBooking.start + ' and end ' + targetBooking.end);
         bookingsForResource.forEach(booking => {
             console.log('booking id ' + booking.id + 
@@ -152,10 +154,11 @@ export class RequestValidator {
                 (targetBooking.userid != booking.userid)) {
                 console.log('booking is taken!');
                 bookingsExists = true;
-                //lastBookingUserName = booking.username;
+                lastBookingUserName = booking.username;
+                console.log('lastBookingUserName is ' + lastBookingUserName);
             }
         });
-        return bookingsExists;
+        return { bookingsExists, lastBookingUserName};
     }
 
     shares(response: ResponseBuilder, dataAccessObject: DataAccessObject, eventHolder: EventHolder, callback) { 

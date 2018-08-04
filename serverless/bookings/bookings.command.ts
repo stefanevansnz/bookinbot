@@ -54,7 +54,7 @@ export class BookingsCommand {
                         });
                     } else {
                         responseBuilder.errorMessage = 
-                        'This resource is already booked at that time by ' + lastBookingUserName;
+                        'This resource is already booked by ' + lastBookingUserName + ' at that time' ;
                         callback();
                     }
                 });
@@ -69,7 +69,7 @@ export class BookingsCommand {
                         });
                     } else {
                         responseBuilder.errorMessage = 
-                        'This booking is not owned';
+                        'Sorry, you cannot delete this booking.';
                         callback();
                     }
                 });

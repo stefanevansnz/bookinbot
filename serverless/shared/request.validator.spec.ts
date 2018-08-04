@@ -22,9 +22,10 @@ describe("The request validator ", function() {
        "username":"Tom Tom"}
     ];
 
-    let bookingsExists;
     let targetBooking;
     let description;
+    let bookingsExists;
+    let lastBookingUserName;
     
     description = 'Trying to book just before';
     console.log(description);
