@@ -46,18 +46,17 @@
       <div>
             <a routerLink="/signin">Got a login? Sign In here!</a>
       </div>  
-      
-      <button (click)="searchEmails()" class="btn btn-primary" type="button">Search Emails</button>
 
     </div> <!-- end of status new -->         
 
     <div *ngIf="status=='confirm'" class="form-group">
       <h1>Your user has been registered!</h1>
       <p>
-        Your user has been registered and an email has been sent to the previous email address.
+        Your user has been registered and an email has been sent to your email address.
       </p>      
       <p>
-        Please open this email and click the verify link to complete the sign up process.
+        Please open the email and click the link to verify your email address. 
+        Then you're free to sign in.
       </p>
 
     </div> <!-- end of status new -->    

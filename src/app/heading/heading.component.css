@@ -1,7 +1,19 @@
-.mr-auto {
-    cursor: pointer;
+
+nav.navbar {
+    color: #d1d1d1;  
 }
+
+ul.navbar-nav span {
+    margin-left: 14px; 
+}
+
 
 nav.navbar a {
     color: white;  
+}
+
+nav.navbar .btn-outline-success {
+    color: white;  
+    border-color: white;  
+
 }

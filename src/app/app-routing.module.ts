@@ -4,6 +4,8 @@ import { ResourcesComponent } from "./resources/resources.component";
 import { BookingsComponent } from "./bookings/bookings.component";
 import { SharesComponent } from "./shares/shares.component";
 import { SplashComponent } from "./splash/splash.component";
+import { FeaturesComponent } from "./features/features.component";
+import { PricingComponent } from "./pricing/pricing.component";
 import { SignupComponent } from "./signup/signup.component";
 import { SigninComponent } from "./signin/signin.component";
 import { SignoutComponent } from "./signout/signout.component";
@@ -17,7 +19,9 @@ const appRoutes: Routes = [
     { path: 'bookings/:id/:ownerid', component: BookingsComponent, canActivate: [AuthenticationGuard] },
     { path: 'shares/:id', component: SharesComponent, canActivate: [AuthenticationGuard] },
     { path: 'signout', component: SignoutComponent, canActivate: [AuthenticationGuard] },    
-    { path: '', component: SplashComponent },        
+    { path: '', component: SplashComponent },
+    { path: 'features', component: FeaturesComponent },                   
+    { path: 'pricing', component: PricingComponent },                       
     { path: 'signup/:status/:id', component: SignupComponent },
     { path: 'signup/:status', component: SignupComponent },
     { path: 'signin', component: SigninComponent },    

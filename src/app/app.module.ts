@@ -24,6 +24,8 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { SplashComponent } from './splash/splash.component';
 import { BookingsColourPickerService } from './bookings/bookings-colour-picker.service';
 import { SharesComponent } from './shares/shares.component';
+import { FeaturesComponent } from './features/features.component';
+import { PricingComponent } from './pricing/pricing.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { SharesComponent } from './shares/shares.component';
     SignoutComponent,
     PageNotFoundComponent,
     SplashComponent,
-    SharesComponent
+    SharesComponent,
+    FeaturesComponent,
+    PricingComponent
   ],
   imports: [
     BrowserModule,
