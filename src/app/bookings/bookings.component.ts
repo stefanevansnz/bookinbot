@@ -37,8 +37,8 @@ export class BookingsComponent implements OnInit {
   editBooking: Booking;
   ownerOfResource = false;
   
-  private readonly dateFormat = 'DD/MM/YYYY';
-  private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
+  //private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
+  private readonly timeFormat = 'YYYY-MM-DDThh:mm:00';
   //private readonly defaultTime = '10:00 AM';  
   private readonly defaultTime = '10:00';  
   private editIndex: number;
@@ -219,7 +219,8 @@ export class BookingsComponent implements OnInit {
         userid,
         username,
         this.resourceId,
-        value.start, value.end);      
+        value.start, 
+        value.end);      
     } else {
       //let resource = new Resource(null, null, null, value.title);
       booking = new Booking(null, 

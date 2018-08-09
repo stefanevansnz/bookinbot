@@ -25,11 +25,14 @@ export class BookingsCommand {
             this.requestValidator.checkIfAccessAllowedToResource(this.dataAccessObject, eventHolder, 
                 function(resourceAccessAllowed) {
                     if (resourceAccessAllowed) {
+                        let startParam = eventHolder.queryStringParameters.start;
+                        let endParam = eventHolder.queryStringParameters.end;  
+                        //var startItem = moment(startParam).format(self.timeFormat);
+                        console.log('startParam is ' + startParam + ' endParam is ' + endParam);
+                        eventHolder.start = startParam;
+                        eventHolder.end = endParam;                             
+
                         self.dataAccessObject.bookings(responseBuilder, eventHolder, function() {
-                            let startParam = eventHolder.queryStringParameters.start;
-                            let endParam = eventHolder.queryStringParameters.end;  
-                            //var startItem = moment(startParam).format(self.timeFormat);
-                            console.log('startParam is ' + startParam + ' endParam is ' + endParam);      
                             let bookingsForResource = responseBuilder.resultSet;
                             bookingsForResource.forEach(booking => {
                                 console.log('booking id ' + booking.id +  ' is ' + booking.start + ' to ' + booking.end);

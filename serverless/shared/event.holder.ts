@@ -9,4 +9,6 @@ export class EventHolder {
     resourceId: string;    
     userSessionId: string;
     queryStringParameters: any;
+    start: string;    
+    end: string;
 }

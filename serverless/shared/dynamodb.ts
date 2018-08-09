@@ -64,6 +64,68 @@ export class DynamoDb {
 
     }
 
+    getFilterDates(response: ResponseBuilder, tableName: string, parameters: Parameter[], object, callback) {
+        console.log('DynamoDb GET FilterDates');
+        let numberOfParameters = parameters.length;
+        let keyConditionExpression = '';
+        let expressionAttributeNames = '';
+        let expressionAttributeValues = '';
+        let expressionCount = 1;
+        let monthStart = '';
+        let monthEnd = '';        
+        parameters.forEach((param) => {
+            if (param.value != undefined) {
+                let addToCondition = false;
+                if (param.name == 'start' || param.name == 'end' ) {
+                    param.value = new Date(+param.value * 1000).toISOString();
+                    param.value = param.value.substring(0, param.value.length - 5)
+                } else {
+                    addToCondition = true;
+                }
+                console.log('Param name is ' + param.name + ' - ' + param.value );
+
+                if (addToCondition) {
+                    keyConditionExpression += '#' + param.name + ' = :' + param.name;
+                }
+                expressionAttributeNames += '"#' + param.name + '" : "' + param.name + '"';
+                expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
+                if (expressionCount < numberOfParameters) {
+                    if (addToCondition) {
+                        keyConditionExpression += ' AND ';   
+                    }
+                    expressionAttributeNames += ', ';   
+                    expressionAttributeValues += ', ';          
+                }
+                expressionCount++;
+            }
+        });
+
+        let params = {
+            TableName: tableName,
+            KeyConditionExpression: keyConditionExpression,
+            FilterExpression : 
+            '(#start between :start and :end)' +
+            ' or (#end between :start and :end)',
+
+            ExpressionAttributeNames:                
+                JSON.parse('{' + expressionAttributeNames + '}'),
+            ExpressionAttributeValues: 
+                JSON.parse('{' + expressionAttributeValues + '}')                
+        } 
+
+        console.log('Running DB query params: ' + JSON.stringify(params));
+
+        this.dynamoDb.query(params, (error, result) => {
+            console.log('Result is ' + JSON.stringify(result));
+            console.log('Error is ' + JSON.stringify(error));                
+            if (result.Items) {
+                result = result.Items;
+            }
+            response.resultSet = result;
+            callback();
+        });
+    }
+
     get(response: ResponseBuilder, tableName: string, parameters: Parameter[], object, callback) {
         console.log('DynamoDb GET');
         let numberOfParameters = parameters.length;
@@ -72,8 +134,9 @@ export class DynamoDb {
         let expressionAttributeValues = '';
         let expressionCount = 1;
         parameters.forEach((param) => {
-            console.log('Param name is ' + param.name + ' - ' + param.value );
             if (param.value != undefined) {
+                console.log('Param name is ' + param.name + ' - ' + param.value );
+
                 keyConditionExpression += '#' + param.name + ' = :' + param.name;
                 expressionAttributeNames += '"#' + param.name + '" : "' + param.name + '"';
                 expressionAttributeValues += '":' + param.name + '" : "' + param.value + '"';
@@ -85,6 +148,7 @@ export class DynamoDb {
                 expressionCount++;
             }
         });
+
         let params = {
             TableName: tableName,
             KeyConditionExpression: keyConditionExpression,
