@@ -129,6 +129,7 @@ export class DynamoDb {
     get(response: ResponseBuilder, tableName: string, parameters: Parameter[], object, callback) {
         console.log('DynamoDb GET');
         let numberOfParameters = parameters.length;
+        console.log( 'numberOfParameters is' + numberOfParameters);
         let keyConditionExpression = '';
         let expressionAttributeNames = '';
         let expressionAttributeValues = '';
@@ -148,7 +149,7 @@ export class DynamoDb {
                 expressionCount++;
             }
         });
-
+        console.log('creating params keyConditionExpression is ' + keyConditionExpression);
         let params = {
             TableName: tableName,
             KeyConditionExpression: keyConditionExpression,

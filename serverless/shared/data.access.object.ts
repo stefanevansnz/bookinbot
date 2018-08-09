@@ -34,15 +34,19 @@ export class DataAccessObject {
 
     bookings(response, eventHolder: EventHolder, callback) {   
         //let databaseParameters = new DatabaseParameters();
-        console.log('DataAccessObject bookings eventHolder.id is ' + eventHolder.id);
+        console.log('DataAccessObject bookings eventHolder.id is ' + eventHolder.id +
+                    ' eventHolder.start is ' + eventHolder.start +
+                    ' eventHolder.end is ' + eventHolder.end);
         
         let parameters: Parameter[] = [];        
         if (eventHolder.method == 'DELETE') {
             parameters.push(new Parameter('resourceid', eventHolder.object.resourceid));
             parameters.push(new Parameter('id', eventHolder.object.id));
         } else if (eventHolder.method == 'GET') {
-            parameters.push(new Parameter('start', eventHolder.start));
-            parameters.push(new Parameter('end', eventHolder.end));
+            if (eventHolder.start != undefined && eventHolder.end != undefined) {
+                parameters.push(new Parameter('start', eventHolder.start));
+                parameters.push(new Parameter('end', eventHolder.end));    
+            }
             parameters.push(new Parameter('resourceid', eventHolder.id));            
         } else if (eventHolder.method == 'POST') {
             parameters.push(new Parameter('resourceid', eventHolder.id));
@@ -52,7 +56,7 @@ export class DataAccessObject {
         let method = eventHolder.method.toLowerCase();
         let object = eventHolder.object;
         // use table
-        if (method == 'get') {
+        if (method == 'get' && eventHolder.start != undefined && eventHolder.end != undefined) {
             this.db.getFilterDates(response, tableName, parameters, object, callback);        
         } else {
             this.db[method](response, tableName, parameters, object, callback);        
