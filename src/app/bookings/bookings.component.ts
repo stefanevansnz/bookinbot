@@ -37,11 +37,10 @@ export class BookingsComponent implements OnInit {
   editBooking: Booking;
   ownerOfResource = false;
   
-  //private readonly timeFormat = 'DD/MM/YYYY hh:mm A';
+  private readonly displayTimeFormat = 'DD/MM/YYYY hh:mm A';
   private readonly timeFormat = 'YYYY-MM-DDThh:mm:00';
-  //private readonly defaultTime = '10:00 AM';  
-  private readonly defaultTime = '10:00';  
-  private editIndex: number;
+  private readonly timeFormatEvent = 'YYYY-MM-DD hh:mm:00';  
+  private readonly defaultTime = '10:00';    
   private editCalendarEvent: any;
   private resourceId;
   private ownerId;  
@@ -62,13 +61,8 @@ export class BookingsComponent implements OnInit {
           let id = params['id'];
           console.log('resourceId = ' + id);
           this.resourceId = id;
-          /*
-          let ownerid = params['ownerid'];
-          console.log('ownerid = ' + ownerid);
-          this.ownerId = ownerid;
-          */
+
           this.loadResourceDetails();
-//          this.loadBookingDetails();
         }
       );
   }
@@ -110,14 +104,21 @@ export class BookingsComponent implements OnInit {
         },
         nowIndicator: true,
         height: 540,
+        // open booking for update
         eventClick: function(calEvent, jsEvent, view) {
-          var startItem = moment(calEvent.start).format(self.timeFormat);
-          var endItem = moment(calEvent.end).format(self.timeFormat);
+          console.log('calEvent.start: ' + calEvent.start);   
+          console.log('calEvent.end: ' + calEvent.end);          
+          var startItem = moment(calEvent.start).format(self.timeFormatEvent);
+          var endItem = moment(calEvent.end).format(self.timeFormatEvent);
+          console.log('startItem: ' + startItem);   
+          console.log('endItem: ' + endItem);     
+
           console.log('calEvent.id: ' + calEvent.id);   
           console.log('calEvent.username: ' + calEvent.username);                        
           var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
           self.onEditObject( calEvent, booking);
         },            
+        // open booking to be created
         dayClick: function(date, jsEvent, view) {
           console.log('Clicked on: ' + date.format());
           var startItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).format(self.timeFormat);
@@ -202,13 +203,20 @@ export class BookingsComponent implements OnInit {
     var username = user.firstname + ' ' + user.lastname;
     
     console.log('form submitted userid is ' + userid);
-    var startDate = moment(value.start, this.timeFormat);
-    var endDate = moment(value.end, this.timeFormat);
+    var startDate = moment(value.start, this.displayTimeFormat);
+    var endDate = moment(value.end, this.displayTimeFormat);
+
+    console.log('form startDate is ' +  startDate);
+    console.log('form endDate is ' +  endDate); 
 
     if (startDate > endDate) {
       this.message = 'The start date is in front of the end date';
       return;
     }
+    startDate = startDate.format(self.timeFormat);
+    endDate = endDate.format(self.timeFormat);
+    console.log('form startDate is ' +  startDate);
+    console.log('form endDate is ' +  endDate); 
 
     let booking;
     console.log('edit mode is ' + this.editMode);
@@ -219,16 +227,16 @@ export class BookingsComponent implements OnInit {
         userid,
         username,
         this.resourceId,
-        value.start, 
-        value.end);      
+        startDate, 
+        endDate);      
     } else {
       //let resource = new Resource(null, null, null, value.title);
       booking = new Booking(null, 
         userid,
         username,
         this.resourceId,
-        value.start, 
-        value.end);      
+        startDate, 
+        endDate);      
     }
     
     this.dataStorageService.setObjectOnServer('bookings', 'editBooking', booking, this, null);          
@@ -267,6 +275,7 @@ export class BookingsComponent implements OnInit {
 
   onAddObject(booking: Booking) {
     console.log('onAddObject');
+    let self = this;
     
     this.errorMessage = '';
     this.editMode = false;
@@ -277,9 +286,16 @@ export class BookingsComponent implements OnInit {
     console.log('form submitted start is ' +  booking.start);
     console.log('form submitted end is ' +  booking.end); 
     
+    // convert to display date using moment.
+    let displayStartDate = moment(booking.start).format(self.displayTimeFormat);
+    let displayEndDate = moment(booking.end).format(self.displayTimeFormat);
+
+    console.log('form displayStartDate is ' +  displayStartDate);
+    console.log('form displayEndDate is ' +  displayEndDate); 
+
     this.slForm.setValue({
-      start: booking.start,
-      end: booking.end      
+      start: displayStartDate,
+      end: displayEndDate      
     });   
     
     this.dateRangePickerService.setDateRanges();
@@ -293,16 +309,25 @@ export class BookingsComponent implements OnInit {
     console.log('onEditObject ' + calEvent.id);
     console.log('booking start ' + booking.start);
     console.log('booking end ' + booking.end);
-    console.log('booking id ' + booking.id);    
+    console.log('booking id ' + booking.id);   
+    
+    let self = this; 
 
     this.errorMessage = '';
     this.editCalendarEvent = calEvent;
     this.editBooking = booking;
-    this.editIndex = calEvent.id;
     this.editMode = true;
+
+    // convert to display date using moment.
+    let displayStartDate = moment(booking.start).format(self.displayTimeFormat);
+    let displayEndDate = moment(booking.end).format(self.displayTimeFormat);
+
+    console.log('form displayStartDate is ' +  displayStartDate);
+    console.log('form displayEndDate is ' +  displayEndDate); 
+
     this.slForm.setValue({
-      start: booking.start,
-      end: booking.end,      
+      start: displayStartDate,
+      end: displayEndDate      
     });
 
     this.dateRangePickerService.setDateRanges();
