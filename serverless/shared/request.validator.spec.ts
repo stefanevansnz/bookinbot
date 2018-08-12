@@ -1,13 +1,9 @@
 import {mock, instance, when, verify, anyOfClass} from 'ts-mockito';
-import { RequestExtractor } from './request.extractor';
-import { DataAccessObject } from './data.access.object';
-import { ResponseBuilder } from './response.builder';
-import { RequestProcessor } from './request.processor';
 import { RequestValidator } from './request.validator';
 
 const assert = require('assert');
 
-describe("The request validator ", function() {
+describe("The request validator", function() {
 
 
   it("can validate bookings", function() {  
@@ -16,56 +12,48 @@ describe("The request validator ", function() {
     // bookings
     let bookingsForResource = [
       {"resourceid":"9c2ae2bc-ec9f-4d2b-80a5-5ed42654ffab",
-       "start":"10/07/2018 10:00 AM","end":"11/07/2018 10:00 AM",
+       "start":"2018-08-08T10:00:00","end":"2018-08-09T10:00:00",
        "id":"da7b0c89-2f32-4149-8ac5-4c1426185829",
        "userid":"11b341d9-6df7-4bee-a353-13d689274a6a",
-       "username":"Tom Tom"}
+       "username":"Tom Tom"},
+      {"resourceid":"9c2ae2bc-ec9f-4d2b-80a5-5ed42654ffab",
+       "start":"2018-10-08T10:00:00","end":"2018-11-09T10:00:00",
+       "id":"da7b0c89-2f32-4149-8ac5-4c1426185830",
+       "userid":"11b341d9-6df7-4bee-a353-13d689274a6a",
+       "username":"Tom Tom"}       
     ];
 
     let targetBooking;
     let description;
-    let bookingsExists;
-    let lastBookingUserName;
+    let testResult;
     
-    description = 'Trying to book just before';
-    console.log(description);
     targetBooking = {
       "userid":"11b341d9-6df7-4bee-a353-13d689274a6c",
-      "start":"09/07/2018 10:00 AM",
-      "end":"10/07/2018 10:00 AM"
+      "start":"2018-08-07T10:00:00","end":"2018-08-08T10:00:00"
     };    
-    bookingsExists = validator.searchBookingInList(bookingsForResource, targetBooking);
-    assert(!bookingsExists, description);
+    testResult = validator.searchBookingInList(bookingsForResource, targetBooking);
+    assert(!testResult.bookingsExists, 'A booking does not exist just before a current booking');
 
-    description = 'Trying to book during';
-    console.log(description);    
     targetBooking = {
       "userid":"11b341d9-6df7-4bee-a353-13d689274a6c",
-      "start":"10/07/2018 10:00 AM",
-      "end":"11/07/2018 10:00 AM"
+      "start":"2018-08-08T10:00:00","end":"2018-08-09T10:00:00"
     };    
-    bookingsExists = validator.searchBookingInList(bookingsForResource, targetBooking);
-    assert(bookingsExists, description);
+    testResult = validator.searchBookingInList(bookingsForResource, targetBooking);
+    assert(testResult.bookingsExists, 'A booking does exist during a current booking');
 
-    description = 'Trying to book just after';
-    console.log(description);
     targetBooking = {
       "userid":"11b341d9-6df7-4bee-a353-13d689274a6c",
-      "start":"12/07/2018 10:00 AM",
-      "end":"13/07/2018 10:00 AM"
+      "start":"2018-08-09T10:00:00","end":"2018-08-10T10:00:00"
     };    
-    bookingsExists = validator.searchBookingInList(bookingsForResource, targetBooking);
-    assert(!bookingsExists, description);
+    testResult = validator.searchBookingInList(bookingsForResource, targetBooking);
+    assert(!testResult.bookingsExists, 'A booking does not exist just after a current booking');
 
-    description = 'Trying to book one month after';
-    console.log(description);
     targetBooking = {
       "userid":"11b341d9-6df7-4bee-a353-13d689274a6c",
-      "start":"15/08/2018 10:00 AM",
-      "end":"17/08/2018 10:00 AM"
+      "start":"2018-09-09T10:00:00","end":"2018-09-10T10:00:00"
     };    
-    bookingsExists = validator.searchBookingInList(bookingsForResource, targetBooking);
-    assert(!bookingsExists, description);
+    testResult = validator.searchBookingInList(bookingsForResource, targetBooking);
+    assert(!testResult.bookingsExists, 'A booking does not exist one month after a current booking');
 
 
   });

@@ -156,8 +156,11 @@ export class RequestValidator {
                 bookingsExists = true;
                 lastBookingUserName = booking.username;
                 console.log('lastBookingUserName is ' + lastBookingUserName);
+            } else {
+                console.log('booking is free!');
             }
         });
+        console.log('returning bookingsExists as ' +  bookingsExists);
         return { bookingsExists, lastBookingUserName};
     }
 

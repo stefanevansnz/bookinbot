@@ -210,7 +210,8 @@ export class BookingsComponent implements OnInit {
     console.log('form endDate is ' +  endDate); 
 
     if (startDate > endDate) {
-      this.message = 'The start date is in front of the end date';
+      console.log('The start date is in front of the end date'); 
+      this.errorMessage = 'The start date is in front of the end date';
       return;
     }
     startDate = startDate.format(self.timeFormat);
