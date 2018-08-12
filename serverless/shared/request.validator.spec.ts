@@ -55,6 +55,14 @@ describe("The request validator", function() {
     testResult = validator.searchBookingInList(bookingsForResource, targetBooking);
     assert(!testResult.bookingsExists, 'A booking does not exist one month after a current booking');
 
+    targetBooking = {
+      "userid":"11b341d9-6df7-4bee-a353-13d689274a6c",
+      "start":"2018-08-08T11:00:00","end":"2018-08-08T13:00:00"
+    };    
+    testResult = validator.searchBookingInList(bookingsForResource, targetBooking);
+    assert(testResult.bookingsExists, 'A booking does exist inside a current booking');
+
+
 
   });
 
