@@ -51,8 +51,11 @@ export class RequestValidator {
   
         // get all shares for this user
         console.log('Get resource for this user');
+        let method = eventHolder.method;
+        eventHolder.method = 'GET';
         dataAccessObject.resources(validationResponse, eventHolder, function() { 
             console.log('Got response for resource');
+            eventHolder.method = method;
             if (validationResponse.resultSet.length > 0) {                    
                 console.log('Resource is owned by this user');
                 callback(true);
