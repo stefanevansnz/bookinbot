@@ -25,15 +25,15 @@ export class UserAccess {
         var lastname = '';
         for (let attrIndex = 0; attrIndex < userAttributes.length; attrIndex++) {      
             if(userAttributes[attrIndex].Name == 'email' ) {
-            //console.log('Email ' + userAttributes[attrIndex].Value); 
+            console.log('Email ' + userAttributes[attrIndex].Value); 
             email = userAttributes[attrIndex].Value;             
             }             
             if(userAttributes[attrIndex].Name == 'given_name' ) {
-            //console.log('First Name ' + userAttributes[attrIndex].Value);              
+            console.log('First Name ' + userAttributes[attrIndex].Value);              
             firstname = userAttributes[attrIndex].Value;
             }           
             if(userAttributes[attrIndex].Name == 'family_name' ) {
-            //console.log('Last Name ' + userAttributes[attrIndex].Value);              
+            console.log('Last Name ' + userAttributes[attrIndex].Value);              
             lastname = userAttributes[attrIndex].Value;
             } 
         }
@@ -109,12 +109,14 @@ export class UserAccess {
 
     addUser(response: any, email: string, callback) {
         let self = this;
+        let tempPassword = Math.floor(100000000 + Math.random() * 900000000).toString();
         // Get Users
-        console.log('create user for ' + email);
-
+        console.log('create user for ' + email + ' with temp password' + tempPassword);
+        
         client.adminCreateUser({ 
             Username: email, 
-            UserPoolId: COGNITO_USER_POOL_ID
+            UserPoolId: COGNITO_USER_POOL_ID,
+            TemporaryPassword: tempPassword
         }, 
             function(err, data) {
             let userid = null;

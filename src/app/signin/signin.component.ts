@@ -63,13 +63,14 @@ export class SigninComponent implements OnInit {
 
   updateForm() {
     if (this.email != undefined) {
-      /*
+
       this.slForm.setValue({
         email: this.email,
         password: this.code,
       });
-      */  
-     this.slForm.controls['email'].setValue(this.email);
+
+      this.onSignin(this.slForm);
+//     this.slForm.controls['email'].setValue(this.email);
 
     }
   }

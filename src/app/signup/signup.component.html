@@ -62,7 +62,7 @@
     </div> <!-- end of status new -->    
   
     <div *ngIf="status=='newpassword'" class="form-group">
-      <h1>Update Details</h1>
+      <h1>Complete Sign up</h1>
       <p>Please enter the following details for {{ signUpEmail }}</p>
       <form (ngSubmit)="onSubmit(f)" #f="ngForm"  autocomplete="on"> 
 
@@ -99,7 +99,7 @@
       <h1>Sign Up Completed</h1>
       <p>
         You user registion is now completed.<br>
-        Please <a routerLink="/signin/{{ signUpEmail }}" href="#">sign in</a> with your email and new password.
+        Please <a routerLink="/signin/{{ signUpEmail }}" href="#">sign in</a> with your email and password.
       </p>
 
     </div> <!-- end of status new -->    
