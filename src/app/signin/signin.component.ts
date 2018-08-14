@@ -21,7 +21,6 @@ export class SigninComponent implements OnInit {
   signUpEmail: string;  
 
   email: string;
-  code: string
 
   constructor(private authenticationService: AuthenticationService,
               private notificationService: NotificationService,
@@ -37,22 +36,8 @@ export class SigninComponent implements OnInit {
     );
 
     let self = this;
-    this.route.params
-      .subscribe(
-        (params: Params) => {
-          // something has changed
-          this.email = params['email'];
-          console.log('load email = ' + this.email);
-          //form.value.email = email;
-          if (params['code'] == undefined) {
-            this.code = '';
-          } else {
-            this.code = params['code'];
-          }
-          console.log('load code = ' + this.code);
 
-        }
-      );    
+         
 
   }
 
@@ -64,13 +49,7 @@ export class SigninComponent implements OnInit {
   updateForm() {
     if (this.email != undefined) {
 
-      this.slForm.setValue({
-        email: this.email,
-        password: this.code,
-      });
-
-      this.onSignin(this.slForm);
-//     this.slForm.controls['email'].setValue(this.email);
+      this.slForm.controls['email'].setValue(this.email);
 
     }
   }
@@ -87,13 +66,6 @@ export class SigninComponent implements OnInit {
   successfulLogin() {
     console.log('successfulLogin');
     this.router.navigateByUrl('/resources'); 
-  }
-
-  newPasswordRequired() {
-    //this.router.navigateByUrl('/signup/newpassword/' + this.signUpEmail);
-    this.router.navigate(['/signup/newpassword/' + this.signUpEmail], {
-      skipLocationChange: true
-    });
   }
 
 

@@ -58,7 +58,7 @@ export class HeadingComponent implements OnInit {
 
   onTryForFree() {
     console.log('onTryForFree');
-    this.router.navigate(['/signup/new']);
+    this.router.navigate(['/signup']);
   }
     
 

@@ -22,10 +22,12 @@ const appRoutes: Routes = [
     { path: '', component: SplashComponent },
     { path: 'features', component: FeaturesComponent },                   
     { path: 'pricing', component: PricingComponent },                       
-    { path: 'signup/:status/:id', component: SignupComponent },
-    { path: 'signup/:status', component: SignupComponent },
+//    { path: 'signup/:status/:id', component: SignupComponent },
+//    { path: 'signup/:status/:email/:code', component: SignupComponent },    
+    { path: 'signup', component: SignupComponent },    
+    { path: 'signup/:email/:code', component: SignupComponent },    
+//    { path: 'signup/:status', component: SignupComponent },
     { path: 'signin', component: SigninComponent },    
-    { path: 'signin/:email/:code', component: SigninComponent },    
     { path: 'signin/:email', component: SigninComponent },    
     { path: '**', component: PageNotFoundComponent}    
 ];

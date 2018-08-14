@@ -15,7 +15,14 @@ Resources:
       EmailVerificationSubject: 'Welcome to BookInBot.com'
       EmailVerificationMessage: 'Welcome to BookInBot.com<br><br>Please click the link below to verify your email address. {##Verify Email##} <br><br>The BookInBot Team.'
       EmailSubject: 'You have been invited to join BookInBot.com'
-      EmailMessage: 'Hi, you have been invited to join BookInBot.com<br><br>Your username is {username} and temporary password is {####}<br><br>Copy the temporary password above and use to sign in below<br><br>http://bookinbot.com/signin/{username}<br><br>The BookInBot Team.'
+      EmailMessage: 'Hi, you have been invited to join BookInBot.com<br>
+<br>
+Click on the link below and sign up.<br>
+<br>
+http://localhost:4200/signup/{username}/{####}<br>
+<br>
+The BookInBot Team.
+'
       Policies:
         PasswordPolicy:
           MinimumLength: 6
