@@ -23,9 +23,10 @@ export class SharesCommand {
         let resourceId = eventHolder.id;     
         console.log('SharesCommand ' + path);
         switch (path) {
-            case 'shares':
+            case 'shares': {
                 switch (method) {
-                    case 'POST': 
+                    case 'POST': { 
+                        console.log('shares post');
                         // create user in cognito first
                         self.userAccess.shares(responseBuilder, eventHolder, function(userid) {
                             console.log('User created is with user id of ' + userid);
@@ -34,10 +35,12 @@ export class SharesCommand {
                             self.dataAccessObject.shares(responseBuilder, eventHolder, function() {
                                 callback();
                             });    
-                        }); 
-                    break;                         
-                    default:
-                    this.requestValidator.checkIfOwnerOfResource(this.dataAccessObject, eventHolder, 
+                        });
+                        break;                         
+                    }
+                    default: {
+                    console.log('shares default');
+                        this.requestValidator.checkIfOwnerOfResource(this.dataAccessObject, eventHolder, 
                         function(resourceOwner) {
                             console.log('resourceOwner is ' + resourceOwner + ' resourceId is ' + resourceId);
                             if (resourceOwner || resourceId == undefined) {
@@ -52,14 +55,19 @@ export class SharesCommand {
                                 callback();
                             }
                         });
-                    break;
+                        break;
+                    }
                 }
-            case 'sharessearch':
+                break;
+            }
+            case 'sharessearch': {
+                console.log('sharessearch default');
                 eventHolder.id = eventHolder.resourceId;
                 self.userAccess.sharessearch(responseBuilder, eventHolder, function() {
                     callback();
                 });
-                break;                
+                break;
+            }    
 
         }       
 
