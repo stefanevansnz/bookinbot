@@ -1496,7 +1496,7 @@
             this.renderTimePicker('right');
 
             // apply changes for time
-            this.clickApply();
+            //this.clickApply();
 
         },
 
