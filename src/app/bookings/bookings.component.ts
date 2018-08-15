@@ -98,11 +98,15 @@ export class BookingsComponent implements OnInit {
         themeSystem: 'bootstrap4',
         header: {
           left: 'title',
-          center: '',
           //right: 'month,agendaWeek  '
           right: 'prev today next'
         },
-        nowIndicator: true,
+        footer: {
+          left: 'month,listWeek,agendaWeek,agendaDay',
+          //right: 'month,agendaWeek  '
+          right: 'prev today next'
+        },
+        nowIndicator: true,      
         height: 540,
         // open booking for update
         eventClick: function(calEvent, jsEvent, view) {

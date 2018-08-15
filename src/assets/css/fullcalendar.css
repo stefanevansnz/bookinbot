@@ -3,6 +3,14 @@
  * Docs & License: https://fullcalendar.io/
  * (c) 2018 Adam Shaw
  */
+
+ /*
+ .fc-today {
+  background: rgb(255, 249, 199) !important;
+  border: none !important;
+  font-weight: bold;
+} */
+
 .fc {
   direction: ltr;
   text-align: left; }
