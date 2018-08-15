@@ -37,9 +37,9 @@ export class BookingsComponent implements OnInit {
   editBooking: Booking;
   ownerOfResource = false;
   
-  private readonly displayTimeFormat = 'DD/MM/YYYY hh:mm A';
-  private readonly timeFormat = 'YYYY-MM-DDThh:mm:00';
-  private readonly timeFormatEvent = 'YYYY-MM-DD hh:mm:00';  
+  private readonly displayTimeFormat = 'DD/MM/YYYY hh:mm a';
+  private readonly timeFormat = 'YYYY-MM-DDTHH:mm:00';
+  private readonly timeFormatEvent = 'YYYY-MM-DD HH:mm:00';  
   private readonly defaultTime = '10:00';    
   private editCalendarEvent: any;
   private resourceId;
