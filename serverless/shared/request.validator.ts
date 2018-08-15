@@ -126,6 +126,7 @@ export class RequestValidator {
         console.log('target start is ' + targetBooking.start);  
         console.log('target end is ' + targetBooking.end);
         console.log('target userid is ' + targetBooking.userid); 
+        console.log('target id is ' + targetBooking.id); 
 
         // get all shares for that resource
         eventHolder.id = eventHolder.object.resourceid;
@@ -144,17 +145,18 @@ export class RequestValidator {
     searchBookingInList(bookingsForResource, targetBooking) {
         let bookingsExists = false;
         let lastBookingUserName = '';
-        console.log('validating if target booking already exists for this start ' + targetBooking.start + ' and end ' + targetBooking.end);
+        console.log(
+        'target  id ' + targetBooking.id + 
+        ' start ' + targetBooking.start + 
+        ' end ' + targetBooking.end);
         bookingsForResource.forEach(booking => {
-            console.log('booking id ' + booking.id + 
+            console.log('testing id ' + booking.id + 
                         ' start ' + booking.start + 
-                        ' end ' + booking.end +
-                        ' username ' + booking.username + 
-                        ' userid ' + booking.userid );
+                        ' end ' + booking.end);
             // check if already booked
-            if ((targetBooking.start >= booking.start && targetBooking.start < booking.end) ||
-                (targetBooking.end > booking.start && targetBooking.end <= booking.end) &&
-                (targetBooking.userid != booking.userid)) {
+            if (((targetBooking.start >= booking.start && targetBooking.start < booking.end) ||
+                 (targetBooking.end > booking.start && targetBooking.end <= booking.end)) &&
+                 (targetBooking.id != booking.id)) {
                 console.log('booking is taken!');
                 bookingsExists = true;
                 lastBookingUserName = booking.username;
