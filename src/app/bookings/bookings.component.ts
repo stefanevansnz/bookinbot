@@ -124,10 +124,14 @@ export class BookingsComponent implements OnInit {
         },            
         // open booking to be created
         dayClick: function(date, jsEvent, view) {
-          console.log('Clicked on: ' + date.format());
-          var startItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).format(self.timeFormat);
-          // add a day
-          var endItem = moment(date.format(this.dateFormat) + ' ' + self.defaultTime).add(1, 'days').format(self.timeFormat);
+          var inputDate = date.format();
+          var inputTime = date.format(this.dateFormat) + ' ' + self.defaultTime;
+          if (inputDate.length > 10) {
+            inputTime = date.format(this.dateFormat);
+          }
+          console.log('Clicked on inputDate: ' + inputDate + ' - ' + inputDate.length);
+          var startItem = moment(inputTime).format(self.timeFormat);
+          var endItem = moment(inputTime).add(1, 'days').format(self.timeFormat);
           console.log('form submitted start is ' + startItem);
           console.log('form submitted end is ' + endItem);          
           var booking = new Booking(null, null, null, null, startItem, endItem);
