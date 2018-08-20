@@ -106,12 +106,16 @@ export class BookingsComponent implements OnInit {
           //right: 'month,agendaWeek  '
           right: 'prev today next'
         },
-        nowIndicator: true,      
+        nowIndicator: true,   
+        editable: true,
         height: 540,
         // open booking for update
         eventClick: function(calEvent, jsEvent, view) {
           console.log('calEvent.start: ' + calEvent.start);   
-          console.log('calEvent.end: ' + calEvent.end);          
+          console.log('calEvent.end: ' + calEvent.end);  
+          console.log('calEvent.username: ' + calEvent.username);  
+          console.log('calEvent.resourceId: ' + calEvent.resourceId);  
+          
           var startItem = moment(calEvent.start).format(self.timeFormatEvent);
           var endItem = moment(calEvent.end).format(self.timeFormatEvent);
           console.log('startItem: ' + startItem);   
@@ -138,7 +142,22 @@ export class BookingsComponent implements OnInit {
           // add object
           self.onAddObject(booking);
           
-        },           
+        },  
+        eventDrop: function(calEvent, delta, revertFunc) {
+          let inputTime = calEvent.start.format();
+          console.log(calEvent.id + " was dropped on " +inputTime);
+          console.log("user id " + calEvent.userid);
+          console.log("resourceId " + calEvent.resourceId);          
+          var startItem = moment(inputTime).format(self.timeFormat);
+          var endItem = moment(inputTime).add(1, 'days').format(self.timeFormat);
+          console.log('form submitted start is ' + startItem);
+          console.log('form submitted end is ' + endItem);          
+          
+          var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
+          self.onEditObject( calEvent, booking);
+
+            
+        },                 
         events: function(start, end, timezone, callback) {            
           self.dataStorageService.addAuthorization(function(headers) {
             let authHeader = { Authorization: headers.get('Authorization')};
