@@ -14,6 +14,11 @@ export class RequestValidator {
         let userSessionId = eventHolder.userSessionId;   
         let bookingOwnedByUser = false;   
         let bookingId = eventHolder.object.id;
+        if (bookingId == null) {
+            console.log('No booking id so not owned by anyone yet.');
+            callback(true);
+            return;
+        }
   
         console.log('Get booking for this user');
         eventHolder.method = 'GET'; 

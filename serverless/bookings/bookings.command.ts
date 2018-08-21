@@ -47,17 +47,27 @@ export class BookingsCommand {
                 });
             break;
             case 'POST': 
-            let validationResponse = new ResponseBuilder();
-            this.requestValidator.checkIfBookingExists(validationResponse, this.dataAccessObject, eventHolder, 
-                function(bookingsExists, lastBookingUserName) {
-                    if (!bookingsExists) {
+            this.requestValidator.checkIfOwnerOfBooking(this.dataAccessObject, eventHolder, 
+                function(ownerOfBooking) {
+                    if (ownerOfBooking) {
                         eventHolder.method = 'POST';
-                        self.dataAccessObject.bookings(responseBuilder, eventHolder, function() {
-                            callback();
-                        });
+                        let validationResponse = new ResponseBuilder();
+                        self.requestValidator.checkIfBookingExists(validationResponse, self.dataAccessObject, eventHolder, 
+                            function(bookingsExists, lastBookingUserName) {
+                                if (!bookingsExists) {
+                                    eventHolder.method = 'POST';
+                                    self.dataAccessObject.bookings(responseBuilder, eventHolder, function() {
+                                        callback();
+                                    });
+                                } else {
+                                    responseBuilder.errorMessage = 
+                                    lastBookingUserName + ' has already booked the resource during this time' ;
+                                    callback();
+                                }
+                            });
                     } else {
                         responseBuilder.errorMessage = 
-                        'This resource is already booked by ' + lastBookingUserName + ' at that time' ;
+                        'Sorry, this is not your booking to change.';
                         callback();
                     }
                 });
