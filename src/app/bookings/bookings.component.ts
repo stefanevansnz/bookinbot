@@ -36,6 +36,7 @@ export class BookingsComponent implements OnInit {
   bookings: Booking[] = [];
   editBooking: Booking;
   ownerOfResource = false;
+  revertFunc;
   
   private readonly displayTimeFormat = 'DD/MM/YYYY hh:mm a';
   private readonly timeFormat = 'YYYY-MM-DDTHH:mm:00';
@@ -124,7 +125,7 @@ export class BookingsComponent implements OnInit {
           console.log('calEvent.id: ' + calEvent.id);   
           console.log('calEvent.username: ' + calEvent.username);                        
           var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
-          self.onEditObject( calEvent, booking);
+          self.onEditObject( calEvent, null, booking);
         },            
         // open booking to be created
         dayClick: function(date, jsEvent, view) {
@@ -154,7 +155,7 @@ export class BookingsComponent implements OnInit {
           console.log('form submitted end is ' + endItem);          
           
           var booking = new Booking( calEvent.id,  calEvent.userid, calEvent.username, calEvent.resourceId, startItem, endItem);
-          self.onEditObject( calEvent, booking);
+          self.onEditObject( calEvent, revertFunc, booking);
 
             
         },                 
@@ -297,8 +298,13 @@ export class BookingsComponent implements OnInit {
         color: colour
       });  
     }
-    
+
     jQuery("#editModal").modal("hide");
+  }
+
+  onCancelModel() {
+    console.log('cancel model');
+    this.revertFunc();
   }
 
   onAddObject(booking: Booking) {
@@ -333,18 +339,19 @@ export class BookingsComponent implements OnInit {
   }    
 
 
-  onEditObject(calEvent, booking: Booking) {
+  onEditObject(calEvent, revertFunc, booking: Booking) {
     console.log('onEditObject ' + calEvent.id);
     console.log('booking start ' + booking.start);
     console.log('booking end ' + booking.end);
     console.log('booking id ' + booking.id);   
-    
+
     let self = this; 
 
     this.errorMessage = '';
     this.editCalendarEvent = calEvent;
     this.editBooking = booking;
     this.editMode = true;
+    self.revertFunc = revertFunc;
 
     // convert to display date using moment.
     let displayStartDate = moment(booking.start).format(self.displayTimeFormat);

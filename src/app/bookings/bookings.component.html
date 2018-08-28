@@ -67,7 +67,11 @@
               type="button"
               (click)="onDelete()" 
               *ngIf="editMode">Delete</button>                                 
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button 
+              class="btn btn-secondary" 
+              type="button"
+              (click)="onCancelModel()"              
+              data-dismiss="modal">Close</button>
           </div>
         </form>           
       </div>
