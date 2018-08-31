@@ -178,7 +178,11 @@ export class DynamoDb {
         // create in db
         if (object.id == null) {
             object.id = uuid();
-        }        
+        } 
+        
+        // add timestamp
+        object.timestamp = new Date().toISOString();
+
         console.log('object.id is ' + object.id); 
         let params = {
             TableName: tableName,
