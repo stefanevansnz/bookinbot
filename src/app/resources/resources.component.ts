@@ -23,6 +23,7 @@ export class ResourcesComponent implements OnInit {
   resourcesLoading = true;
   sharesLoading = true;
   editMode = false;
+  sureOfDelete = false;
   resources: Resource[] = [];
   editResource: Resource;
 
@@ -62,32 +63,24 @@ export class ResourcesComponent implements OnInit {
     this.router.navigate(['/bookings/' + resourceid]);
   }
 
-  onSubmit(form: NgForm) {
-    const value = form.value;
-    console.log('form submitted title is ' + value.title);
-    let self = this; 
-    let resource = new Resource(null, null, null, value.title);
-
-    if (this.editMode) {
-      console.log('edit mode');
-      resource = new Resource( this.editResource.id, null, null, value.title);
-
-    }
-    this.dataStorageService.setObjectOnServer('resources', 'editResource', resource, self, null);          
-  
-  }
 
   onAddObject() {
     this.editMode = false;
     this.slForm.reset();
+    this.sureOfDelete = false;  
+    this.message = '';      
     jQuery("#editModal").modal("show");
   }  
   
   closeSetModal() { 
+    this.sureOfDelete = false;    
+    this.slForm.reset();    
     jQuery("#editModal").modal("hide");
   }
 
   closeDeleteModal() { 
+    this.sureOfDelete = false;    
+    this.slForm.reset();
     jQuery("#editModal").modal("hide");
   }
 
@@ -98,11 +91,56 @@ export class ResourcesComponent implements OnInit {
     console.log('this.editResource.id is ' + this.editResource.id);
     this.editIndex = index;
     this.editMode = true;
+    this.sureOfDelete = false;    
+
+    this.message = '';
+
+    /*
+    if (resource.title != undefined) {
+      this.slForm.controls['title'].setValue(resource.title);
+    }
+    */
+
     this.slForm.setValue({
-      title: resource.title,
-    });
+      title: resource.title
+    });    
+  
     jQuery("#editModal").modal("show");
   }  
+
+  onDeleteSure() {
+    console.log('onDeleteSure');
+    this.sureOfDelete = true;
+  }
+
+
+  onSubmit(form: NgForm) {
+    const value = form.value;
+    console.log('sureOfDelete is ' + this.sureOfDelete);
+    let self = this; 
+
+    if (this.sureOfDelete) {
+      console.log('form submitted suredelete is ' + value.suredelete);
+      if (value.suredelete == 'DELETE') {
+        this.onDelete();
+      } else {
+        this.message = 'Type DELETE in the field above.';
+      }
+    } else {
+      console.log('form submitted title is ' + value.title);
+
+      let resource = new Resource(null, null, null, value.title);
+  
+      if (this.editMode) {
+        console.log('edit mode');
+        resource = new Resource( this.editResource.id, null, null, value.title);
+  
+      }
+      this.dataStorageService.setObjectOnServer('resources', 'editResource', resource, self, null);            
+    }
+  
+  }
+
 
   onDelete() {
     let self = this;

@@ -7,11 +7,11 @@
           <h4 class="modal-title">{{ editMode ? 'Edit' : 'Add' }} Resource</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
+        <form (ngSubmit)="onSubmit(f)" #f="ngForm" *ngIf="!sureOfDelete">     
           <div class="modal-body">
             <div class="row">
-              <div class="col-sm-12 form-group">
-                <label for="name">Title</label>
+              <div class="col-sm-12 form-group" >
+                <label for="title">Resource Title</label>
                 <input 
                   type="text" id="title" class="form-control" name="title" ngModel required>
               </div>   
@@ -32,21 +32,62 @@
               id="save-resource"
               class="btn btn-success" 
               type="submit" 
-              [disabled]="!f.valid">
+              [disabled]="!f.valid"
+              *ngIf="!sureOfDelete">
               {{ editMode ? 'Update' : 'Add' }}</button>   
             <button 
               id="delete-resource"             
               class="btn btn-danger" 
               type="button"
-              (click)="onDelete()" 
+              (click)="onDeleteSure()" 
               *ngIf="editMode">Delete</button>                                 
             <button 
               id="cancel-resource" 
               type="button" 
               class="btn btn-secondary" 
+              (click)="closeSetModal()"              
               data-dismiss="modal">Close</button>
           </div>
-        </form>           
+        </form>    
+        
+        <form (ngSubmit)="onSubmit(f)" #f="ngForm" *ngIf="sureOfDelete">     
+            <div class="modal-body">
+              <div class="row">
+                  <div class="col-sm-12 form-group">
+                      <label for="suredelete">Type the word DELETE below to remove {{ editResource.title }}.</label>                
+                      <input 
+                        type="text" id="suredelete" class="form-control" name="suredelete" ngModel required>
+                  </div>   
+              </div> 
+              <div class="row" *ngIf="message">
+                  <div class="col-sm-12 form-group">
+                      <div class="alert alert-danger" role="alert">
+                          {{ message }}
+                      </div>   
+                  </div>
+              </div>
+  
+            </div>        
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button 
+                id="delete-resource-sure"             
+                class="btn btn-danger" 
+                type="submit"
+                [disabled]="!f.valid"
+                *ngIf="editMode && sureOfDelete">Confirm Delete</button>                                 
+  
+              <button 
+                id="cancel-resource" 
+                type="button" 
+                class="btn btn-secondary" 
+                (click)="closeSetModal()"                
+                data-dismiss="modal">Close</button>
+            </div>
+          </form>    
+  
+        
+
       </div>
     </div>
   </div>
@@ -59,13 +100,6 @@
       Loading...
       </div>       
       <ng-template #resourcesLoaded>
-<!--        
-      <span><a routerLink="/">Home</a></span>
-      <hr>
--->
-      <div *ngIf="message" class="alert alert-danger" role="alert">
-          {{ message }}
-      </div>       
       <h1>Your Resources</h1>
       <button id="add-resource" type="button" class="btn btn-primary" 
         (click)="onAddObject()">Add</button>    
