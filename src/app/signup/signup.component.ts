@@ -96,9 +96,11 @@ export class SignupComponent implements OnInit {
     if (email == null) {
       console.log('complete sign in');
       email = this.email;
+      console.log('using email ' + email);
       if (newpassword != password) {
         this.message = 'Passwords do not match';
       } else {
+        console.log('signinUser');
         this.authenticationService.signinUser(email, password, newpassword, firstname, lastname, this);
       }  
     } else {
@@ -111,6 +113,11 @@ export class SignupComponent implements OnInit {
     console.log('successfulSignUp ' + status);
     this.status = status;
     //this.router.navigateByUrl('/signup/'+ status+ '/' + email);    
+  }
+
+  successfulLogin() {
+    console.log('successfulLogin');
+    this.router.navigateByUrl('/resources'); 
   }
 
   isLoading() {

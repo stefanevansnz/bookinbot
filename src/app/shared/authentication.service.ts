@@ -49,50 +49,9 @@ export class AuthenticationService {
         
     }
 
-    signinUser(email: string, password: string, newPassword: string, firstname: string, lastname: string, callback ) {
-
-        let self = this;
-
-        let authenticationData = {
-          Username : email,
-          Password : password,
-        };  
-
-        let poolData : any = {
-            UserPoolId: environment.userpoolid,
-            ClientId: environment.clientid
-        };
-
-        console.log('email is ' + email);
-        let authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
-        let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
-        let userData = {
-          Username : email,
-          Pool : userPool
-        };
-        let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
-
-        if (newPassword != null) {
-            console.log ("newPasswordRequired email is " + email);
-            callback.loading = false;  
-            var attributesData = {
-                given_name: firstname,
-                family_name: lastname
-            }            
-            this.savedCognitoUser.completeNewPasswordChallenge(newPassword, attributesData,  {
-                onSuccess: function(result) {
-                    //callback.successfulSignUp();
-                    callback.successfulSignUp('completed', email);
-                },
-                onFailure: function(error) {
-                    console.log ("Authenticated Error:" + error.message);    
-                    self.notificationService.setMessage( error.message );
-                    callback.loading = false;                               
-                }
-            });
-        } else {
-
-            cognitoUser.authenticateUser(authenticationDetails, {
+    authenticateUser(cognitoUser: any, authenticationDetails: any, userPool: any,
+                     callback: any, self: any) {
+        cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
               
               let cognitoGetUser = userPool.getCurrentUser();
@@ -139,7 +98,64 @@ export class AuthenticationService {
                     callback.loading = false;  
                     callback.newPasswordRequired();    
             }        
-          }); 
+          });
+
+    }
+
+    signinUser(email: string, password: string, newPassword: string, firstname: string, lastname: string, callback ) {
+
+        let self = this;
+
+        let authenticationData = {
+          Username : email,
+          Password : password,
+        };  
+
+        let poolData : any = {
+            UserPoolId: environment.userpoolid,
+            ClientId: environment.clientid
+        };
+
+        console.log('email is ' + email + ' password is ' + password);
+        let authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
+        let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+        let userData = {
+          Username : email,
+          Pool : userPool
+        };
+        let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+
+        if (newPassword != null) {
+            console.log ("newPassword email is " + email);
+            callback.loading = false;  
+            var attributesData = {
+                given_name: firstname,
+                family_name: lastname
+            }         
+            if (self.savedCognitoUser == undefined) {
+                let errorMessage = 'Unknown user';
+                console.log('errorMessage ' + errorMessage);    
+                self.notificationService.setMessage( errorMessage );
+                callback.loading = false; 
+                return;                                          
+            }
+            
+            self.savedCognitoUser.completeNewPasswordChallenge(newPassword, attributesData,  {
+                onSuccess: function(result) {
+                    //callback.successfulSignUp();
+                    //callback.successfulSignUp('completed', email);
+                    console.log('Authenticate User');
+                    self.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);
+                },
+                onFailure: function(error) {
+                    console.log('Authenticated Error ' + error.message);    
+                    self.notificationService.setMessage( error.message );
+                    callback.loading = false;                               
+                }
+            });
+        } else {
+            console.log('Authenticate User');
+            this.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);          
         }                   
     }
     

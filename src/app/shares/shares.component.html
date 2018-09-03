@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">      
         <div class="modal-header">
-          <h4 class="modal-title">{{ editMode ? 'Edit' : 'Add' }} Email</h4>
+          <h4 class="modal-title">{{ editMode ? 'Remove Person' : 'Add Email' }}</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <form (ngSubmit)="onSubmit(f)" #f="ngForm">     
@@ -18,7 +18,7 @@
                 </div>                          
             </div>   
             <div class="form-group" *ngIf="editMode">
-              <p>Edit email address</p>
+              <p>Are you sure you want to no longer share with this person?</p>
             </div>  
 
             <div *ngIf="searching">
@@ -52,20 +52,13 @@
               *ngIf="!editMode" 
               [disabled]="!f.valid">
               {{ searchMode ? 'Search' : 'Add' }}</button>
-
-            <button *ngIf="editMode"
-              class="edit-share btn btn-success float-right edit" 
-              (click)="onReSendObject()"         
-              type="submit" >
-              Resend
-              </button>  
     
             <button 
               id="delete-share"             
               class="btn btn-danger" 
               type="button"
               (click)="onDelete()" 
-              *ngIf="editMode">Delete</button>                                 
+              *ngIf="editMode">Remove</button>                                 
             <button 
               id="cancel-share" 
               type="button" 
@@ -108,7 +101,7 @@
               class="edit-share btn btn-success float-right edit" 
               (click)="onEditObject(i, share)"         
               type="submit" >
-              Edit
+              Remove
               </button> 
               
               <p *ngIf="share.username">{{ share.username }}</p>
@@ -125,11 +118,6 @@
                 </span>            
               </p>
               <ng-template #loading>...</ng-template>          
-
-    <!--
-              <p *ngIf="share.status == 'INVITE SENT' " class="badge badge-warning">{{ share.status }}</p>
-              <p *ngIf="share.status == 'SIGN UP COMPLETED' " class="badge badge-success">{{ share.status }}</p>
-    -->        
             </li>
           </ul>
         </ng-template>  
