@@ -153,6 +153,7 @@ export class DynamoDb {
         let params = {
             TableName: tableName,
             KeyConditionExpression: keyConditionExpression,
+            ScanIndexForward: false,    // true = ascending, false = descending
             ExpressionAttributeNames:                
                 JSON.parse('{' + expressionAttributeNames + '}'),
             ExpressionAttributeValues: 

@@ -73,20 +73,24 @@ export class ResourcesComponent implements OnInit {
   }  
   
   closeSetModal() { 
-    this.sureOfDelete = false;    
-    this.slForm.reset();    
+    console.log('closeSetModal');
     jQuery("#editModal").modal("hide");
+    this.slForm.reset();    
+    this.sureOfDelete = false;    
   }
 
   closeDeleteModal() { 
-    this.sureOfDelete = false;    
-    this.slForm.reset();
+    console.log('closeDeleteModal');
     jQuery("#editModal").modal("hide");
+    this.slForm.reset();    
+    this.sureOfDelete = false;    
   }
 
 
   onEditObject(index: number, resource: Resource) {
     //console.log('onEditObject ' + index);
+    this.slForm.resetForm();   
+
     this.editResource = resource;
     console.log('this.editResource.id is ' + this.editResource.id);
     this.editIndex = index;
