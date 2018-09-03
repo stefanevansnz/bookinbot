@@ -48,6 +48,15 @@ export class ResourcesComponent implements OnInit {
   }
 
   successfullLoad(self) {
+    jQuery("#editModal").on('hidden.bs.modal', function (e) {
+      console.log('hidding');
+      self.slForm.reset();
+      self.errorMessage = '';
+      self.successMessage = '';
+      self.editMode = false;
+  
+    })
+
     console.log('load shares');
     self.dataStorageService.getObjectArrayFromServer('shares', null, self, null);          
   }

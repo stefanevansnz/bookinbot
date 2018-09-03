@@ -57,6 +57,17 @@ export class SharesComponent implements OnInit {
   }
 
   resourceLoaded(self) {
+
+    jQuery("#editModal").on('hidden.bs.modal', function (e) {
+      console.log('hidding');
+      self.slForm.reset();
+      self.errorMessage = '';
+      self.successMessage = '';
+      self.searchMode = true;
+      self.editMode = false;
+  
+    })
+
     console.log('load shares for resource resourceId = ' + self.resourceId);
     self.dataStorageService.getObjectArrayFromServer('shares', self.resourceId, self, self.sharesLoaded);
   }
@@ -154,10 +165,13 @@ export class SharesComponent implements OnInit {
     this.editIndex = index;
     this.editMode = true;    
     this.searchMode = false;
+    this.slForm.reset();
+
     this.slForm.setValue({
       email: share.email
     });
     jQuery("#editModal").modal("show");
+    jQuery("#editModal").modal('handleUpdate')
   }  
 
   onReSendObject(index: number, share: Share) {
