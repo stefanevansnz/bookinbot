@@ -103,7 +103,8 @@ export class BookingsComponent implements OnInit {
           right: 'prev today next'
         },
         footer: {
-          left: 'month,listWeek,agendaWeek,agendaDay',
+          //left: 'month,listWeek,agendaWeek,agendaDay',
+          left: 'month,agendaWeek,agendaDay',
           //right: 'month,agendaWeek  '
           right: 'prev today next'
         },

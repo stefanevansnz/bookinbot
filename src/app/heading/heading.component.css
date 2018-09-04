@@ -4,7 +4,11 @@ nav.navbar {
 }
 
 ul.navbar-nav span {
-    margin-left: 14px; 
+    margin-left: 6px; 
+}
+
+a.navbar-brand {
+    margin-right: 0px;    
 }
 
 
