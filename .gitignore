@@ -44,9 +44,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# config
-/src/environments/*.ts
-
 # serverless
 serverless/.serverless/*
 serverless/.webpack/*
