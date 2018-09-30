@@ -7,12 +7,12 @@ phases:
     install:
         commands:
             - echo Installing source NPM dependencies...
-            - npm install
             - npm install -g @angular/cli
+            - npm install
     build:
         commands:
-            - echo Build started on `date`
-            - ng build --env=${BUILD_ENV}
+            - echo Starting Angular Build
+            - ng build --prod --aot --output-hashing all 
 artifacts:
     files:
         - '**/*'
