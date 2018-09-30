@@ -7,11 +7,13 @@ phases:
     install:
         commands:
             - echo Installing source NPM dependencies...
-            - npm install -g @angular/cli
             - npm install
+            - npm install --save-dev @angular/cli@latest
     build:
         commands:
             - echo Starting Angular Build
+            - node --version
+            - ng --version
             - ng build --prod --aot --output-hashing all 
 artifacts:
     files:
