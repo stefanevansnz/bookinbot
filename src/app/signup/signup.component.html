@@ -9,7 +9,7 @@
           <label for="email">Email</label>
 
           <div class="input-group">                
-          <input required email id="email" name="email" autocomplete='email' ngModel class="form-control">
+          <input ngModel #email="ngModel" required email id="email" name="email" autocomplete='email' class="form-control">
           </div> 
         </div>
 
@@ -17,8 +17,11 @@
           <label for="password">Password</label>
 
           <div class="input-group">
-          <input required password type="password" id="password" name="password" autocomplete='current-password' ngModel class="form-control">
+          <input ngModel #password="ngModel" required password minlength="6" type="password" id="password" name="password" autocomplete='current-password' class="form-control">
           </div>            
+          <div *ngIf="password.errors?.minlength">
+              Password must be at least 6 characters long.
+          </div> 
         </div> 
 
         <div class="form-group">
@@ -77,15 +80,21 @@
         </div>          
     
         <div class="form-group">
-          <label for="newpassword">New Password</label>
-          <input required password type="password" id="password" name="password" ngModel class="form-control">
+          <label for="password">New Password</label>
+          <input ngModel #password="ngModel" required password minlength="6" type="password" id="password" name="password" class="form-control">
+          <div *ngIf="password.errors?.minlength">
+              Password must be at least 6 characters long.
+          </div>   
         </div>            
 
         <div class="form-group">        
           <label for="newpassword">Confirm Password</label>
-          <input required password type="password" id="newpassword" name="newpassword" ngModel class="form-control">
+          <input ngModel #newpassword="ngModel" required password minlength="6" type="password" id="newpassword" name="newpassword" class="form-control">
+          <div *ngIf="newpassword.errors?.minlength">
+              Password must be at least 6 characters long.
+          </div>   
         </div>            
-        
+      
         <div *ngIf="message" class="alert alert-danger" role="alert">
           {{ message }}
         </div>      

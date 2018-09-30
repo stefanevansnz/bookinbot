@@ -1,0 +1,20 @@
+version: 0.2
+environment_variables:
+    plaintext:
+        S3_BUCKET: "build.bookinbot.com"
+        BUILD_ENV: "prod"
+phases:
+    install:
+        commands:
+            - echo Installing source NPM dependencies...
+            - npm install
+            - npm install -g @angular/cli
+    build:
+        commands:
+            - echo Build started on `date`
+            - ng build --env=${BUILD_ENV}
+artifacts:
+    files:
+        - '**/*'
+    base-directory: 'dist*'
+    discard-paths: yes
