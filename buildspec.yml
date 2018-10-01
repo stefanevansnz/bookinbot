@@ -14,12 +14,9 @@ phases:
         commands:
             - echo Build Angular Code
             - ng build --prod --aot --output-hashing all 
-    post_build:
-         commands:
             - echo Copy Build to S3
             - cd serverless
             - serverless client deploy --stage prod
-
 artifacts:
     files:
         - '**/*'
