@@ -9,6 +9,7 @@ phases:
             - echo Installing source NPM dependencies...
             - npm install
             - npm install -g @angular/cli
+            - npm install -g serverless
     build:
         commands:
             - echo Build Angular Code
