@@ -55,13 +55,21 @@ export class SignupComponent implements OnInit {
           this.email = params['email'];
           console.log('load email = ' + this.email);
           if (params['code'] == undefined) {
+            console.log('New ' + this.code);                         
             this.code = '';
             this.status = 'new';
-          } else {//
+          } else if (this.email == 'confirm') {
+            this.code = params['code'];
+            console.log('Confirm code is ' + this.code);             
+            // test code 
+            this.status = 'new';
+            this.authenticationService.signinUser(this.email, null, null, this.code, null, null, this);
+          } else {
+            console.log('New Password ' + this.code);             
             this.code = params['code'];
             // test code 
             this.status = 'newpassword';
-            this.authenticationService.signinUser(this.email, this.code, null, null, null, this);
+            this.authenticationService.signinUser(this.email, this.code, null, null, null, null, this);
           }
           console.log('load code = ' + this.code);
 
@@ -92,16 +100,18 @@ export class SignupComponent implements OnInit {
     let newpassword = form.value.newpassword;      
     let firstname = form.value.firstname;
     let lastname = form.value.lastname;
+    let code = form.value.code;
 
     if (email == null) {
       console.log('complete sign in');
       email = this.email;
       console.log('using email ' + email);
+      console.log('using code ' + code);      
       if (newpassword != password) {
         this.message = 'Passwords do not match';
       } else {
         console.log('signinUser');
-        this.authenticationService.signinUser(email, password, newpassword, firstname, lastname, this);
+        this.authenticationService.signinUser(email, password, newpassword, code, firstname, lastname, this);
       }  
     } else {
       console.log('sign up');

@@ -14,6 +14,7 @@ export class AuthenticationService {
 
     loadedUser = new Subject();
     savedCognitoUser: any;
+    saveAuthenticationDetails: any;
 
     constructor(private notificationService: NotificationService,
                 private router: Router) {
@@ -102,7 +103,7 @@ export class AuthenticationService {
 
     }
 
-    signinUser(email: string, password: string, newPassword: string, firstname: string, lastname: string, callback ) {
+    signinUser(email: string, password: string, newPassword: string, code: string, firstname: string, lastname: string, callback ) {
 
         let self = this;
 
@@ -116,16 +117,78 @@ export class AuthenticationService {
             ClientId: environment.clientid
         };
 
-        console.log('email is ' + email + ' password is ' + password);
+        console.log('email is ' + email + ' password is ' + password + ' code is ' + code);
         let authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
         let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
         let userData = {
           Username : email,
           Pool : userPool
         };
-        let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
 
-        if (newPassword != null) {
+        if (code != null) {
+            // sign in with code to complete sign up
+            callback.loading = false; 
+
+            let cognitoUser = self.savedCognitoUser;
+            let authenticationDetails = self.saveAuthenticationDetails;
+//            let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+
+            console.log('confirmRegistration for ' + code); 
+            self.savedCognitoUser.confirmRegistration(code, true,  
+                function(error, result) {
+                    if (error) {
+                        console.log('Error Confirming Code ' + error.message);    
+                        self.notificationService.setMessage( error.message );
+                        callback.loading = false; 
+                        return;
+                    }
+                    console.log('call result: ' + result);
+                    console.log('Authenticate User');
+                    self.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);
+                } 
+                
+            );
+
+            //this.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);             
+
+            /*
+            //email = localStorage.getItem("username"); 
+            console.log('email is ' + email);
+
+            userData = {
+                Username : email,
+                Pool : userPool
+            };
+            //console.log('create cognitoUser again from userDate ' + JSON.stringify(userData)); 
+            //cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+
+            console.log('check cognitoUser');
+            if (cognitoUser == undefined) {
+                let errorMessage = 'Unknown user';
+                console.log('errorMessage ' + errorMessage);    
+                self.notificationService.setMessage( errorMessage );
+                callback.loading = false; 
+                return;                                          
+            }           
+            console.log('confirmRegistration for ' + code); 
+            self.savedCognitoUser.confirmRegistration(code, true,  
+                function(error, result) {
+                    if (error) {
+                        console.log('Authenticated Error ' + error.message);    
+                        self.notificationService.setMessage( error.message );
+                        callback.loading = false; 
+                        return;
+                    }
+                    console.log('call result: ' + result);
+                    console.log('Authenticate User');
+                    self.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);
+                } 
+                
+            );
+            */
+
+        } else if (newPassword != null) {
+            // sign in with new password to complete sign up
             console.log ("newPassword email is " + email);
             callback.loading = false;  
             var attributesData = {
@@ -145,6 +208,7 @@ export class AuthenticationService {
                     //callback.successfulSignUp();
                     //callback.successfulSignUp('completed', email);
                     console.log('Authenticate User');
+                    let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
                     self.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);
                 },
                 onFailure: function(error) {
@@ -155,6 +219,7 @@ export class AuthenticationService {
             });
         } else {
             console.log('Authenticate User');
+            let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
             this.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);          
         }                   
     }
@@ -164,14 +229,27 @@ export class AuthenticationService {
         let self = this;
 
         console.log('email is ' + email);
+        let authenticationData = {
+            Username : email,
+            Password : password,
+        };  
+  
 
+        let authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
+  
         let poolData : any = {
             UserPoolId: environment.userpoolid,
             ClientId: environment.clientid
         };
 
         let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
-
+/*        
+        let userData = {
+          Username : email,
+          Pool : userPool
+        };
+        let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+*/
         var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.
             CognitoUserAttribute({
                 Name : 'email',
@@ -205,6 +283,17 @@ export class AuthenticationService {
                 console.log('You have successfully signed up, please confirm your email ');
                 console.log('User id is ' + result.userSub + ' firstname is ' + firstname);
                 // add user with name etc to table
+                //let cognitoUser = result.user;
+                let userData = {
+                    Username : email,
+                    Pool : userPool
+                  };
+                let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+                self.savedCognitoUser = cognitoUser;
+                self.saveAuthenticationDetails = authenticationDetails;
+
+                // save user email for later use for confirmation
+                //localStorage.setItem('username',  email);
 
                 // then ask to sign up
                 callback.successfulSignUp('confirm', email);
