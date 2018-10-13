@@ -43,18 +43,29 @@
         <div *ngIf="message" class="alert alert-danger" role="alert">
             {{ message }}
         </div> 
-                   
-        <button [disabled]="!f.valid" class="btn btn-primary" type="submit">Sign Up</button>
+
+        <div *ngIf="loading; else ready">
+            <button id="signup" [disabled]="true" class="btn btn-primary"             
+            type="submit"><i class="fa fa-refresh fa-spin"></i> Signing up...</button>
+        </div>       
+        <ng-template #ready>
+            <button id="signup" [disabled]="!f.valid" class="btn btn-primary"             
+            type="submit">Sign Up</button>
+        </ng-template>
+
       </form>   
       <div>
-            <a routerLink="/signin">Got a login? Sign In here!</a>
+        <a routerLink="/signin">Got a login already? Sign In here!</a>
+      </div>  
+      <div>
+        <a routerLink="/recover">Resend confirmation code?</a>
       </div>  
 
     </div> <!-- end of status new -->         
 
     <div *ngIf="status=='confirm'" class="form-group">
         <div class="jumbotron text-white rounded bg-success">
-          <h3>Almost done! One last step...</h3>
+          <h3>Almost there! One last step...</h3>
           <p>Please check your e-mail and type in the code we have sent you below.</p>
         </div>
 
@@ -67,15 +78,26 @@
                 </div>  
                 <div *ngIf="code.errors?.pattern">
                     Code must be 6 digits
-                </div>                          
-  
+                </div> 
+
+                <div>
+                  <a routerLink="/recover">Didn't get the code? Resend it.</a>
+                </div>  
+                         
             </div>
       
             <div *ngIf="message" class="alert alert-danger" role="alert">
                 {{ message }}
             </div> 
-                         
-            <button [disabled]="!f.valid" class="btn btn-primary" type="submit">Complete Sign Up</button>
+
+            <div *ngIf="loading; else ready">
+                <button id="signup" [disabled]="true" class="btn btn-primary"             
+                type="submit"><i class="fa fa-refresh fa-spin"></i> Completing Sign up...</button>
+            </div>       
+            <ng-template #ready>
+                <button id="signup" [disabled]="!f.valid" class="btn btn-primary"             
+                type="submit">Complete Sign Up</button>
+            </ng-template>                   
         </form>  
     </div> <!-- end of status new -->    
   
@@ -114,17 +136,24 @@
           {{ message }}
         </div>      
           
-        <button [disabled]="!f.valid" class="btn btn-primary" type="submit">Sign Up</button>
+        <div *ngIf="loading; else ready">
+            <button id="signup" [disabled]="true" class="btn btn-primary"             
+            type="submit"><i class="fa fa-refresh fa-spin"></i> Signing up...</button>
+        </div>       
+        <ng-template #ready>
+            <button id="signup" [disabled]="!f.valid" class="btn btn-primary"             
+            type="submit">Sign Up</button>
+        </ng-template>
+
 
       </form>        
     </div> <!-- end of status newpassword -->    
 
     <div *ngIf="status=='completed'" class="form-group">
-      <h1>Sign Up Completed</h1>
-      <p>
-        You user registion is now completed.<br>
-        Please <a routerLink="/signin/{{ signUpEmail }}" href="#">sign in</a> with your email and password.
-      </p>
+      <div class="jumbotron text-white rounded bg-success">
+            <h3>All done!</h3>
+            <p>Just <a routerLink="/signin">sign in</a> with your email and password</p>
+      </div> 
 
     </div> <!-- end of status new -->    
 

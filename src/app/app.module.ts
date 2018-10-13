@@ -26,6 +26,8 @@ import { BookingsColourPickerService } from './bookings/bookings-colour-picker.s
 import { SharesComponent } from './shares/shares.component';
 import { FeaturesComponent } from './features/features.component';
 import { PricingComponent } from './pricing/pricing.component';
+import { RecoverComponent } from './recover/recover.component';
+import { ForgotComponent } from './forgot/forgot.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { PricingComponent } from './pricing/pricing.component';
     SplashComponent,
     SharesComponent,
     FeaturesComponent,
-    PricingComponent
+    PricingComponent,
+    RecoverComponent,
+    ForgotComponent
   ],
   imports: [
     BrowserModule,

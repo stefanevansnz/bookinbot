@@ -8,6 +8,8 @@ import { FeaturesComponent } from "./features/features.component";
 import { PricingComponent } from "./pricing/pricing.component";
 import { SignupComponent } from "./signup/signup.component";
 import { SigninComponent } from "./signin/signin.component";
+import { RecoverComponent } from "./recover/recover.component";
+import { ForgotComponent } from "./forgot/forgot.component";
 import { SignoutComponent } from "./signout/signout.component";
 import { PageNotFoundComponent } from "./pagenotfound/pagenotfound.component";
 import { AuthenticationGuardService as AuthenticationGuard } from "./shared/authentication-guard.service";
@@ -23,9 +25,11 @@ const appRoutes: Routes = [
     { path: 'features', component: FeaturesComponent },                   
     { path: 'pricing', component: PricingComponent },                       
     { path: 'signup', component: SignupComponent },    
-    { path: 'signup/:email/:code', component: SignupComponent },    
+    { path: 'signup/:email', component: SignupComponent },    
     { path: 'signin', component: SigninComponent },    
-    { path: 'signin/:email', component: SigninComponent },    
+    { path: 'signin/:email', component: SigninComponent },
+    { path: 'recover', component: RecoverComponent }, 
+    { path: 'forgot', component: ForgotComponent },                
     { path: '**', component: PageNotFoundComponent}    
 ];
 

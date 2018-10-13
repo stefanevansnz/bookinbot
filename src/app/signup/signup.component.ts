@@ -38,7 +38,8 @@ export class SignupComponent implements OnInit {
               ) { }
 
 
-  ngOnInit() {    
+  ngOnInit() {  
+    this.loading = false;      
     this.messageUpdate = this.notificationService.getMessage()
     .subscribe(
       (message) => {
@@ -54,16 +55,16 @@ export class SignupComponent implements OnInit {
           //this.status = params['status'];
           this.email = params['email'];
           console.log('load email = ' + this.email);
-          if (params['code'] == undefined) {
-            console.log('New ' + this.code);                         
-            this.code = '';
+          if (this.email == undefined) {
+            console.log('New sign up');
             this.status = 'new';
           } else if (this.email == 'confirm') {
-            this.code = params['code'];
-            console.log('Confirm code is ' + this.code);             
+            console.log('Confirm sign up');             
             // test code 
-            this.status = 'new';
-            this.authenticationService.signinUser(this.email, null, null, this.code, null, null, this);
+            this.status = 'confirm';
+            //this.authenticationService.signinUser(this.email, null, null, this.code, null, null, this);
+          } else if (this.email == 'completed') {
+            console.log('completed sign up');                               
           } else {
             console.log('New Password ' + this.code);             
             this.code = params['code'];
@@ -93,7 +94,6 @@ export class SignupComponent implements OnInit {
 
 
   onSubmit(form: NgForm) {
-    //this.loading = true;
     console.log('submit');
     let email = form.value.email;
     let password = form.value.password;
@@ -101,6 +101,8 @@ export class SignupComponent implements OnInit {
     let firstname = form.value.firstname;
     let lastname = form.value.lastname;
     let code = form.value.code;
+    
+    this.loading = true;
 
     if (email == null) {
       console.log('complete sign in');
@@ -114,7 +116,7 @@ export class SignupComponent implements OnInit {
         this.authenticationService.signinUser(email, password, newpassword, code, firstname, lastname, this);
       }  
     } else {
-      console.log('sign up');
+      console.log('sign up');      
       this.authenticationService.signupUser(email, password, firstname, lastname, this);
     }
   } 
@@ -122,7 +124,7 @@ export class SignupComponent implements OnInit {
   successfulSignUp(status, email) {
     console.log('successfulSignUp ' + status);
     this.status = status;
-    //this.router.navigateByUrl('/signup/'+ status+ '/' + email);    
+    this.loading = false;
   }
 
   successfulLogin() {

@@ -16,11 +16,27 @@
                 {{ message }}
             </div>        
             
-            <button id="signin" [disabled]="!f.valid" class="btn btn-primary" type="submit">Sign In</button>
+            <div *ngIf="loading; else ready">
+                <button id="signin" [disabled]="true" class="btn btn-primary"             
+                type="submit"><i class="fa fa-refresh fa-spin"></i> Signing in...</button>
+            </div>       
+            <ng-template #ready>
+                <button id="signin" [disabled]="!f.valid" class="btn btn-primary"             
+                type="submit">Sign In</button>
+            </ng-template>
+
             
             <div>
-                <a routerLink="/signup">No login? Sign Up here!</a>
+                <a routerLink="/signup">No login? Sign Up here.</a>
             </div>
+
+            <div>
+                <a routerLink="/forgot">Forgot your password?</a>
+            </div>          
+            
+            <div>
+                <a routerLink="/recover">User not confirm? Resend code.</a>
+            </div>                
 
         </form>        
                   

@@ -97,7 +97,7 @@
   <div id="resources" class="col-md-12">
 
       <div *ngIf="resourcesLoading; else resourcesLoaded">
-      Loading...
+      <i class="fa fa-refresh fa-spin"></i> Loading...
       </div>       
       <ng-template #resourcesLoaded>
       <h1>Your Resources</h1>
@@ -125,7 +125,7 @@
       </ng-template>  
 
       <div *ngIf="sharesLoading; else sharesLoaded">
-      Loading...
+      <i class="fa fa-refresh fa-spin"></i> Loading...
       </div>       
       <ng-template #sharesLoaded>
         <h1 *ngIf="shares?.length > 0">Resources shared with you</h1>

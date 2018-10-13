@@ -103,6 +103,77 @@ export class AuthenticationService {
 
     }
 
+
+    resendConfirmationCode(email: string, callback ) {
+
+        let self = this;
+
+        let poolData : any = {
+            UserPoolId: environment.userpoolid,
+            ClientId: environment.clientid
+        };
+
+        console.log('resendConfirmationCode email is ' + email );
+        let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+        let userData = {
+          Username : email,
+          Pool : userPool
+        };
+        let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+
+        cognitoUser.resendConfirmationCode(function(error, result) {
+            if (error) {
+                console.log('Error resendConfirmationCode ' + error.message);    
+                self.notificationService.setMessage( error.message );
+                callback.loading = false; 
+                return;
+            }
+            console.log('resendConfirmationCode result: ' + result);
+            self.savedCognitoUser = cognitoUser;
+            
+            // then ask to sign up
+            callback.successfulResendConfirmationCode('confirm', email);
+
+        });        
+    }
+
+    forgotPassword(email: string, callback ) {
+
+        let self = this;
+
+        let poolData : any = {
+            UserPoolId: environment.userpoolid,
+            ClientId: environment.clientid
+        };
+
+        console.log('forgotPassword email is ' + email );
+        let userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+        let userData = {
+          Username : email,
+          Pool : userPool
+        };
+        let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+
+        cognitoUser.forgotPassword({
+            onSuccess: function (result) {
+                console.log('forgotPassword result: ' + result);
+                // then ask to sign up
+                callback.successfulForgotPassword('confirm', email);
+            },
+            onFailure: function(error) {
+                console.log('Error forgotPassword ' + error.message);    
+                self.notificationService.setMessage( error.message );
+                callback.loading = false; 
+                return;
+            },
+            inputVerificationCode() {
+                var verificationCode = prompt('Please input verification code ' ,'');
+                var newPassword = prompt('Enter new password ' ,'');
+                cognitoUser.confirmPassword(verificationCode, newPassword, this);
+            }
+        });      
+    }
+
     signinUser(email: string, password: string, newPassword: string, code: string, firstname: string, lastname: string, callback ) {
 
         let self = this;
@@ -127,11 +198,9 @@ export class AuthenticationService {
 
         if (code != null) {
             // sign in with code to complete sign up
-            callback.loading = false; 
-
-            let cognitoUser = self.savedCognitoUser;
-            let authenticationDetails = self.saveAuthenticationDetails;
-//            let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+            callback.loading = true; 
+            // set authenticationDetails if previously saved
+            authenticationDetails = self.saveAuthenticationDetails;
 
             console.log('confirmRegistration for ' + code); 
             self.savedCognitoUser.confirmRegistration(code, true,  
@@ -143,49 +212,17 @@ export class AuthenticationService {
                         return;
                     }
                     console.log('call result: ' + result);
-                    console.log('Authenticate User');
-                    self.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);
-                } 
-                
-            );
-
-            //this.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);             
-
-            /*
-            //email = localStorage.getItem("username"); 
-            console.log('email is ' + email);
-
-            userData = {
-                Username : email,
-                Pool : userPool
-            };
-            //console.log('create cognitoUser again from userDate ' + JSON.stringify(userData)); 
-            //cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
-
-            console.log('check cognitoUser');
-            if (cognitoUser == undefined) {
-                let errorMessage = 'Unknown user';
-                console.log('errorMessage ' + errorMessage);    
-                self.notificationService.setMessage( errorMessage );
-                callback.loading = false; 
-                return;                                          
-            }           
-            console.log('confirmRegistration for ' + code); 
-            self.savedCognitoUser.confirmRegistration(code, true,  
-                function(error, result) {
-                    if (error) {
-                        console.log('Authenticated Error ' + error.message);    
-                        self.notificationService.setMessage( error.message );
-                        callback.loading = false; 
-                        return;
+                    console.log('Authenticate User authenticationDetails are ' + authenticationDetails);
+                    if (authenticationDetails != undefined) {
+                        self.authenticateUser(self.savedCognitoUser, authenticationDetails, userPool, callback, self);                        
+                    } else {
+                        callback.successfulSignUp('completed', email);
                     }
-                    console.log('call result: ' + result);
-                    console.log('Authenticate User');
-                    self.authenticateUser(cognitoUser, authenticationDetails, userPool, callback, self);
+
                 } 
                 
             );
-            */
+
 
         } else if (newPassword != null) {
             // sign in with new password to complete sign up

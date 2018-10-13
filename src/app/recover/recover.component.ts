@@ -6,14 +6,12 @@ import { Subject } from 'rxjs/Subject';
 import { NotificationService } from '../shared/notification.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-declare var jQuery:any;
-
 @Component({
-  selector: 'app-signin',
-  templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.css']
+  selector: 'app-recover',
+  templateUrl: './recover.component.html',
+  styleUrls: ['./recover.component.css']
 })
-export class SigninComponent implements OnInit {
+export class RecoverComponent implements OnInit {
 
   @ViewChild('f') slForm: NgForm;
   messageUpdate: Subscription;
@@ -21,12 +19,10 @@ export class SigninComponent implements OnInit {
   loading: boolean = false;
   signUpEmail: string;  
 
-  email: string;
-
   constructor(private authenticationService: AuthenticationService,
-              private notificationService: NotificationService,
-              private router: Router,
-              private route: ActivatedRoute) { }
+    private notificationService: NotificationService,
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {    
     this.messageUpdate = this.notificationService.getMessage()
@@ -39,38 +35,28 @@ export class SigninComponent implements OnInit {
     let self = this;
   }
 
-  ngAfterViewInit() {
-    console.log('on after view init');
-    setTimeout(_=> this.updateForm());
-  } 
-
-  updateForm() {
-    if (this.email != undefined) {
-
-      this.slForm.controls['email'].setValue(this.email);
-
-    }
-  }
-
-
-  onSignin(form: NgForm) {
-    console.log('sign in');
+  onRecover(form: NgForm) {
     this.loading = true;
     const email = form.value.email;
     this.signUpEmail = email;
     const password = form.value.password;    
-    this.authenticationService.signinUser(email, password, null, null, null, null, this);
+    this.authenticationService.resendConfirmationCode(email, this);
   } 
 
-  successfulLogin() {
-    console.log('successfulLogin');
-    this.router.navigateByUrl('/resources'); 
+  successfulResendConfirmationCode() {
+    console.log('successfulResendConfirmationCode');
+    this.router.navigateByUrl('/signup/confirm'); 
+  }
+
+  successfulSignUp() {
+    console.log('successfulSignUp');
+    this.router.navigateByUrl('/signup/confirm'); 
   }
 
 
   isLoading() {
     return this.loading;
-  }
+  }  
 
 
 }
