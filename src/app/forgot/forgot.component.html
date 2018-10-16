@@ -1,22 +1,86 @@
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset1 col-md-offset-2">
         <h1>Forgot password</h1>
-        <form (ngSubmit)="onForgot(f)" #f="ngForm" autocomplete="on">
-            <div class="form-group">
-              <label for="email">Enter your email</label>
-              <input required email type="email" id="email" name="email" ngModel class="form-control">
-            </div>
+        <div *ngIf="status=='new'" class="form-group">
+            <form (ngSubmit)="onForgot(f)" #f="ngForm" autocomplete="on">
+                <div class="form-group">
+                <label for="email">Enter your email</label>
+                <input required email type="email" id="email" name="email" ngModel class="form-control">
+                </div>
+                    
+                <div *ngIf="message" class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>        
                 
-            <div *ngIf="message" class="alert alert-danger" role="alert">
-                {{ message }}
-            </div>        
-            
-            <button id="forgot" [disabled]="!f.valid" class="btn btn-primary" type="submit">Reset Password</button>
-                      
+                <div *ngIf="loading; else ready">
+                    <button id="forgot" [disabled]="true" class="btn btn-primary"             
+                    type="submit"><i class="fa fa-refresh fa-spin"></i> Sending code...</button>
+                </div>       
+                <ng-template #ready>
+                    <button id="forgot" [disabled]="!f.valid" class="btn btn-primary"             
+                    type="submit">Reset Password</button>
+                </ng-template>
+                            
 
-        </form>        
+            </form>     
+        </div> <!-- end of status new -->   
+        
+        <div *ngIf="status=='confirm'" class="form-group">
+            <div class="jumbotron text-white rounded bg-success">
+                <h3>Ok, almost sorted...</h3>
+                <p>Please check your e-mail and type in the code we have sent you and a new password below.</p>
+            </div>
+    
+            <form (ngSubmit)="onConfirmPasswordCode(f)" #f="ngForm" autocomplete="off"> 
+                <div class="form-group">
+                    <label for="code">Enter code here:</label>
+            
+                    <div class="form-group">
+                        <div class="input-group">            
+                        <input ngModel #code="ngModel" required pattern="[0-9][0-9][0-9][0-9][0-9][0-9]" id="code" name="code" autocomplete='code' class="form-control" maxlength="6" size="6">
+                        </div>  
+                        <div *ngIf="code.errors?.pattern">
+                            Code must be 6 digits
+                        </div>    
+                    </div>                                   
+
+                    <div class="form-group">
+                        <label for="password">New Password</label>
+                        <input ngModel #password="ngModel" required password minlength="6" type="password" id="password" name="password" class="form-control">
+                        <div *ngIf="password.errors?.minlength">
+                            Password must be at least 6 characters long.
+                        </div>   
+                    </div>   
+                    
+                    <div>
+                        <a routerLink="/forgot">Didn't get the code? Resend it.</a>
+                    </div>                      
+                                
+                </div>
+            
+                <div *ngIf="message" class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div> 
+    
+                <div *ngIf="loading; else ready">
+                    <button id="forgot" [disabled]="true" class="btn btn-primary"             
+                    type="submit"><i class="fa fa-refresh fa-spin"></i> Updating password...</button>
+                </div>       
+                <ng-template #ready>
+                    <button id="forgot" [disabled]="!f.valid" class="btn btn-primary"             
+                    type="submit">Update Password</button>
+                </ng-template>                   
+            </form>  
+        </div> <!-- end of confirm new -->    
                   
     </div>
+
+    <div *ngIf="status=='completed'" class="form-group">
+        <div class="jumbotron text-white rounded bg-success">
+            <h3>Your password has been updated!</h3>
+            <p>Just <a routerLink="/signin">sign in</a> with your email and new password</p>
+        </div> 
+    </div> <!-- end of status new -->   
 
 
   </div>

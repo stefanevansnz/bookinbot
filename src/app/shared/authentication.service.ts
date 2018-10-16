@@ -105,7 +105,6 @@ export class AuthenticationService {
 
 
     resendConfirmationCode(email: string, callback ) {
-
         let self = this;
 
         let poolData : any = {
@@ -137,6 +136,11 @@ export class AuthenticationService {
         });        
     }
 
+    confirmRegistrationCode() {
+        // confirmRegistration should be moved in here
+    }
+
+
     forgotPassword(email: string, callback ) {
 
         let self = this;
@@ -158,7 +162,7 @@ export class AuthenticationService {
             onSuccess: function (result) {
                 console.log('forgotPassword result: ' + result);
                 // then ask to sign up
-                callback.successfulForgotPassword('confirm', email);
+                callback.successfulSendForgotPassword('confirm', email);
             },
             onFailure: function(error) {
                 console.log('Error forgotPassword ' + error.message);    
@@ -167,11 +171,47 @@ export class AuthenticationService {
                 return;
             },
             inputVerificationCode() {
+                self.savedCognitoUser = cognitoUser;
+                callback.successfulSendForgotPassword('confirm', email);
+/*
                 var verificationCode = prompt('Please input verification code ' ,'');
                 var newPassword = prompt('Enter new password ' ,'');
                 cognitoUser.confirmPassword(verificationCode, newPassword, this);
+*/                
             }
         });      
+    }
+
+    confirmPasswordCode(verificationCode, newPassword, callback) {
+
+        let self = this;
+
+        console.log('confirmPasswordCode for ' + verificationCode + ' and ' + newPassword); 
+        self.savedCognitoUser.confirmPassword(verificationCode, newPassword,{
+            onSuccess: function (result) {
+                console.log('successfulConfirmPassword result: ' + result);
+                callback.successfulConfirmPassword('completed');
+            },
+            onFailure: function(error) {
+                console.log('Error forgotPassword ' + error.message);    
+                self.notificationService.setMessage( error.message );
+                callback.loading = false; 
+                return;
+            }
+            /*            
+            function(error, result) {
+                if (error) {
+                    console.log('Error Confirming Code ' + error.message);    
+                    self.notificationService.setMessage( error.message );
+                    callback.loading = false; 
+                    return;
+                }
+                console.log('successfulConfirmPassword result: ' + result);
+                callback.successfulConfirmPassword('completed');
+            } */
+            }
+        );        
+
     }
 
     signinUser(email: string, password: string, newPassword: string, code: string, firstname: string, lastname: string, callback ) {

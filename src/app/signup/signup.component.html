@@ -58,7 +58,7 @@
         <a routerLink="/signin">Got a login already? Sign In here!</a>
       </div>  
       <div>
-        <a routerLink="/recover">Resend confirmation code?</a>
+        <a routerLink="/recover">Want to resend confirmation code?</a>
       </div>  
 
     </div> <!-- end of status new -->         
@@ -71,7 +71,7 @@
 
         <form (ngSubmit)="onSubmit(f)" #f="ngForm"  autocomplete="on"> 
             <div class="form-group">
-                <label for="lastname">Enter code here:</label>
+                <label for="code">Enter code here:</label>
       
                 <div class="input-group">            
                 <input ngModel #code="ngModel" required pattern="[0-9][0-9][0-9][0-9][0-9][0-9]" id="code" name="code" autocomplete='code' class="form-control" maxlength="6" size="6">
@@ -79,10 +79,6 @@
                 <div *ngIf="code.errors?.pattern">
                     Code must be 6 digits
                 </div> 
-
-                <div>
-                  <a routerLink="/recover">Didn't get the code? Resend it.</a>
-                </div>  
                          
             </div>
       
@@ -98,7 +94,12 @@
                 <button id="signup" [disabled]="!f.valid" class="btn btn-primary"             
                 type="submit">Complete Sign Up</button>
             </ng-template>                   
-        </form>  
+        </form> 
+        
+        <div>
+            <a routerLink="/recover">Didn't get the code? Resend it.</a>
+        </div>  
+        
     </div> <!-- end of status new -->    
   
     <div *ngIf="status=='newpassword'" class="form-group">

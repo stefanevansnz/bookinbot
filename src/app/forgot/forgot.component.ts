@@ -18,6 +18,7 @@ export class ForgotComponent implements OnInit {
   message: any;
   loading: boolean = false;
   signUpEmail: string;  
+  status: string;  
 
   constructor(private authenticationService: AuthenticationService,
     private notificationService: NotificationService,
@@ -31,6 +32,7 @@ export class ForgotComponent implements OnInit {
         this.message = message;
       }
     );
+    this.status = 'new';
 
     let self = this;
   }
@@ -43,9 +45,30 @@ export class ForgotComponent implements OnInit {
     this.authenticationService.forgotPassword(email, this);
   } 
 
-  successfulForgotPassword() {
-    console.log('successfulForgotPassword');
-    this.router.navigateByUrl('/signup/confirm'); 
+
+  onConfirmPasswordCode(form: NgForm) {
+    console.log('submit');
+    let password = form.value.password;
+    let code = form.value.code;
+    
+    this.loading = true;
+
+
+      console.log('sign up');      
+      this.authenticationService.confirmPasswordCode(code, password, this);
+  } 
+
+  successfulSendForgotPassword() {
+    console.log('successfulSendForgotPassword');
+    this.loading = false;
+    this.status = 'confirm';
+    //this.router.navigateByUrl('/signup/confirm'); 
+  }
+
+  successfulConfirmPassword() {
+    console.log('successfulConfirmPassword');
+    this.loading = false;
+    this.status = 'completed';
   }
 
   isLoading() {
