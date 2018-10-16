@@ -26,6 +26,7 @@ const appRoutes: Routes = [
     { path: 'pricing', component: PricingComponent },                       
     { path: 'signup', component: SignupComponent },    
     { path: 'signup/:email', component: SignupComponent },    
+    { path: 'signup/:email/:code', component: SignupComponent },      
     { path: 'signin', component: SigninComponent },    
     { path: 'signin/:email', component: SigninComponent },
     { path: 'recover', component: RecoverComponent }, 

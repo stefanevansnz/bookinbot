@@ -39,7 +39,10 @@ export class ForgotComponent implements OnInit {
 
   onForgot(form: NgForm) {
     this.loading = true;
-    const email = form.value.email;
+    let email = form.value.email;
+    if (email == undefined) {
+      email = email.toLowerCase();
+    }      
     this.signUpEmail = email;
     const password = form.value.password;    
     this.authenticationService.forgotPassword(email, this);

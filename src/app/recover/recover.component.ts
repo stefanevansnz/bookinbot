@@ -37,7 +37,7 @@ export class RecoverComponent implements OnInit {
 
   onRecover(form: NgForm) {
     this.loading = true;
-    const email = form.value.email;
+    const email = form.value.email.toLowerCase();
     this.signUpEmail = email;
     const password = form.value.password;    
     this.authenticationService.resendConfirmationCode(email, this);
