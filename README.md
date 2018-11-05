@@ -101,7 +101,7 @@ Add
 ## Angular References
 
 https://angular.io/guide/quickstart
-** the following commands can be used to set up an inital project
+
 `ng new bookinbot`
 
 
