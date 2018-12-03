@@ -11,6 +11,7 @@ phases:
             - npm install -g @angular/cli
             - npm install -g serverless
             - npm install --save serverless-finch
+            - npm install serverless-offline --save-dev
     build:
         commands:
             - echo Check Serverless Version
